@@ -19,9 +19,12 @@ RUN npm run build
 
 # --- Stage 3: runtime ---
 FROM php:8.5-apache
+# opcache sudah built-in di image php:8.5 — jangan di-docker-php-ext-install
+# (menghasilkan "cp: cannot stat 'modules/*'" karena tidak ada module baru).
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libpq-dev libzip-dev unzip \
-    && docker-php-ext-install pdo_pgsql zip opcache \
+    && docker-php-ext-install pdo_pgsql zip \
+    && docker-php-ext-enable opcache \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Apache: serve Laravel's public directory, allow .htaccess rewrites.
