@@ -1,15 +1,12 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import PublicFooter from '@/Components/PublicFooter.vue';
+import PublicNavbar from '@/Components/PublicNavbar.vue';
+import { Head, Link } from '@inertiajs/vue3';
 
 const props = defineProps({
     service: { type: Object, required: true },
     products: { type: Array, default: () => [] },
 });
-
-const page = usePage();
-const user = computed(() => page.props.auth?.user ?? null);
 
 const rupiah = (value) =>
     new Intl.NumberFormat('id-ID', {
@@ -22,25 +19,8 @@ const rupiah = (value) =>
 <template>
     <Head :title="`Layanan ${service.name}`" />
 
-    <div class="min-h-screen bg-gray-100">
-        <nav class="border-b border-gray-100 bg-white">
-            <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                <Link href="/" class="flex items-center gap-2">
-                    <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
-                    <span class="font-semibold text-gray-800">Pyramid</span>
-                </Link>
-                <div class="flex items-center gap-4 text-sm font-medium">
-                    <template v-if="user">
-                        <Link :href="route('dashboard')" class="text-gray-600 hover:text-gray-900">Dashboard</Link>
-                        <Link :href="route('transactions.index')" class="text-gray-600 hover:text-gray-900">Transaksi Saya</Link>
-                    </template>
-                    <template v-else>
-                        <Link :href="route('login')" class="text-gray-600 hover:text-gray-900">Masuk</Link>
-                        <Link :href="route('register')" class="text-gray-600 hover:text-gray-900">Daftar</Link>
-                    </template>
-                </div>
-            </div>
-        </nav>
+    <div class="min-h-screen bg-brand-50 font-sans">
+        <PublicNavbar />
 
         <header class="bg-white shadow">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
@@ -104,9 +84,9 @@ const rupiah = (value) =>
                             <div class="mt-4 pt-2">
                                 <Link
                                     :href="route('catalog.show', { service: service.slug, product: product.slug })"
-                                    class="inline-flex w-full items-center justify-center rounded-md bg-gray-800 px-4 py-2 text-sm font-semibold text-white transition hover:bg-gray-700"
+                                    class="inline-flex w-full items-center justify-center rounded-md bg-sun-400 px-4 py-2 text-sm font-bold text-cocoa transition hover:bg-sun-500"
                                 >
-                                    Lihat Detail
+                                    Pesan Sekarang
                                 </Link>
                             </div>
                         </div>
@@ -118,5 +98,7 @@ const rupiah = (value) =>
                 </div>
             </div>
         </main>
+
+        <PublicFooter />
     </div>
 </template>

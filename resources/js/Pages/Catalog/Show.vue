@@ -1,15 +1,13 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
-import { Head, Link, usePage } from '@inertiajs/vue3';
+import PublicFooter from '@/Components/PublicFooter.vue';
+import PublicNavbar from '@/Components/PublicNavbar.vue';
+import { Head, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
 const props = defineProps({
     service: { type: Object, required: true },
     product: { type: Object, required: true },
 });
-
-const page = usePage();
-const user = computed(() => page.props.auth?.user ?? null);
 
 const rupiah = (value) =>
     new Intl.NumberFormat('id-ID', {
@@ -24,25 +22,8 @@ const inStock = computed(() => props.product.stock > 0);
 <template>
     <Head :title="`${product.name} — ${service.name}`" />
 
-    <div class="min-h-screen bg-gray-100">
-        <nav class="border-b border-gray-100 bg-white">
-            <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                <Link href="/" class="flex items-center gap-2">
-                    <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
-                    <span class="font-semibold text-gray-800">Pyramid</span>
-                </Link>
-                <div class="flex items-center gap-4 text-sm font-medium">
-                    <template v-if="user">
-                        <Link :href="route('dashboard')" class="text-gray-600 hover:text-gray-900">Dashboard</Link>
-                        <Link :href="route('transactions.index')" class="text-gray-600 hover:text-gray-900">Transaksi Saya</Link>
-                    </template>
-                    <template v-else>
-                        <Link :href="route('login')" class="text-gray-600 hover:text-gray-900">Masuk</Link>
-                        <Link :href="route('register')" class="text-gray-600 hover:text-gray-900">Daftar</Link>
-                    </template>
-                </div>
-            </div>
-        </nav>
+    <div class="min-h-screen bg-brand-50 font-sans">
+        <PublicNavbar />
 
         <main class="py-12">
             <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
@@ -105,7 +86,7 @@ const inStock = computed(() => props.product.stock > 0);
                             <Link
                                 v-if="inStock"
                                 :href="route('checkout.create', { service: service.slug, product: product.slug })"
-                                class="inline-flex w-full items-center justify-center rounded-md bg-gray-800 px-6 py-3 text-sm font-semibold uppercase tracking-widest text-white transition hover:bg-gray-700"
+                                class="inline-flex w-full items-center justify-center rounded-md bg-sun-400 px-6 py-3 text-sm font-bold uppercase tracking-widest text-cocoa transition hover:bg-sun-500"
                             >
                                 Pesan Sekarang
                             </Link>
@@ -117,7 +98,7 @@ const inStock = computed(() => props.product.stock > 0);
                             >
                                 Stok Habis
                             </button>
-                            <p v-if="!user && inStock" class="mt-2 text-center text-xs text-gray-500">
+                            <p v-if="!$page.props.auth.user && inStock" class="mt-2 text-center text-xs text-gray-500">
                                 Anda akan diminta masuk terlebih dahulu sebelum memesan.
                             </p>
                         </div>
@@ -146,5 +127,7 @@ const inStock = computed(() => props.product.stock > 0);
                 </div>
             </div>
         </main>
+
+        <PublicFooter />
     </div>
 </template>

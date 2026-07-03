@@ -91,7 +91,7 @@ const submit = () => form.post(route('checkout.store'));
                             v-for="opt in distribution_options"
                             :key="opt.value"
                             class="flex items-center gap-2 rounded border p-3"
-                            :class="form.distribution_type === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'"
+                            :class="form.distribution_type === opt.value ? 'border-brand-500 bg-brand-50' : 'border-gray-200'"
                         >
                             <input v-model="form.distribution_type" type="radio" :value="opt.value" />
                             <span class="text-sm text-gray-800">{{ opt.label }}</span>
@@ -133,7 +133,7 @@ const submit = () => form.post(route('checkout.store'));
                             id="recipient_address"
                             v-model="form.recipient_address"
                             rows="3"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                             required
                         />
                         <InputError class="mt-2" :message="form.errors.recipient_address" />
@@ -148,7 +148,7 @@ const submit = () => form.post(route('checkout.store'));
                             v-for="opt in payment_options"
                             :key="opt.value"
                             class="flex items-center gap-2 rounded border p-3"
-                            :class="form.payment_method === opt.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'"
+                            :class="form.payment_method === opt.value ? 'border-brand-500 bg-brand-50' : 'border-gray-200'"
                         >
                             <input v-model="form.payment_method" type="radio" :value="opt.value" />
                             <span class="text-sm text-gray-800">{{ opt.label }}</span>

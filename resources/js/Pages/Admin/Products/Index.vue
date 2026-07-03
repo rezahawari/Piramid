@@ -80,7 +80,7 @@ const destroy = (product) => {
                                     <span
                                         v-for="service in product.services"
                                         :key="service.id"
-                                        class="inline-flex items-center rounded-full bg-indigo-100 px-2.5 py-0.5 text-xs font-medium text-indigo-700"
+                                        class="inline-flex items-center rounded-full bg-brand-100 px-2.5 py-0.5 text-xs font-medium text-brand-700"
                                     >
                                         {{ service.name }}
                                     </span>
@@ -103,7 +103,7 @@ const destroy = (product) => {
                             <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
                                 <Link
                                     :href="route('admin.produk.edit', product.id)"
-                                    class="font-medium text-indigo-600 hover:text-indigo-800"
+                                    class="font-medium text-brand-600 hover:text-brand-800"
                                 >
                                     Ubah
                                 </Link>

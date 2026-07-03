@@ -164,7 +164,7 @@ const failLabel = {
 
                 <div v-if="transaction.manual_transfer_proof_url" class="mb-4 text-sm">
                     <p class="text-gray-700">Bukti transfer terkirim — menunggu verifikasi admin.</p>
-                    <a :href="transaction.manual_transfer_proof_url" target="_blank" class="text-indigo-600 hover:underline">Lihat bukti</a>
+                    <a :href="transaction.manual_transfer_proof_url" target="_blank" class="text-brand-600 hover:underline">Lihat bukti</a>
                 </div>
 
                 <form class="space-y-3" @submit.prevent="submitProof">

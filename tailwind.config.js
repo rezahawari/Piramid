@@ -13,7 +13,31 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['"Nunito Sans"', ...defaultTheme.fontFamily.sans],
+                script: ['"Kaushan Script"', 'cursive'],
+            },
+            colors: {
+                brand: {
+                    50: '#f6fdf9',
+                    100: '#e3f6ee',
+                    200: '#9ddbbd',
+                    300: '#6fc4a0',
+                    400: '#53b691',
+                    500: '#43a984',
+                    600: '#318a6b',
+                    700: '#2a7259',
+                    800: '#235c49',
+                    900: '#1d4a3b',
+                },
+                sun: {
+                    400: '#fab617',
+                    500: '#e6a512',
+                },
+                cocoa: '#6b3f01',
+                night: {
+                    DEFAULT: '#0c0c0c',
+                    soft: '#1f1f1f',
+                },
             },
         },
     },

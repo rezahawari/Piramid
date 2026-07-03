@@ -1,5 +1,5 @@
 <script setup>
-import ApplicationLogo from '@/Components/ApplicationLogo.vue';
+import BrandLogo from '@/Components/BrandLogo.vue';
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -20,8 +20,8 @@ const navItems = [
                 <div class="flex h-16 items-center justify-between">
                     <div class="flex items-center gap-6">
                         <Link href="/admin" class="flex items-center gap-2">
-                            <ApplicationLogo class="block h-9 w-auto fill-current text-gray-800" />
-                            <span class="font-semibold text-gray-800">Admin Pyramid</span>
+                            <BrandLogo />
+                            <span class="font-semibold text-gray-800">Admin Piramid</span>
                         </Link>
                         <div class="hidden gap-4 sm:flex">
                             <Link
@@ -32,7 +32,7 @@ const navItems = [
                                 :class="
                                     $page.url.startsWith(item.href) &&
                                     (item.href !== '/admin' || $page.url === '/admin')
-                                        ? 'border-indigo-400 text-gray-900'
+                                        ? 'border-brand-400 text-gray-900'
                                         : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                                 "
                             >

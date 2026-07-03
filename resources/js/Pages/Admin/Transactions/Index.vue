@@ -101,7 +101,7 @@ const canModerate = (t) =>
                 <tbody class="divide-y divide-gray-100">
                     <tr v-for="t in transactions.data" :key="t.id" class="hover:bg-gray-50">
                         <td class="px-4 py-3 font-mono">
-                            <Link :href="`/admin/transaksi/${t.transaction_code}`" class="text-indigo-600 hover:underline">
+                            <Link :href="`/admin/transaksi/${t.transaction_code}`" class="text-brand-600 hover:underline">
                                 {{ t.transaction_code }}
                             </Link>
                         </td>
@@ -148,7 +148,7 @@ const canModerate = (t) =>
                     v-if="link.url"
                     :href="link.url"
                     class="rounded px-3 py-1 text-sm"
-                    :class="link.active ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
+                    :class="link.active ? 'bg-brand-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
                     v-html="link.label"
                 />
                 <span v-else class="px-3 py-1 text-sm text-gray-400" v-html="link.label" />
@@ -170,7 +170,7 @@ const canModerate = (t) =>
                     <textarea
                         v-model="rejectForm.reason"
                         rows="3"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                         required
                     />
                     <p v-if="rejectForm.errors.reason" class="mt-1 text-sm text-red-600">{{ rejectForm.errors.reason }}</p>

@@ -196,7 +196,7 @@ const t = computed(() => props.transaction);
                 <p v-if="statusForm.errors.status" class="mb-2 text-sm text-red-600">{{ statusForm.errors.status }}</p>
                 <button
                     v-if="nextStage"
-                    class="rounded bg-indigo-600 px-3 py-2 text-sm text-white hover:bg-indigo-700 disabled:opacity-40"
+                    class="rounded bg-brand-600 px-3 py-2 text-sm text-white hover:bg-brand-700 disabled:opacity-40"
                     :disabled="statusForm.processing"
                     @click="advanceStatus"
                 >
@@ -244,7 +244,7 @@ const t = computed(() => props.transaction);
                     <div class="sm:col-span-2">
                         <button
                             type="submit"
-                            class="rounded bg-indigo-600 px-3 py-2 text-sm text-white hover:bg-indigo-700 disabled:opacity-40"
+                            class="rounded bg-brand-600 px-3 py-2 text-sm text-white hover:bg-brand-700 disabled:opacity-40"
                             :disabled="uploading || docForm.processing || !docForm.file"
                         >
                             {{ uploading ? 'Mengunggah…' : 'Unggah Dokumentasi' }}

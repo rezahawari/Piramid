@@ -53,7 +53,7 @@ const tanggal = (iso) =>
                             v-if="link.url"
                             :href="link.url"
                             class="rounded px-3 py-1 text-sm"
-                            :class="link.active ? 'bg-indigo-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
+                            :class="link.active ? 'bg-brand-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'"
                             v-html="link.label"
                         />
                         <span v-else class="px-3 py-1 text-sm text-gray-400" v-html="link.label" />
@@ -63,7 +63,7 @@ const tanggal = (iso) =>
 
             <div v-else class="rounded-lg bg-white p-8 text-center shadow-sm">
                 <p class="text-gray-500">Belum ada transaksi.</p>
-                <Link href="/" class="mt-2 inline-block text-indigo-600 hover:underline">Lihat layanan</Link>
+                <Link href="/" class="mt-2 inline-block text-brand-600 hover:underline">Lihat layanan</Link>
             </div>
         </div>
     </AuthenticatedLayout>

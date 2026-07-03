@@ -67,7 +67,7 @@ const destroy = (service) => {
                             <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
                                 <Link
                                     :href="route('admin.layanan.edit', service.id)"
-                                    class="font-medium text-indigo-600 hover:text-indigo-800"
+                                    class="font-medium text-brand-600 hover:text-brand-800"
                                 >
                                     Ubah
                                 </Link>

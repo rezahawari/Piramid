@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Service;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class LandingController extends Controller
 {
     /**
-     * Display the landing page with the active services.
+     * Display the landing page with the active services and featured products.
      */
     public function index(): Response
     {
@@ -18,8 +18,10 @@ class LandingController extends Controller
             'services' => Service::active()
                 ->orderBy('name')
                 ->get(['id', 'name', 'slug', 'description', 'cover_image_url']),
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
+            'products' => Product::active()
+                ->orderBy('price')
+                ->limit(3)
+                ->get(['id', 'name', 'slug', 'price', 'weight_estimate_kg', 'primary_image_url']),
         ]);
     }
 }

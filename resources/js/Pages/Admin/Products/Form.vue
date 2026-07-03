@@ -92,7 +92,7 @@ const submit = () => {
                         id="description"
                         v-model="form.description"
                         rows="4"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
                     ></textarea>
                     <InputError class="mt-2" :message="form.errors.description" />
                 </div>

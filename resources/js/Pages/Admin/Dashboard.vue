@@ -10,7 +10,7 @@ defineProps({
 });
 
 const cards = [
-    { key: 'services', label: 'Layanan', href: '/admin/layanan', color: 'text-indigo-600' },
+    { key: 'services', label: 'Layanan', href: '/admin/layanan', color: 'text-brand-600' },
     { key: 'products', label: 'Produk Hewan', href: '/admin/produk', color: 'text-emerald-600' },
     { key: 'transactions', label: 'Transaksi', href: '/admin/transaksi', color: 'text-blue-600' },
     {
