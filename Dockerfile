@@ -24,7 +24,7 @@ FROM php:8.5-apache
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libpq-dev libzip-dev unzip \
     && docker-php-ext-install pdo_pgsql zip \
-    && docker-php-ext-enable opcache \
+    && { docker-php-ext-enable opcache || true; } \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Apache: serve Laravel's public directory, allow .htaccess rewrites.
