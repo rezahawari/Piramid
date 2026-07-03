@@ -4,12 +4,12 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --ignore-platform-reqs
 COPY . .
-RUN composer dump-autoload --optimize --no-dev
+RUN composer dump-autoload --optimize --no-dev --no-scripts
 
 # --- Stage 2: frontend assets ---
 FROM node:24-alpine AS assets
 WORKDIR /app
-COPY package.json package-lock.json vite.config.js ./
+COPY package.json package-lock.json vite.config.js tailwind.config.js postcss.config.js ./
 RUN npm ci
 COPY resources ./resources
 COPY public ./public
@@ -33,6 +33,12 @@ RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-avail
 WORKDIR /var/www/html
 COPY --from=vendor /app /var/www/html
 COPY --from=assets /app/public/build /var/www/html/public/build
-RUN chown -R www-data:www-data storage bootstrap/cache
+
+# Storage skeleton (kosong di build context karena .dockerignore) + symlink publik.
+RUN mkdir -p storage/app/public storage/logs \
+        storage/framework/cache/data storage/framework/sessions storage/framework/views \
+    && php artisan package:discover --ansi \
+    && php artisan storage:link \
+    && chown -R www-data:www-data storage bootstrap/cache
 
 EXPOSE 80
