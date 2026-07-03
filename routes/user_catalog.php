@@ -4,6 +4,8 @@
 
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\ManualTransferController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,4 +21,10 @@ Route::middleware('auth')->group(function () {
     // Pelacakan transaksi (USR-05)
     Route::get('/transaksi', [TransactionController::class, 'index'])->name('transactions.index');
     Route::get('/transaksi/{transaction:transaction_code}', [TransactionController::class, 'show'])->name('transactions.show');
+
+    // Pembayaran (USR-04)
+    Route::post('/pembayaran/{transaction:transaction_code}/snap-token', [PaymentController::class, 'snapToken'])
+        ->name('payment.snap-token');
+    Route::post('/pembayaran/{transaction:transaction_code}/bukti-transfer', [ManualTransferController::class, 'store'])
+        ->name('payment.manual-proof');
 });
