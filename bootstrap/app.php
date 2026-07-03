@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Di belakang reverse proxy (Traefik/Dokploy): percayai header
+        // X-Forwarded-* supaya Laravel tahu request aslinya HTTPS dan
+        // asset/link ter-generate dengan skema yang benar.
+        $middleware->trustProxies(at: '*');
+
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
