@@ -14,71 +14,90 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
+        // Tanpa factory/Faker — seeder harus bisa jalan di image production
+        // yang di-build dengan composer --no-dev.
+
         // Dev-only admin account — ganti kredensial ini sebelum production,
         // atau pakai `php artisan user:make-admin {email}` di server.
-        User::factory()->create([
-            'name' => 'Admin Pyramid',
-            'email' => 'admin@pyramid.test',
-            'password' => 'password',
-            'role' => 'admin',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'admin@pyramid.test'],
+            [
+                'name' => 'Admin Pyramid',
+                'password' => 'password',
+                'role' => 'admin',
+            ],
+        );
 
-        User::factory()->create([
-            'name' => 'User Demo',
-            'email' => 'user@pyramid.test',
-            'password' => 'password',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'user@pyramid.test'],
+            [
+                'name' => 'User Demo',
+                'password' => 'password',
+            ],
+        );
 
-        $qurban = Service::create([
-            'name' => 'Qurban',
-            'slug' => 'qurban',
-            'description' => 'Tunaikan ibadah qurban dengan hewan terbaik, disalurkan transparan hingga penerima manfaat.',
-            'is_active' => true,
-        ]);
+        $qurban = Service::firstOrCreate(
+            ['slug' => 'qurban'],
+            [
+                'name' => 'Qurban',
+                'description' => 'Tunaikan ibadah qurban dengan hewan terbaik, disalurkan transparan hingga penerima manfaat.',
+                'is_active' => true,
+            ],
+        );
 
-        $aqiqah = Service::create([
-            'name' => 'Aqiqah',
-            'slug' => 'aqiqah',
-            'description' => 'Layanan aqiqah lengkap untuk menyambut kelahiran buah hati.',
-            'is_active' => true,
-        ]);
+        $aqiqah = Service::firstOrCreate(
+            ['slug' => 'aqiqah'],
+            [
+                'name' => 'Aqiqah',
+                'description' => 'Layanan aqiqah lengkap untuk menyambut kelahiran buah hati.',
+                'is_active' => true,
+            ],
+        );
 
-        $sedekah = Service::create([
-            'name' => 'Sedekah',
-            'slug' => 'sedekah',
-            'description' => 'Sedekah hewan ternak untuk penerima manfaat terdaftar.',
-            'is_active' => true,
-        ]);
+        $sedekah = Service::firstOrCreate(
+            ['slug' => 'sedekah'],
+            [
+                'name' => 'Sedekah',
+                'description' => 'Sedekah hewan ternak untuk penerima manfaat terdaftar.',
+                'is_active' => true,
+            ],
+        );
 
-        $kambingStandar = Product::create([
-            'name' => 'Kambing Standar',
-            'slug' => 'kambing-standar',
-            'description' => 'Kambing sehat, bobot 23-25 kg, memenuhi syarat qurban dan aqiqah.',
-            'price' => 2500000,
-            'weight_estimate_kg' => 24,
-            'stock' => 50,
-        ]);
+        $kambingStandar = Product::firstOrCreate(
+            ['slug' => 'kambing-standar'],
+            [
+                'name' => 'Kambing Standar',
+                'description' => 'Kambing sehat, bobot 23-25 kg, memenuhi syarat qurban dan aqiqah.',
+                'price' => 2500000,
+                'weight_estimate_kg' => 24,
+                'stock' => 50,
+            ],
+        );
 
-        $kambingPremium = Product::create([
-            'name' => 'Kambing Premium',
-            'slug' => 'kambing-premium',
-            'description' => 'Kambing pilihan, bobot 28-32 kg.',
-            'price' => 3500000,
-            'weight_estimate_kg' => 30,
-            'stock' => 30,
-        ]);
+        $kambingPremium = Product::firstOrCreate(
+            ['slug' => 'kambing-premium'],
+            [
+                'name' => 'Kambing Premium',
+                'description' => 'Kambing pilihan, bobot 28-32 kg.',
+                'price' => 3500000,
+                'weight_estimate_kg' => 30,
+                'stock' => 30,
+            ],
+        );
 
-        $sapiPatungan = Product::create([
-            'name' => 'Sapi 1/7 (Patungan)',
-            'slug' => 'sapi-patungan',
-            'description' => 'Satu bagian dari tujuh untuk qurban sapi bersama.',
-            'price' => 3200000,
-            'weight_estimate_kg' => 350,
-            'stock' => 70,
-        ]);
+        $sapiPatungan = Product::firstOrCreate(
+            ['slug' => 'sapi-patungan'],
+            [
+                'name' => 'Sapi 1/7 (Patungan)',
+                'description' => 'Satu bagian dari tujuh untuk qurban sapi bersama.',
+                'price' => 3200000,
+                'weight_estimate_kg' => 350,
+                'stock' => 70,
+            ],
+        );
 
-        $kambingStandar->services()->attach([$qurban->id, $aqiqah->id, $sedekah->id]);
-        $kambingPremium->services()->attach([$qurban->id, $aqiqah->id]);
-        $sapiPatungan->services()->attach([$qurban->id]);
+        $kambingStandar->services()->syncWithoutDetaching([$qurban->id, $aqiqah->id, $sedekah->id]);
+        $kambingPremium->services()->syncWithoutDetaching([$qurban->id, $aqiqah->id]);
+        $sapiPatungan->services()->syncWithoutDetaching([$qurban->id]);
     }
 }
