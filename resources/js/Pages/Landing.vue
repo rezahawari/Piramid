@@ -262,7 +262,7 @@ const coverageCountries = [
         </section>
 
         <!-- Cakupan Wilayah -->
-        <section class="overflow-hidden py-16">
+        <section class="overflow-hidden pt-16">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="grid gap-8 lg:grid-cols-2 lg:items-start">
                     <div>
