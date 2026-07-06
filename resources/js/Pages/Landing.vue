@@ -262,27 +262,29 @@ const coverageCountries = [
         </section>
 
         <!-- Cakupan Wilayah -->
-        <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <div class="grid gap-8 lg:grid-cols-2 lg:items-start">
-                <div>
-                    <h2 class="text-3xl font-extrabold sm:text-4xl">Cakupan Wilayah</h2>
-                    <p class="mt-4 max-w-lg text-zinc-600">
-                        Temukan area yang terjangkau oleh layanan kami. Kami terus memperluas jangkauan
-                        demi pelayanan yang lebih baik.
-                    </p>
-                </div>
-                <div class="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4 lg:grid-cols-2">
-                    <div
-                        v-for="c in coverageCountries"
-                        :key="c.name"
-                        class="flex items-center gap-2 text-sm font-semibold text-zinc-700"
-                    >
-                        <span class="text-xl" aria-hidden="true">{{ c.flag }}</span>
-                        {{ c.name }}
+        <section class="overflow-hidden py-16">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid gap-8 lg:grid-cols-2 lg:items-start">
+                    <div>
+                        <h2 class="text-3xl font-extrabold sm:text-4xl">Cakupan Wilayah</h2>
+                        <p class="mt-4 max-w-lg text-zinc-600">
+                            Temukan area yang terjangkau oleh layanan kami. Kami terus memperluas jangkauan
+                            demi pelayanan yang lebih baik.
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4 lg:grid-cols-2">
+                        <div
+                            v-for="c in coverageCountries"
+                            :key="c.name"
+                            class="flex items-center gap-2 text-sm font-semibold text-zinc-700"
+                        >
+                            <span class="text-xl" aria-hidden="true">{{ c.flag }}</span>
+                            {{ c.name }}
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="relative mt-10 overflow-hidden rounded-2xl">
+            <div class="relative mt-10">
                 <img
                     src="/images/coverage/map-full.png"
                     alt="Peta cakupan wilayah Piramid"
@@ -292,14 +294,8 @@ const coverageCountries = [
         </section>
 
         <!-- Penutup -->
-        <section class="relative overflow-hidden bg-night py-16">
-            <img
-                src="/images/coverage/map-crop.png"
-                alt=""
-                aria-hidden="true"
-                class="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25"
-            />
-            <div class="relative mx-auto max-w-3xl px-4 text-center sm:px-6">
+        <section class="bg-night py-16">
+            <div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
                 <h2 class="text-2xl font-extrabold text-white sm:text-3xl">
                     Yuk, Tunaikan Qurban &amp; Aqiqah Bersama Piramid
                 </h2>
