@@ -10,6 +10,7 @@ use App\Services\Cloudinary\CloudinaryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class TransactionDocumentationController extends Controller
@@ -34,14 +35,24 @@ class TransactionDocumentationController extends Controller
         ]);
 
         if ($request->hasFile('file')) {
-            $upload = $cloudinary->uploadFile(
-                $request->file('file'),
-                config('cloudinary.upload_folder').'/'.$transaction->transaction_code,
-            );
+            $file = $request->file('file');
 
-            $fileUrl = $upload['secure_url'];
-            $publicId = $upload['public_id'];
-            $type = $upload['resource_type'] === 'video' ? 'video' : 'photo';
+            if ($cloudinary->isConfigured()) {
+                $upload = $cloudinary->uploadFile(
+                    $file,
+                    config('cloudinary.upload_folder').'/'.$transaction->transaction_code,
+                );
+
+                $fileUrl = $upload['secure_url'];
+                $publicId = $upload['public_id'];
+                $type = $upload['resource_type'] === 'video' ? 'video' : 'photo';
+            } else {
+                // Fallback dev lokal tanpa kredensial Cloudinary (sama seperti ManualTransferController).
+                $path = $file->store('dokumentasi', 'public');
+                $fileUrl = Storage::disk('public')->url($path);
+                $publicId = null;
+                $type = str_starts_with($file->getMimeType(), 'video/') ? 'video' : 'photo';
+            }
         } else {
             $fileUrl = $validated['file_url'];
             $publicId = $validated['cloudinary_public_id'] ?? null;
