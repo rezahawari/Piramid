@@ -111,23 +111,25 @@ const coverageCountries = [
                 </p>
             </div>
 
-            <!-- Ilustrasi hero: latar masjid + hewan qurban -->
+            <!-- Ilustrasi hero: latar masjid (full-bleed) + hewan qurban (di-crop sebatas paha) -->
+            <img
+                src="/assets/svgs/hero_bg.svg"
+                alt=""
+                aria-hidden="true"
+                class="absolute inset-x-0 bottom-0 w-full opacity-10"
+            />
             <div class="relative mx-auto mt-8 max-w-6xl px-4 sm:px-6 lg:px-8">
-                <img
-                    src="/assets/svgs/hero_bg.svg"
-                    alt=""
-                    aria-hidden="true"
-                    class="absolute inset-x-0 bottom-0 w-full opacity-20"
-                />
-                <img
-                    src="/assets/svgs/hero.svg"
-                    alt="Ilustrasi qurban Piramid"
-                    class="relative mx-auto w-full max-w-2xl"
-                />
+                <div class="relative mx-auto aspect-[2/1] w-full max-w-2xl overflow-hidden">
+                    <img
+                        src="/assets/svgs/hero.svg"
+                        alt="Ilustrasi qurban Piramid"
+                        class="absolute inset-x-0 top-0 w-full"
+                    />
+                </div>
             </div>
 
-            <!-- Stats bar (kartu, overlap bawah ilustrasi hero) -->
-            <div class="relative -mt-10 px-4 pb-8 sm:-mt-14 sm:px-6 lg:px-8">
+            <!-- Stats bar (kartu, overlap tipis sambung ke bawah ilustrasi hero) -->
+            <div class="relative -mt-8 px-4 pb-8 sm:-mt-10 sm:px-6 lg:px-8">
                 <div class="mx-auto max-w-6xl rounded-3xl bg-night p-5 sm:p-8">
                     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <div
