@@ -36,29 +36,32 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
-        $qurban = Service::firstOrCreate(
+        $qurban = Service::updateOrCreate(
             ['slug' => 'qurban'],
             [
                 'name' => 'Qurban',
                 'description' => 'Tunaikan ibadah qurban dengan hewan terbaik, disalurkan transparan hingga penerima manfaat.',
+                'cover_image_url' => '/images/services/qurban.jpg',
                 'is_active' => true,
             ],
         );
 
-        $aqiqah = Service::firstOrCreate(
+        $aqiqah = Service::updateOrCreate(
             ['slug' => 'aqiqah'],
             [
                 'name' => 'Aqiqah',
                 'description' => 'Layanan aqiqah lengkap untuk menyambut kelahiran buah hati.',
+                'cover_image_url' => '/images/services/aqiqah.jpg',
                 'is_active' => true,
             ],
         );
 
-        $sedekah = Service::firstOrCreate(
+        $sedekah = Service::updateOrCreate(
             ['slug' => 'sedekah'],
             [
                 'name' => 'Sedekah',
                 'description' => 'Sedekah hewan ternak untuk penerima manfaat terdaftar.',
+                'cover_image_url' => '/images/services/sedekah.jpg',
                 'is_active' => true,
             ],
         );

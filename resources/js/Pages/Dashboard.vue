@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
@@ -20,8 +20,19 @@ import { Head } from '@inertiajs/vue3';
                 <div
                     class="overflow-hidden bg-white shadow-sm sm:rounded-lg"
                 >
-                    <div class="p-6 text-gray-900">
-                        You're logged in!
+                    <div class="flex flex-col gap-4 p-6 text-gray-900 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-lg font-semibold">Siap berqurban?</p>
+                            <p class="mt-1 text-sm text-gray-600">
+                                Pilih hewan qurban &amp; aqiqah, lalu selesaikan pesanan dalam satu langkah.
+                            </p>
+                        </div>
+                        <Link
+                            href="/layanan/qurban"
+                            class="inline-flex items-center justify-center rounded-md bg-brand-500 px-6 py-3 font-bold text-white transition hover:bg-brand-600"
+                        >
+                            Mulai Pemesanan
+                        </Link>
                     </div>
                 </div>
             </div>

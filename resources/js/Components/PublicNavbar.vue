@@ -26,10 +26,17 @@ const isActive = (href) =>
                         Beranda
                     </Link>
                     <Link
+                        href="/layanan/qurban"
+                        :class="isActive('/layanan') ? 'text-brand-500' : 'text-zinc-900 hover:text-brand-500'"
+                    >
+                        Pemesanan
+                    </Link>
+                    <Link
+                        v-if="user"
                         href="/transaksi"
                         :class="isActive('/transaksi') ? 'text-brand-500' : 'text-zinc-900 hover:text-brand-500'"
                     >
-                        Pemesanan
+                        Transaksi
                     </Link>
                 </div>
             </div>
@@ -78,7 +85,8 @@ const isActive = (href) =>
 
         <div v-show="open" class="space-y-1 border-t border-zinc-100 px-4 pb-4 pt-2 sm:hidden">
             <Link href="/" class="block py-2 font-semibold text-zinc-900">Beranda</Link>
-            <Link href="/transaksi" class="block py-2 font-semibold text-zinc-900">Pemesanan</Link>
+            <Link href="/layanan/qurban" class="block py-2 font-semibold text-zinc-900">Pemesanan</Link>
+            <Link v-if="user" href="/transaksi" class="block py-2 font-semibold text-zinc-900">Transaksi</Link>
             <template v-if="user">
                 <Link v-if="user.role === 'admin'" href="/admin" class="block py-2 font-semibold text-zinc-900">Admin</Link>
                 <Link href="/logout" method="post" as="button" class="block py-2 font-semibold text-brand-500">Keluar</Link>

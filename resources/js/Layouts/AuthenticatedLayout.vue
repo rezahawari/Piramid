@@ -37,6 +37,18 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Dashboard
                                 </NavLink>
+                                <NavLink
+                                    href="/layanan/qurban"
+                                    :active="route().current('catalog.*')"
+                                >
+                                    Pemesanan
+                                </NavLink>
+                                <NavLink
+                                    :href="route('transactions.index')"
+                                    :active="route().current('transactions.*')"
+                                >
+                                    Transaksi
+                                </NavLink>
                             </div>
                         </div>
 
@@ -143,6 +155,18 @@ const showingNavigationDropdown = ref(false);
                             :active="route().current('dashboard')"
                         >
                             Dashboard
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href="/layanan/qurban"
+                            :active="route().current('catalog.*')"
+                        >
+                            Pemesanan
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            :href="route('transactions.index')"
+                            :active="route().current('transactions.*')"
+                        >
+                            Transaksi
                         </ResponsiveNavLink>
                     </div>
 

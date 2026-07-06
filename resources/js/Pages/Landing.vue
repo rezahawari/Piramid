@@ -1,4 +1,5 @@
 <script setup>
+import HeroSlider from '@/Components/HeroSlider.vue';
 import PublicFooter from '@/Components/PublicFooter.vue';
 import PublicNavbar from '@/Components/PublicNavbar.vue';
 import { Head, Link } from '@inertiajs/vue3';
@@ -66,6 +67,32 @@ const reasons = [
     'Laporan dokumentasi 100% transparan',
     'Mendukung misi sebar manfaat',
 ];
+
+const heroSliderImages = [
+    '/images/hero-slider/8.jpg',
+    '/images/hero-slider/9.jpg',
+    '/images/hero-slider/10.jpg',
+    '/images/hero-slider/11.jpg',
+    '/images/hero-slider/12.jpg',
+    '/images/hero-slider/13.jpg',
+    '/images/hero-slider/14.jpg',
+    '/images/hero-slider/15.jpg',
+    '/images/hero-slider/16.jpg',
+    '/images/hero-slider/17.jpg',
+];
+
+const coverageCountries = [
+    { name: 'Indonesia', flag: '🇮🇩' },
+    { name: 'Singapore', flag: '🇸🇬' },
+    { name: 'Australia', flag: '🇦🇺' },
+    { name: 'New Zealand', flag: '🇳🇿' },
+    { name: 'Taiwan', flag: '🇹🇼' },
+    { name: 'Lithuania', flag: '🇱🇹' },
+    { name: 'Netherlands', flag: '🇳🇱' },
+    { name: 'Denmark', flag: '🇩🇰' },
+    { name: 'United Kingdom', flag: '🇬🇧' },
+    { name: 'United States', flag: '🇺🇸' },
+];
 </script>
 
 <template>
@@ -84,29 +111,36 @@ const reasons = [
                 </p>
             </div>
 
-            <!-- Ilustrasi hero sederhana + siluet masjid -->
-            <div class="relative mx-auto mt-8 flex h-48 max-w-5xl items-end justify-center gap-6 sm:h-56">
-                <svg class="absolute inset-x-0 bottom-0 h-full w-full text-brand-100" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
-                    <path fill="currentColor" d="M0 200V120h60l20-40 20 40h80V90l50-60 50 60v30h90l30-70 30 70h110V80l40-50 40 50v40h100l25-55 25 55h70V110l45-55 45 55v90z" opacity=".5" />
-                </svg>
-                <span class="relative text-7xl sm:text-8xl" aria-hidden="true">🐐</span>
-                <span class="relative text-8xl sm:text-9xl" aria-hidden="true">🧕</span>
-                <span class="relative text-8xl sm:text-9xl" aria-hidden="true">🐄</span>
+            <!-- Ilustrasi hero: latar masjid + hewan qurban -->
+            <div class="relative mx-auto mt-8 max-w-5xl">
+                <img
+                    src="/assets/svgs/hero_bg.svg"
+                    alt=""
+                    aria-hidden="true"
+                    class="absolute inset-x-0 bottom-0 w-full"
+                />
+                <img
+                    src="/assets/svgs/hero.svg"
+                    alt="Ilustrasi qurban Piramid"
+                    class="relative mx-auto w-full max-w-2xl"
+                />
             </div>
 
-            <!-- Stats bar -->
-            <div class="bg-night py-8">
-                <div class="mx-auto grid max-w-6xl gap-4 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
-                    <div
-                        v-for="s in stats"
-                        :key="s.title"
-                        class="rounded-xl p-5"
-                        :class="s.accent ? 'bg-brand-500 text-white' : 'bg-white text-night-soft'"
-                    >
-                        <p class="text-2xl font-extrabold">{{ s.title }}</p>
-                        <p class="mt-1 text-sm" :class="s.accent ? 'text-brand-50' : 'text-zinc-600'">
-                            {{ s.body }}
-                        </p>
+            <!-- Stats bar (kartu, tidak full-bleed) -->
+            <div class="px-4 py-8 sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-6xl rounded-3xl bg-night p-5 sm:p-8">
+                    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                        <div
+                            v-for="s in stats"
+                            :key="s.title"
+                            class="rounded-xl p-5"
+                            :class="s.accent ? 'bg-brand-500 text-white' : 'bg-white text-night-soft'"
+                        >
+                            <p class="text-2xl font-extrabold">{{ s.title }}</p>
+                            <p class="mt-1 text-sm" :class="s.accent ? 'text-brand-50' : 'text-zinc-600'">
+                                {{ s.body }}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -148,9 +182,15 @@ const reasons = [
             </div>
         </section>
 
-        <!-- Layanan Kami (band hijau) -->
-        <section class="bg-brand-500 py-16">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <!-- Layanan Kami (band hijau + layer masjid) -->
+        <section class="relative overflow-hidden bg-brand-500 py-16">
+            <img
+                src="/assets/svgs/mosque_light.svg"
+                alt=""
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-x-0 bottom-0 w-full opacity-20"
+            />
+            <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h2 class="text-center text-3xl font-extrabold text-white">Layanan Kami</h2>
                 <p class="mt-2 text-center text-brand-50">
                     Layanan Qurban &amp; Aqiqah yang Amanah dan Praktis
@@ -195,7 +235,7 @@ const reasons = [
         <!-- Kenapa harus Piramid -->
         <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
             <div class="grid items-center gap-10 lg:grid-cols-2">
-                <div class="hidden justify-center text-9xl lg:flex" aria-hidden="true">🕌</div>
+                <HeroSlider :images="heroSliderImages" />
                 <div>
                     <h2 class="text-3xl font-extrabold sm:text-4xl">Kenapa Harus Piramid?</h2>
                     <p class="mt-4 max-w-lg text-zinc-600">
@@ -216,6 +256,60 @@ const reasons = [
                         Pesan Sekarang
                     </Link>
                 </div>
+            </div>
+        </section>
+
+        <!-- Cakupan Wilayah -->
+        <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+            <div class="grid gap-8 lg:grid-cols-2 lg:items-start">
+                <div>
+                    <h2 class="text-3xl font-extrabold sm:text-4xl">Cakupan Wilayah</h2>
+                    <p class="mt-4 max-w-lg text-zinc-600">
+                        Temukan area yang terjangkau oleh layanan kami. Kami terus memperluas jangkauan
+                        demi pelayanan yang lebih baik.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-4 lg:grid-cols-2">
+                    <div
+                        v-for="c in coverageCountries"
+                        :key="c.name"
+                        class="flex items-center gap-2 text-sm font-semibold text-zinc-700"
+                    >
+                        <span class="text-xl" aria-hidden="true">{{ c.flag }}</span>
+                        {{ c.name }}
+                    </div>
+                </div>
+            </div>
+            <div class="relative mt-10 overflow-hidden rounded-2xl">
+                <img
+                    src="/images/coverage/map-full.png"
+                    alt="Peta cakupan wilayah Piramid"
+                    class="w-full"
+                />
+            </div>
+        </section>
+
+        <!-- Penutup -->
+        <section class="relative overflow-hidden bg-night py-16">
+            <img
+                src="/images/coverage/map-crop.png"
+                alt=""
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-25"
+            />
+            <div class="relative mx-auto max-w-3xl px-4 text-center sm:px-6">
+                <h2 class="text-2xl font-extrabold text-white sm:text-3xl">
+                    Yuk, Tunaikan Qurban &amp; Aqiqah Bersama Piramid
+                </h2>
+                <p class="mt-3 text-brand-50">
+                    Amanah, transparan, dan menjangkau hingga pelosok negeri &mdash; kapan pun, di mana pun.
+                </p>
+                <Link
+                    href="/layanan/qurban"
+                    class="mt-6 inline-block rounded-md bg-sun-400 px-6 py-3 font-bold text-cocoa transition hover:bg-sun-500"
+                >
+                    Pesan Sekarang
+                </Link>
             </div>
         </section>
 
