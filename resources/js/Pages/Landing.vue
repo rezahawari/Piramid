@@ -1,4 +1,5 @@
 <script setup>
+import AnimalPicker from '@/Components/AnimalPicker.vue';
 import HeroSlider from '@/Components/HeroSlider.vue';
 import PublicFooter from '@/Components/PublicFooter.vue';
 import PublicNavbar from '@/Components/PublicNavbar.vue';
@@ -8,9 +9,6 @@ const props = defineProps({
     services: Array,
     products: Array,
 });
-
-const rupiah = (v) =>
-    new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v);
 
 // Atribut tampilan per layanan, meniru kartu "Layanan Kami" di referensi.
 const serviceMeta = {
@@ -46,13 +44,6 @@ const serviceMeta = {
     },
 };
 const metaFor = (slug) => serviceMeta[slug] ?? { arabic: '', emoji: '🐄', features: [] };
-
-const productEmoji = (name) => {
-    const n = name.toLowerCase();
-    if (n.includes('sapi')) return '🐄';
-    if (n.includes('domba')) return '🐑';
-    return '🐐';
-};
 
 const stats = [
     { title: '50K+', body: 'Keluarga percaya dengan kami', accent: true },
@@ -149,38 +140,18 @@ const coverageCountries = [
         </section>
 
         <!-- Pilih hewan -->
-        <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <div class="grid items-center gap-10 lg:grid-cols-2">
-                <div>
+        <section class="bg-zinc-50 py-16">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mb-10 max-w-2xl">
                     <h2 class="text-3xl font-extrabold sm:text-4xl" style="text-wrap: balance">
                         Pilih Hewan Qurban &amp; Aqiqah Sesuai Kebutuhan
                     </h2>
-                    <p class="mt-4 max-w-lg text-zinc-600">
+                    <p class="mt-4 text-zinc-600">
                         Semua hewan kami diseleksi secara ketat: sehat, sesuai syariat, dan terawat oleh
                         peternak profesional. Harga transparan, pilihan beragam.
                     </p>
-                    <div class="mt-8 hidden justify-center text-9xl lg:flex" aria-hidden="true">🐄</div>
                 </div>
-                <div class="flex flex-col gap-4">
-                    <Link
-                        v-for="p in products"
-                        :key="p.id"
-                        :href="`/layanan/qurban/produk/${p.slug}`"
-                        class="group flex items-stretch overflow-hidden rounded-xl bg-night-soft text-white transition hover:-translate-y-0.5 hover:shadow-lg"
-                    >
-                        <span class="flex w-28 items-center justify-center bg-brand-100 text-5xl" aria-hidden="true">
-                            {{ productEmoji(p.name) }}
-                        </span>
-                        <span class="flex flex-1 flex-col justify-center gap-1 px-5 py-4">
-                            <span class="font-bold">{{ p.name }}</span>
-                            <span v-if="p.weight_estimate_kg" class="text-xs text-zinc-400">
-                                ±{{ Math.round(p.weight_estimate_kg) }} kg
-                            </span>
-                            <span class="mt-1 text-xs text-zinc-400">Mulai dari</span>
-                            <span class="text-lg font-extrabold group-hover:text-brand-300">{{ rupiah(p.price) }}</span>
-                        </span>
-                    </Link>
-                </div>
+                <AnimalPicker :products="products" />
             </div>
         </section>
 
