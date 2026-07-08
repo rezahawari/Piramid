@@ -19,6 +19,13 @@ const currentIndex = computed(() =>
 );
 const nextStage = computed(() => props.stages[currentIndex.value + 1] ?? null);
 
+// Dibayar → Hewan Disiapkan tidak butuh bukti dokumentasi, cukup konfirmasi selesai.
+const advanceButtonLabel = computed(() =>
+    props.transaction.status === 'dibayar' && nextStage.value?.value === 'hewan_disiapkan'
+        ? 'Selesai, Lanjut ke Hewan Disiapkan'
+        : `Naikkan ke: ${nextStage.value?.label ?? ''}`,
+);
+
 const rupiah = (v) =>
     new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v);
 
@@ -200,7 +207,7 @@ const t = computed(() => props.transaction);
                     :disabled="statusForm.processing"
                     @click="advanceStatus"
                 >
-                    Naikkan ke: {{ nextStage.label }}
+                    {{ advanceButtonLabel }}
                 </button>
                 <p v-else class="text-sm text-green-700">Semua tahapan selesai.</p>
             </section>

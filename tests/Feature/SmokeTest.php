@@ -183,8 +183,7 @@ class SmokeTest extends TestCase
             ->assertRedirect();
         $t1->refresh();
         $this->assertSame(PaymentStatus::Paid, $t1->payment_status);
-        // Stage "Dibayar" dilewati otomatis saat disetujui — langsung ke Hewan Disiapkan.
-        $this->assertSame(TransactionStatus::HewanDisiapkan, $t1->status);
+        $this->assertSame(TransactionStatus::Dibayar, $t1->status);
         $this->assertSame($this->admin->id, $t1->approved_by);
 
         // Reject + restore stock
@@ -223,14 +222,19 @@ class SmokeTest extends TestCase
             ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'dibayar'])
             ->assertSessionHasErrors(['status']);
 
-        // Simulasikan hasil approve(): lunas dan langsung lompat ke Hewan Disiapkan
-        // (stage Dibayar dilewati otomatis, tidak butuh dokumentasi terpisah).
-        $t->update(['payment_status' => PaymentStatus::Paid, 'status' => TransactionStatus::HewanDisiapkan]);
+        // Simulasikan hasil approve(): lunas, status naik ke Dibayar.
+        $t->update(['payment_status' => PaymentStatus::Paid, 'status' => TransactionStatus::Dibayar]);
 
         // Lompat dua tahap → ditolak
         $this->actingAs($this->admin)
-            ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'didistribusikan'])
+            ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'tersembelih'])
             ->assertSessionHasErrors(['status']);
+
+        // Dibayar → Hewan Disiapkan tidak butuh dokumentasi → sukses
+        $this->actingAs($this->admin)
+            ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'hewan_disiapkan'])
+            ->assertRedirect();
+        $this->assertSame(TransactionStatus::HewanDisiapkan, $t->fresh()->status);
 
         // Naik tanpa dokumentasi tahap berjalan (Hewan Disiapkan) → ditolak
         $this->actingAs($this->admin)
@@ -287,8 +291,7 @@ class SmokeTest extends TestCase
         $this->postJson('/webhooks/midtrans/notification', $payload)->assertOk();
         $t->refresh();
         $this->assertSame(PaymentStatus::Paid, $t->payment_status);
-        // Stage "Dibayar" dilewati otomatis saat lunas via Midtrans — langsung ke Hewan Disiapkan.
-        $this->assertSame(TransactionStatus::HewanDisiapkan, $t->status);
+        $this->assertSame(TransactionStatus::Dibayar, $t->status);
 
         $this->postJson('/webhooks/midtrans/notification', [
             'order_id' => $t->transaction_code,
