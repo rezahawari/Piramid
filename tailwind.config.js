@@ -14,7 +14,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['"Nunito Sans"', ...defaultTheme.fontFamily.sans],
-                script: ['"Kaushan Script"', 'cursive'],
+                script: ['"Hidayatullah"', 'cursive'],
             },
             colors: {
                 brand: {

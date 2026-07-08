@@ -75,8 +75,9 @@ class TransactionStatusController extends Controller
             ]);
         }
 
-        // PRD ADM-04: tiap tahapan wajib disertai bukti dokumentasi sebelum lanjut.
-        $requiresProof = $current->order() >= TransactionStatus::Dibayar->order();
+        // PRD ADM-04 (revisi): stage Dibayar dilewati otomatis (lihat approve()), jadi
+        // dokumentasi baru wajib mulai tahap Hewan Disiapkan sampai Didistribusikan.
+        $requiresProof = $current->order() >= TransactionStatus::HewanDisiapkan->order();
 
         if ($requiresProof && ! $transaction->documentations()->where('stage', $current->value)->exists()) {
             throw ValidationException::withMessages([

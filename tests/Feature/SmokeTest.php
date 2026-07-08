@@ -183,7 +183,8 @@ class SmokeTest extends TestCase
             ->assertRedirect();
         $t1->refresh();
         $this->assertSame(PaymentStatus::Paid, $t1->payment_status);
-        $this->assertSame(TransactionStatus::Dibayar, $t1->status);
+        // Stage "Dibayar" dilewati otomatis saat disetujui — langsung ke Hewan Disiapkan.
+        $this->assertSame(TransactionStatus::HewanDisiapkan, $t1->status);
         $this->assertSame($this->admin->id, $t1->approved_by);
 
         // Reject + restore stock
@@ -222,28 +223,35 @@ class SmokeTest extends TestCase
             ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'dibayar'])
             ->assertSessionHasErrors(['status']);
 
-        $t->update(['payment_status' => PaymentStatus::Paid, 'status' => TransactionStatus::Dibayar]);
+        // Simulasikan hasil approve(): lunas dan langsung lompat ke Hewan Disiapkan
+        // (stage Dibayar dilewati otomatis, tidak butuh dokumentasi terpisah).
+        $t->update(['payment_status' => PaymentStatus::Paid, 'status' => TransactionStatus::HewanDisiapkan]);
 
-        // Naik tanpa dokumentasi tahap berjalan → ditolak
+        // Lompat dua tahap → ditolak
         $this->actingAs($this->admin)
-            ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'hewan_disiapkan'])
+            ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'didistribusikan'])
+            ->assertSessionHasErrors(['status']);
+
+        // Naik tanpa dokumentasi tahap berjalan (Hewan Disiapkan) → ditolak
+        $this->actingAs($this->admin)
+            ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'tersembelih'])
             ->assertSessionHasErrors(['status']);
 
         // Simpan dokumentasi mode direct-upload (file_url), lalu naik → sukses
         $this->actingAs($this->admin)->post("/admin/transaksi/{$t->transaction_code}/dokumentasi", [
-            'stage' => 'dibayar',
+            'stage' => 'hewan_disiapkan',
             'type' => 'photo',
             'file_url' => 'https://example.com/foto.jpg',
             'caption' => 'Hewan diterima',
         ])->assertRedirect();
-        $this->assertDatabaseHas('transaction_documentations', ['transaction_id' => $t->id, 'stage' => 'dibayar']);
+        $this->assertDatabaseHas('transaction_documentations', ['transaction_id' => $t->id, 'stage' => 'hewan_disiapkan']);
 
         $this->actingAs($this->admin)
-            ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'hewan_disiapkan'])
+            ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'tersembelih'])
             ->assertRedirect();
-        $this->assertSame(TransactionStatus::HewanDisiapkan, $t->fresh()->status);
+        $this->assertSame(TransactionStatus::Tersembelih, $t->fresh()->status);
 
-        // Lompat dua tahap → ditolak
+        // Naik ke tahap terakhir tanpa dokumentasi tahap berjalan (Tersembelih) → ditolak
         $this->actingAs($this->admin)
             ->post("/admin/transaksi/{$t->transaction_code}/status", ['status' => 'didistribusikan'])
             ->assertSessionHasErrors(['status']);
@@ -279,7 +287,8 @@ class SmokeTest extends TestCase
         $this->postJson('/webhooks/midtrans/notification', $payload)->assertOk();
         $t->refresh();
         $this->assertSame(PaymentStatus::Paid, $t->payment_status);
-        $this->assertSame(TransactionStatus::Dibayar, $t->status);
+        // Stage "Dibayar" dilewati otomatis saat lunas via Midtrans — langsung ke Hewan Disiapkan.
+        $this->assertSame(TransactionStatus::HewanDisiapkan, $t->status);
 
         $this->postJson('/webhooks/midtrans/notification', [
             'order_id' => $t->transaction_code,

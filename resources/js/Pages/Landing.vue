@@ -14,7 +14,7 @@ const props = defineProps({
 const serviceMeta = {
     qurban: {
         arabic: 'قربان',
-        emoji: '🐄',
+        icon: '/images/service-icons/sapi.jpg',
         features: [
             'Hewan sehat & layak qurban',
             'Hewan dipotong di RPH sesuai syariat',
@@ -24,7 +24,7 @@ const serviceMeta = {
     },
     aqiqah: {
         arabic: 'عقيقة',
-        emoji: '🐐',
+        icon: '/images/service-icons/kambing.jpg',
         features: [
             'Hewan dipotong di RPH sesuai syariat',
             'Bisa diantar ke rumah',
@@ -34,7 +34,7 @@ const serviceMeta = {
     },
     sedekah: {
         arabic: 'صدقة',
-        emoji: '🐑',
+        icon: '/images/service-icons/domba.jpg',
         features: [
             'Tepat sasaran ke yang membutuhkan',
             'Laporan penyaluran transparan',
@@ -43,7 +43,7 @@ const serviceMeta = {
         ],
     },
 };
-const metaFor = (slug) => serviceMeta[slug] ?? { arabic: '', emoji: '🐄', features: [] };
+const metaFor = (slug) => serviceMeta[slug] ?? { arabic: '', icon: '/images/service-icons/sapi.jpg', features: [] };
 
 const stats = [
     { title: '50K+', body: 'Keluarga percaya dengan kami', accent: true },
@@ -185,7 +185,12 @@ const coverageCountries = [
                                 :alt="svc.name"
                                 class="h-full w-full rounded-xl object-cover"
                             />
-                            <span v-else aria-hidden="true">{{ metaFor(svc.slug).emoji }}</span>
+                            <img
+                                v-else
+                                :src="metaFor(svc.slug).icon"
+                                :alt="svc.name"
+                                class="h-full w-full rounded-xl object-cover"
+                            />
                         </Link>
                         <h3 class="mt-4 flex items-baseline gap-2 text-2xl font-bold text-white">
                             {{ svc.name }}

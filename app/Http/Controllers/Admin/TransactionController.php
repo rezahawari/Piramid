@@ -69,7 +69,7 @@ class TransactionController extends Controller
         ]);
 
         if ($transaction->status === TransactionStatus::Menunggu) {
-            $transaction->status = TransactionStatus::Dibayar;
+            $transaction->status = TransactionStatus::HewanDisiapkan;
         }
 
         $transaction->save();

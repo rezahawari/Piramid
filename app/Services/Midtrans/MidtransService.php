@@ -133,7 +133,7 @@ class MidtransService
                 $transaction->midtrans_settlement_time = $payload['settlement_time'] ?? now();
 
                 if ($transaction->status === TransactionStatus::Menunggu) {
-                    $transaction->status = TransactionStatus::Dibayar;
+                    $transaction->status = TransactionStatus::HewanDisiapkan;
                 }
             } elseif (in_array($transactionStatus, ['deny', 'cancel'], true)) {
                 $transaction->payment_status = PaymentStatus::Cancelled;
