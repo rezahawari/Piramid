@@ -82,13 +82,13 @@ onBeforeUnmount(stop);
         <!-- Kolom kiri: judul + ilustrasi besar (berubah sesuai pilihan) -->
         <div class="flex flex-col gap-6">
             <slot name="header" />
-            <div class="relative flex min-h-[280px] flex-1 items-center justify-center sm:min-h-[420px]">
+            <div class="relative min-h-[360px] flex-1 overflow-hidden rounded-2xl sm:min-h-[520px]">
                 <img
                     v-for="(animal, i) in animalCards"
                     :key="animal.id"
                     :src="animal.icon"
                     :alt="`Ilustrasi ${animal.name}`"
-                    class="absolute max-h-[280px] w-auto max-w-[90%] object-contain transition-all duration-500 sm:max-h-[420px]"
+                    class="absolute inset-0 h-full w-full object-cover object-top transition-all duration-500"
                     :class="
                         i === active
                             ? 'scale-100 opacity-100'
