@@ -142,16 +142,19 @@ const coverageCountries = [
         <!-- Pilih hewan -->
         <section class="bg-zinc-50 py-16">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="mb-10 max-w-2xl">
-                    <h2 class="text-3xl font-extrabold sm:text-4xl" style="text-wrap: balance">
-                        Pilih Hewan Qurban &amp; Aqiqah Sesuai Kebutuhan
-                    </h2>
-                    <p class="mt-4 text-zinc-600">
-                        Semua hewan kami diseleksi secara ketat: sehat, sesuai syariat, dan terawat oleh
-                        peternak profesional. Harga transparan, pilihan beragam.
-                    </p>
-                </div>
-                <AnimalPicker :products="products" />
+                <AnimalPicker :products="products">
+                    <template #header>
+                        <div class="max-w-lg">
+                            <h2 class="text-3xl font-extrabold sm:text-4xl" style="text-wrap: balance">
+                                Pilih Hewan Qurban &amp; Aqiqah Sesuai Kebutuhan
+                            </h2>
+                            <p class="mt-4 text-zinc-600">
+                                Semua hewan kami diseleksi secara ketat: sehat, sesuai syariat, dan terawat oleh
+                                peternak profesional. Harga transparan, pilihan beragam.
+                            </p>
+                        </div>
+                    </template>
+                </AnimalPicker>
             </div>
         </section>
 

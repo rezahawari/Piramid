@@ -78,21 +78,24 @@ onBeforeUnmount(stop);
 </script>
 
 <template>
-    <div class="grid items-center gap-10 lg:grid-cols-2" @mouseenter="stop" @mouseleave="start">
-        <!-- Ilustrasi besar (berubah sesuai pilihan) -->
-        <div class="relative flex min-h-[280px] items-center justify-center sm:min-h-[360px]">
-            <img
-                v-for="(animal, i) in animalCards"
-                :key="animal.id"
-                :src="animal.icon"
-                :alt="`Ilustrasi ${animal.name}`"
-                class="absolute max-h-[280px] w-auto max-w-[85%] object-contain transition-all duration-500 sm:max-h-[360px]"
-                :class="
-                    i === active
-                        ? 'scale-100 opacity-100'
-                        : 'pointer-events-none scale-95 opacity-0'
-                "
-            />
+    <div class="grid gap-10 lg:grid-cols-2 lg:items-stretch" @mouseenter="stop" @mouseleave="start">
+        <!-- Kolom kiri: judul + ilustrasi besar (berubah sesuai pilihan) -->
+        <div class="flex flex-col gap-6">
+            <slot name="header" />
+            <div class="relative flex min-h-[280px] flex-1 items-center justify-center sm:min-h-[420px]">
+                <img
+                    v-for="(animal, i) in animalCards"
+                    :key="animal.id"
+                    :src="animal.icon"
+                    :alt="`Ilustrasi ${animal.name}`"
+                    class="absolute max-h-[280px] w-auto max-w-[90%] object-contain transition-all duration-500 sm:max-h-[420px]"
+                    :class="
+                        i === active
+                            ? 'scale-100 opacity-100'
+                            : 'pointer-events-none scale-95 opacity-0'
+                    "
+                />
+            </div>
         </div>
 
         <!-- Kartu pilihan hewan -->
