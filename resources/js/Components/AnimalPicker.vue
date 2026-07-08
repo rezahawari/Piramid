@@ -82,7 +82,7 @@ onBeforeUnmount(stop);
         <!-- Kolom kiri: judul + ilustrasi besar (berubah sesuai pilihan) -->
         <div class="flex flex-col gap-6">
             <slot name="header" />
-            <div class="relative min-h-[360px] flex-1 overflow-hidden rounded-2xl sm:min-h-[520px]">
+            <div class="relative min-h-[300px] flex-1 overflow-hidden rounded-2xl sm:min-h-[420px]">
                 <img
                     v-for="(animal, i) in animalCards"
                     :key="animal.id"
@@ -91,8 +91,8 @@ onBeforeUnmount(stop);
                     class="absolute inset-0 h-full w-full object-cover object-top transition-all duration-500"
                     :class="
                         i === active
-                            ? 'scale-100 opacity-100'
-                            : 'pointer-events-none scale-95 opacity-0'
+                            ? 'scale-90 opacity-100'
+                            : 'pointer-events-none scale-85 opacity-0'
                     "
                 />
             </div>
