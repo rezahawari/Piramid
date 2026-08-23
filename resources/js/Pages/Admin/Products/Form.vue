@@ -278,7 +278,7 @@ const submit = () => {
                             />
                             <div>
                                 <p class="text-xs font-bold">{{ service.name }}</p>
-                                <p class="text-[11px] text-gray-400">/layanan/{{ service.slug }}</p>
+                                <!-- <p class="text-[11px] text-gray-400">/layanan/{{ service.slug }}</p> -->
                             </div>
                         </div>
                     </div>
