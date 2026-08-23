@@ -1,0 +1,24 @@
+{
+  "name": "Piramid Qurban & Aqiqah",
+  "short_name": "Piramid",
+  "description": "Platform Pemesanan Hewan Qurban dan Aqiqah Amanah & Sesuai Syariat",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6a1918",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
