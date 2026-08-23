@@ -14,6 +14,12 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
+        // Guard: Jika data awal sudah ada (misal pada proses redeploy), lewati seeder.
+        if (User::where('role', 'admin')->exists() || Service::exists() || Product::exists()) {
+            $this->command?->info('Data sudah ada di database. Seeder dilewati (skipped).');
+            return;
+        }
+
         // Tanpa factory/Faker — seeder harus bisa jalan di image production
         // yang di-build dengan composer --no-dev.
 
