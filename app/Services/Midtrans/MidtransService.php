@@ -15,11 +15,15 @@ class MidtransService
 {
     public function __construct()
     {
-        Config::$serverKey = (string) config('midtrans.server_key');
-        Config::$clientKey = (string) config('midtrans.client_key');
-        Config::$isProduction = (bool) config('midtrans.is_production');
-        Config::$isSanitized = (bool) config('midtrans.is_sanitized');
-        Config::$is3ds = (bool) config('midtrans.is_3ds');
+        $serverKey = config('midtrans.server_key') ?: env('MIDTRANS_SERVER_KEY', 'SB-Mid-server-UWdxhKL11SJqG3c8T0TFyfvo');
+        $clientKey = config('midtrans.client_key') ?: env('MIDTRANS_CLIENT_KEY', 'SB-Mid-client-yq36YrCJTtq0Cb2A');
+        $isProduction = config('midtrans.is_production', false);
+
+        Config::$serverKey = (string) $serverKey;
+        Config::$clientKey = (string) $clientKey;
+        Config::$isProduction = (bool) $isProduction;
+        Config::$isSanitized = (bool) config('midtrans.is_sanitized', true);
+        Config::$is3ds = (bool) config('midtrans.is_3ds', true);
     }
 
     /**
@@ -34,9 +38,13 @@ class MidtransService
             return $transaction->midtrans_snap_token;
         }
 
-        Config::$serverKey = (string) config('midtrans.server_key');
-        Config::$clientKey = (string) config('midtrans.client_key');
-        Config::$isProduction = (bool) config('midtrans.is_production');
+        $serverKey = config('midtrans.server_key') ?: env('MIDTRANS_SERVER_KEY', 'SB-Mid-server-UWdxhKL11SJqG3c8T0TFyfvo');
+        $clientKey = config('midtrans.client_key') ?: env('MIDTRANS_CLIENT_KEY', 'SB-Mid-client-yq36YrCJTtq0Cb2A');
+        $isProduction = config('midtrans.is_production', false);
+
+        Config::$serverKey = (string) $serverKey;
+        Config::$clientKey = (string) $clientKey;
+        Config::$isProduction = (bool) $isProduction;
         Config::$isSanitized = (bool) config('midtrans.is_sanitized', true);
         Config::$is3ds = (bool) config('midtrans.is_3ds', true);
 
