@@ -63,11 +63,12 @@ const executeDelete = () => {
                 <table class="w-full text-left text-xs">
                     <thead class="border-b border-gray-200 bg-gray-50/75 text-[11px] font-bold uppercase tracking-wider text-gray-500">
                         <tr>
-                            <th class="px-5 py-3.5">Hewan / Produk</th>
+                            <th class="px-5 py-3.5">Produk Hewan</th>
                             <th class="px-5 py-3.5">Harga</th>
                             <th class="px-5 py-3.5">Bobot</th>
-                            <th class="px-5 py-3.5">Sisa Stok</th>
-                            <th class="px-5 py-3.5">Layanan Terkait</th>
+                            <th class="px-5 py-3.5">Stok</th>
+                            <th class="px-5 py-3.5">Maks. Sohibul</th>
+                            <th class="px-5 py-3.5">Layanan</th>
                             <th class="px-5 py-3.5">Status</th>
                             <th class="px-5 py-3.5 text-right">Aksi</th>
                         </tr>
@@ -125,6 +126,13 @@ const executeDelete = () => {
                                     "
                                 >
                                     {{ product.stock }} Ekor
+                                </span>
+                            </td>
+
+                            <!-- Maks. Sohibul -->
+                            <td class="px-5 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center rounded-lg bg-indigo-50 border border-indigo-100 px-2 py-0.5 text-xs font-bold text-indigo-700">
+                                    {{ product.max_sohibul ?? 1 }} Orang / Ekor
                                 </span>
                             </td>
 

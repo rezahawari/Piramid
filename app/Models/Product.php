@@ -18,6 +18,7 @@ class Product extends Model
         'price',
         'weight_estimate_kg',
         'stock',
+        'max_sohibul',
         'primary_image_url',
         'gallery',
         'is_active',
@@ -28,6 +29,7 @@ class Product extends Model
         return [
             'price' => 'decimal:2',
             'weight_estimate_kg' => 'decimal:2',
+            'max_sohibul' => 'integer',
             'gallery' => 'array',
             'is_active' => 'boolean',
         ];

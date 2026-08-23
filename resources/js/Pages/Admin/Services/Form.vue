@@ -26,6 +26,7 @@ const form = useForm({
     cover_image_url: props.service?.cover_image_url ?? '',
     image_file: null,
     is_active: props.service?.is_active ?? true,
+    has_sohibul: props.service?.has_sohibul ?? false,
 });
 
 const imagePreview = ref(props.service?.cover_image_url ?? null);
@@ -171,8 +172,21 @@ const submit = () => {
                     </div>
                 </div>
 
-                <!-- Status Publikasi -->
-                <div class="pt-1">
+                <!-- Status Publikasi & Fitur Sohibul -->
+                <div class="space-y-4 pt-1">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <Checkbox v-model:checked="form.has_sohibul" class="!rounded-md" />
+                        <div>
+                            <span class="text-xs font-bold text-gray-900 block">
+                                Sertakan Data Sohibul (Atas Nama Hewan)
+                            </span>
+                            <span class="text-[11px] text-gray-500 block">
+                                Mengaktifkan form input nama-nama sohibul qurban/aqiqah saat pembeli melakukan pemesanan pada layanan ini.
+                            </span>
+                        </div>
+                    </label>
+                    <InputError class="mt-1" :message="form.errors.has_sohibul" />
+
                     <label class="flex items-center gap-3 cursor-pointer">
                         <Checkbox v-model:checked="form.is_active" class="!rounded-md" />
                         <div>

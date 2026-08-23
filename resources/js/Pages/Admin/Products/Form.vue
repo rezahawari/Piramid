@@ -33,6 +33,7 @@ const form = useForm({
             ? String(props.product.weight_estimate_kg)
             : '',
     stock: props.product?.stock != null ? String(props.product.stock) : '0',
+    max_sohibul: props.product?.max_sohibul != null ? Number(props.product.max_sohibul) : 1,
     primary_image_url: props.product?.primary_image_url ?? '',
     image_file: null,
     is_active: props.product?.is_active ?? true,
@@ -145,7 +146,7 @@ const submit = () => {
                     <h3 class="text-base font-bold text-gray-900">Harga, Bobot, & Ketersediaan</h3>
                     <p class="text-xs text-gray-500">Tentukan harga satuan jual, perkiraan berat hidup, dan jumlah stok tersedia.</p>
 
-                    <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <div>
                             <InputLabel for="price" value="Harga Satuan (Rp) *" class="!text-xs font-bold" />
                             <div class="relative mt-1">
@@ -197,6 +198,26 @@ const submit = () => {
                                 <span class="absolute right-3 top-2.5 text-xs text-gray-400">ekor</span>
                             </div>
                             <InputError class="mt-1" :message="form.errors.stock" />
+                        </div>
+
+                        <div>
+                            <InputLabel for="max_sohibul" value="Batas Maks. Sohibul / Ekor *" class="!text-xs font-bold" />
+                            <div class="relative mt-1">
+                                <TextInput
+                                    id="max_sohibul"
+                                    v-model="form.max_sohibul"
+                                    type="number"
+                                    min="1"
+                                    max="50"
+                                    step="1"
+                                    class="block w-full !rounded-xl !text-xs !pr-14 font-semibold text-brand-700"
+                                    placeholder="1 (Kambing) / 7 (Sapi)"
+                                    required
+                                />
+                                <span class="absolute right-3 top-2.5 text-xs text-gray-400">orang</span>
+                            </div>
+                            <p class="mt-1 text-[10px] text-gray-400">Contoh: Kambing = 1 orang, Sapi = 7 orang.</p>
+                            <InputError class="mt-1" :message="form.errors.max_sohibul" />
                         </div>
                     </div>
                 </div>

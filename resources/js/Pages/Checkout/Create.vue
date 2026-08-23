@@ -39,10 +39,24 @@ const form = useForm({
     recipient_city: '',
     recipient_district: '',
     recipient_address: '',
+    sohibul_names: [user.value?.name ?? ''],
     payment_method: 'midtrans',
 });
 
 const isMandiri = computed(() => form.distribution_type === 'alamat_mandiri');
+const maxSohibulTotal = computed(() => form.quantity * (props.product.max_sohibul || 1));
+
+const addSohibul = () => {
+    if (form.sohibul_names.length < maxSohibulTotal.value) {
+        form.sohibul_names.push('');
+    }
+};
+
+const removeSohibul = (index) => {
+    if (form.sohibul_names.length > 1) {
+        form.sohibul_names.splice(index, 1);
+    }
+};
 
 const rupiah = (v) =>
     new Intl.NumberFormat('id-ID', {
@@ -142,11 +156,81 @@ const submit = () => form.post(route('checkout.store'));
                             <InputError class="mt-2" :message="form.errors.quantity" />
                         </div>
 
-                        <!-- 2. Skema Penyaluran & Distribusi -->
+                        <!-- 2. Data Sohibul Qurban/Aqiqah (Kondisional jika Layanan mengaktifkan has_sohibul) -->
+                        <div v-if="service.has_sohibul" class="rounded-2xl border-2 border-brand-500/40 bg-white p-6 shadow-sm">
+                            <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="flex h-7 w-7 items-center justify-center rounded-full bg-brand-500 text-xs font-bold text-white shadow-xs">
+                                        {{ service.has_sohibul ? '2' : '•' }}
+                                    </span>
+                                    <div>
+                                        <h3 class="text-base font-bold text-gray-900">Nama Sohibul (Atas Nama Ibadah)</h3>
+                                        <p class="text-xs text-gray-500">
+                                            Cantumkan nama-nama yang diniatkan untuk ibadah {{ service.name }}.
+                                        </p>
+                                    </div>
+                                </div>
+                                <span class="rounded-lg bg-brand-50 border border-brand-200 px-2.5 py-1 text-xs font-bold text-brand-700">
+                                    Maks. {{ maxSohibulTotal }} Orang ({{ form.quantity }} &times; {{ product.max_sohibul || 1 }})
+                                </span>
+                            </div>
+
+                            <div class="mt-5 space-y-3">
+                                <div
+                                    v-for="(name, index) in form.sohibul_names"
+                                    :key="index"
+                                    class="flex items-center gap-2"
+                                >
+                                    <div class="relative flex-1">
+                                        <span class="absolute left-3.5 top-2.5 text-xs font-bold text-gray-400">
+                                            #{{ index + 1 }}
+                                        </span>
+                                        <TextInput
+                                            v-model="form.sohibul_names[index]"
+                                            type="text"
+                                            class="block w-full !rounded-xl !pl-10 !text-xs"
+                                            :placeholder="`Nama Sohibul ${index + 1} (Contoh: ${index === 0 ? (user?.name || 'Ahmad bin Abdullah') : 'Fatimah binti Ahmad'})`"
+                                            required
+                                        />
+                                    </div>
+                                    <button
+                                        v-if="form.sohibul_names.length > 1"
+                                        type="button"
+                                        @click="removeSohibul(index)"
+                                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-rose-50 text-rose-600 transition hover:bg-rose-100"
+                                        title="Hapus nama ini"
+                                    >
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+
+                                <div class="pt-2 flex items-center justify-between">
+                                    <button
+                                        v-if="form.sohibul_names.length < maxSohibulTotal"
+                                        type="button"
+                                        @click="addSohibul"
+                                        class="inline-flex items-center gap-1.5 rounded-xl border border-dashed border-brand-400 bg-brand-50/50 px-4 py-2 text-xs font-bold text-brand-700 transition hover:bg-brand-100"
+                                    >
+                                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                                        </svg>
+                                        Tambah Nama Sohibul ({{ form.sohibul_names.length }}/{{ maxSohibulTotal }})
+                                    </button>
+                                    <span v-else class="text-xs text-emerald-600 font-semibold">
+                                        ✓ Kuota maksimal {{ maxSohibulTotal }} nama telah terpenuhi
+                                    </span>
+                                </div>
+                            </div>
+                            <InputError class="mt-2" :message="form.errors.sohibul_names" />
+                        </div>
+
+                        <!-- 3. Skema Penyaluran & Distribusi -->
                         <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
                             <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
                                 <span class="flex h-7 w-7 items-center justify-center rounded-full bg-brand-50 text-xs font-bold text-brand-600">
-                                    2
+                                    {{ service.has_sohibul ? '3' : '2' }}
                                 </span>
                                 <div>
                                     <h3 class="text-base font-bold text-gray-900">Skema Penyaluran Daging</h3>
@@ -265,11 +349,11 @@ const submit = () => form.post(route('checkout.store'));
                             </div>
                         </div>
 
-                        <!-- 3. Metode Pembayaran -->
+                        <!-- 4. Metode Pembayaran -->
                         <div class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
                             <div class="flex items-center gap-3 border-b border-gray-100 pb-4">
                                 <span class="flex h-7 w-7 items-center justify-center rounded-full bg-brand-50 text-xs font-bold text-brand-600">
-                                    3
+                                    {{ service.has_sohibul ? '4' : '3' }}
                                 </span>
                                 <div>
                                     <h3 class="text-base font-bold text-gray-900">Metode Pembayaran</h3>

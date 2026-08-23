@@ -18,6 +18,7 @@ class ServiceRequest extends FormRequest
         $this->merge([
             'slug' => Str::slug($this->input('slug') ?: (string) $this->input('name')),
             'is_active' => $this->boolean('is_active'),
+            'has_sohibul' => $this->boolean('has_sohibul'),
         ]);
     }
 
@@ -38,6 +39,7 @@ class ServiceRequest extends FormRequest
             'cover_image_url' => ['nullable', 'string', 'max:2048'],
             'image_file' => ['nullable', 'image', 'max:5120'],
             'is_active' => ['boolean'],
+            'has_sohibul' => ['boolean'],
         ];
     }
 

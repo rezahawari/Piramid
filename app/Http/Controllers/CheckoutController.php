@@ -27,7 +27,7 @@ class CheckoutController extends Controller
         abort_unless($service->is_active && $product->is_active, 404);
 
         return Inertia::render('Checkout/Create', [
-            'service' => $service->only(['id', 'name', 'slug', 'description', 'cover_image_url']),
+            'service' => $service->only(['id', 'name', 'slug', 'description', 'cover_image_url', 'has_sohibul']),
             'product' => $product->only([
                 'id',
                 'name',
@@ -36,6 +36,7 @@ class CheckoutController extends Controller
                 'price',
                 'weight_estimate_kg',
                 'stock',
+                'max_sohibul',
                 'primary_image_url',
             ]),
             'distribution_options' => collect(DistributionType::cases())
@@ -87,6 +88,7 @@ class CheckoutController extends Controller
                 'recipient_city' => $isMandiri ? $data['recipient_city'] : null,
                 'recipient_district' => $isMandiri ? $data['recipient_district'] : null,
                 'recipient_address' => $isMandiri ? $data['recipient_address'] : null,
+                'sohibul_names' => !empty($data['sohibul_names']) ? array_values(array_filter($data['sohibul_names'])) : null,
                 'payment_method' => $data['payment_method'],
                 'payment_status' => PaymentStatus::Pending,
                 'status' => TransactionStatus::Menunggu,

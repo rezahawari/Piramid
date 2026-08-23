@@ -437,6 +437,23 @@ const failLabel = {
                                 </p>
                             </div>
                         </div>
+
+                        <!-- Daftar Nama Sohibul (Atas Nama Ibadah) -->
+                        <div v-if="transaction.sohibul_names?.length" class="mt-4 rounded-xl border border-brand-200 bg-brand-50/40 p-4 text-xs">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold uppercase tracking-wider text-brand-900 block">
+                                    Atas Nama Sohibul:
+                                </span>
+                                <span class="rounded bg-brand-100 px-2 py-0.5 text-[10px] font-bold text-brand-800">
+                                    {{ transaction.sohibul_names.length }} Orang
+                                </span>
+                            </div>
+                            <ol class="list-decimal list-inside space-y-1 text-gray-800 font-semibold">
+                                <li v-for="(name, idx) in transaction.sohibul_names" :key="idx" class="text-xs">
+                                    {{ name }}
+                                </li>
+                            </ol>
+                        </div>
                     </div>
                 </div>
             </div>

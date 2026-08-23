@@ -33,13 +33,15 @@ class StoreCheckoutRequest extends FormRequest
             'recipient_city' => ['nullable', 'required_if:distribution_type,'.DistributionType::AlamatMandiri->value, 'string', 'max:100'],
             'recipient_district' => ['nullable', 'required_if:distribution_type,'.DistributionType::AlamatMandiri->value, 'string', 'max:100'],
             'recipient_address' => ['nullable', 'required_if:distribution_type,'.DistributionType::AlamatMandiri->value, 'string', 'max:1000'],
+            'sohibul_names' => ['nullable', 'array'],
+            'sohibul_names.*' => ['nullable', 'string', 'max:255'],
             'payment_method' => ['required', Rule::enum(PaymentMethod::class)],
         ];
     }
 
     /**
      * Validasi lintas-field: produk harus milik layanan, keduanya aktif,
-     * dan kuantitas tidak melebihi stok saat ini.
+     * kuantitas tidak melebihi stok saat ini, dan batas sohibul jika layanan memerlukan sohibul.
      */
     public function after(): array
     {
@@ -70,8 +72,24 @@ class StoreCheckoutRequest extends FormRequest
                     return;
                 }
 
-                if ($this->integer('quantity') > $product->stock) {
+                $qty = $this->integer('quantity');
+                if ($qty > $product->stock) {
                     $validator->errors()->add('quantity', 'Stok tidak mencukupi.');
+                }
+
+                // Validasi batasan sohibul
+                if ($service->has_sohibul) {
+                    $maxAllowed = $qty * ($product->max_sohibul ?? 1);
+                    $names = array_values(array_filter((array) $this->input('sohibul_names', [])));
+                    
+                    if (empty($names)) {
+                        $validator->errors()->add('sohibul_names', 'Harap masukkan minimal 1 nama sohibul (atas nama qurban/aqiqah).');
+                    } elseif (count($names) > $maxAllowed) {
+                        $validator->errors()->add(
+                            'sohibul_names',
+                            "Maksimal nama sohibul untuk {$qty} ekor {$product->name} adalah {$maxAllowed} orang ({$product->max_sohibul} orang/ekor)."
+                        );
+                    }
                 }
             },
         ];

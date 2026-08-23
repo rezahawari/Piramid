@@ -38,6 +38,7 @@ class ProductRequest extends FormRequest
             'price' => ['required', 'numeric', 'min:0'],
             'weight_estimate_kg' => ['nullable', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
+            'max_sohibul' => ['required', 'integer', 'min:1'],
             'primary_image_url' => ['nullable', 'string', 'max:2048'],
             'image_file' => ['nullable', 'image', 'max:5120'], // Max 5MB
             'is_active' => ['boolean'],

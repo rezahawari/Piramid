@@ -94,9 +94,18 @@ const executeDelete = () => {
                             <h3 class="text-base font-bold text-gray-900 group-hover:text-brand-600 transition">
                                 {{ service.name }}
                             </h3>
-                            <span class="shrink-0 rounded-lg bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700 border border-brand-100">
-                                {{ service.products_count ?? 0 }} Produk
-                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <span
+                                    v-if="service.has_sohibul"
+                                    class="shrink-0 rounded-lg bg-amber-50 px-2 py-0.5 text-[10px] font-bold text-amber-700 border border-amber-200"
+                                    title="Layanan ini menyertakan form nama sohibul"
+                                >
+                                    Sohibul Aktif
+                                </span>
+                                <span class="shrink-0 rounded-lg bg-brand-50 px-2.5 py-1 text-xs font-bold text-brand-700 border border-brand-100">
+                                    {{ service.products_count ?? 0 }} Produk
+                                </span>
+                            </div>
                         </div>
 
                         <p class="mt-2.5 line-clamp-3 text-xs leading-relaxed text-gray-500">

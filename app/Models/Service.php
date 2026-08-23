@@ -17,12 +17,14 @@ class Service extends Model
         'description',
         'cover_image_url',
         'is_active',
+        'has_sohibul',
     ];
 
     protected function casts(): array
     {
         return [
             'is_active' => 'boolean',
+            'has_sohibul' => 'boolean',
         ];
     }
 
