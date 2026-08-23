@@ -11,6 +11,7 @@ const animals = [
     { id: 'sapi', name: 'Sapi', icon: '/assets/images/animals/sapi.png', keywords: ['sapi'] },
     { id: 'kambing', name: 'Kambing', icon: '/assets/images/animals/kambing.png', keywords: ['kambing'] },
     { id: 'domba', name: 'Domba', icon: '/assets/images/animals/domba.png', keywords: ['domba'] },
+    { id: 'unta', name: 'Unta', icon: '/assets/images/animals/domba.png', keywords: ['unta'] },
 ];
 
 const active = ref(0);
