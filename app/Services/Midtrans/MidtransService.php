@@ -179,4 +179,33 @@ class MidtransService
             }
         });
     }
+
+    /**
+     * Check status directly from Midtrans API and sync transaction state.
+     */
+    public function checkTransactionStatus(Transaction $transaction): ?array
+    {
+        try {
+            $orderId = $transaction->transaction_code;
+            $serverKey = config('midtrans.server_key') ?: env('MIDTRANS_SERVER_KEY', 'SB-Mid-server-UWdxhKL11SJqG3c8T0TFyfvo');
+            $isProduction = config('midtrans.is_production', false);
+            $baseUrl = $isProduction ? 'https://api.midtrans.com' : 'https://api.sandbox.midtrans.com';
+
+            $response = \Illuminate\Support\Facades\Http::withBasicAuth($serverKey, '')
+                ->get("{$baseUrl}/v2/{$orderId}/status");
+
+            if ($response->successful()) {
+                $payload = $response->json();
+                $this->handleNotification($payload);
+
+                return $payload;
+            }
+        } catch (\Throwable $e) {
+            Log::warning('Gagal cek status transaksi Midtrans: '.$e->getMessage(), [
+                'transaction_code' => $transaction->transaction_code,
+            ]);
+        }
+
+        return null;
+    }
 }
