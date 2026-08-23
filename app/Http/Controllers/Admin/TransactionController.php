@@ -35,9 +35,13 @@ class TransactionController extends Controller
                 'id' => $t->id,
                 'transaction_code' => $t->transaction_code,
                 'user_name' => $t->user?->name,
+                'user_email' => $t->user?->email,
                 'service_name' => $t->service?->name,
                 'product_name' => $t->product?->name,
+                'product_image_url' => $t->product?->primary_image_url,
+                'quantity' => $t->quantity,
                 'total_amount' => (float) $t->total_amount,
+                'distribution_type' => $t->distribution_type->value,
                 'payment_method' => $t->payment_method->value,
                 'payment_method_label' => $t->payment_method->label(),
                 'payment_status' => $t->payment_status->value,
@@ -103,5 +107,24 @@ class TransactionController extends Controller
         });
 
         return back()->with('success', "Pembayaran {$transaction->transaction_code} ditolak.");
+    }
+
+    public function destroy(Transaction $transaction): RedirectResponse
+    {
+        DB::transaction(function () use ($transaction): void {
+            // Jika transaksi masih berstatus pending/dibayar, kembalikan kuantitas stok produk
+            if (in_array($transaction->payment_status, [PaymentStatus::Pending, PaymentStatus::Paid], true) && $transaction->product) {
+                $transaction->product->increment('stock', $transaction->quantity);
+            }
+
+            // Hapus relasi dokumentasi jika ada
+            $transaction->documentations()->delete();
+
+            $transaction->delete();
+        });
+
+        return redirect()
+            ->route('admin.transactions.index')
+            ->with('success', "Transaksi {$transaction->transaction_code} berhasil dihapus.");
     }
 }
