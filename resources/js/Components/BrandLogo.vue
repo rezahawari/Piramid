@@ -11,7 +11,7 @@ defineProps({
         <img
             src="/images/logo.png"
             alt="Logo Piramid"
-            class="h-8 w-auto object-contain"
+            class="h-12 w-auto object-contain"
         />
         <span
             v-if="variant === 'full'"
