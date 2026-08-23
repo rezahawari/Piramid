@@ -10,6 +10,34 @@ use Inertia\Response;
 class CatalogController extends Controller
 {
     /**
+     * USR-02 — Daftar semua layanan publik beserta produk hewan yang tersedia.
+     */
+    public function services(): Response
+    {
+        $services = Service::where('is_active', true)
+            ->with(['products' => function ($query) {
+                $query->active()
+                    ->orderBy('products.name')
+                    ->select([
+                        'products.id',
+                        'products.name',
+                        'products.slug',
+                        'products.description',
+                        'products.price',
+                        'products.weight_estimate_kg',
+                        'products.stock',
+                        'products.primary_image_url',
+                    ]);
+            }])
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('Catalog/Services', [
+            'services' => $services,
+        ]);
+    }
+
+    /**
      * USR-02 — Daftar produk aktif milik sebuah layanan (publik).
      */
     public function index(Service $service): Response

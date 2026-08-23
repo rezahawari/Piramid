@@ -10,6 +10,7 @@ use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 // Katalog publik (USR-02)
+Route::get('/layanan', [CatalogController::class, 'services'])->name('services.index');
 Route::get('/layanan/{service:slug}', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/layanan/{service:slug}/produk/{product:slug}', [CatalogController::class, 'show'])->name('catalog.show');
 

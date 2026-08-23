@@ -36,6 +36,7 @@ class ServiceRequest extends FormRequest
             ],
             'description' => ['nullable', 'string'],
             'cover_image_url' => ['nullable', 'string', 'max:2048'],
+            'image_file' => ['nullable', 'image', 'max:5120'],
             'is_active' => ['boolean'],
         ];
     }
@@ -49,6 +50,8 @@ class ServiceRequest extends FormRequest
             'name' => 'nama layanan',
             'slug' => 'slug',
             'description' => 'deskripsi',
+            'cover_image_url' => 'URL gambar sampul',
+            'image_file' => 'file gambar sampul',
         ];
     }
 }
