@@ -58,9 +58,14 @@ class CatalogController extends Controller
                 'products.primary_image_url',
             ]);
 
+        $otherServices = Service::where('is_active', true)
+            ->where('id', '!=', $service->id)
+            ->get(['id', 'name', 'slug', 'cover_image_url']);
+
         return Inertia::render('Catalog/Index', [
             'service' => $service->only(['id', 'name', 'slug', 'description', 'cover_image_url']),
             'products' => $products,
+            'otherServices' => $otherServices,
         ]);
     }
 
