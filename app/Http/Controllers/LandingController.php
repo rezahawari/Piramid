@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DocumentationGallery;
 use App\Models\Product;
 use App\Models\Service;
 use Inertia\Inertia;
@@ -10,7 +11,7 @@ use Inertia\Response;
 class LandingController extends Controller
 {
     /**
-     * Display the landing page with the active services and featured products.
+     * Display the landing page with the active services, featured products, and documentation gallery.
      */
     public function index(): Response
     {
@@ -22,6 +23,10 @@ class LandingController extends Controller
                 ->orderBy('price')
                 ->limit(3)
                 ->get(['id', 'name', 'slug', 'price', 'weight_estimate_kg', 'primary_image_url']),
+            'documentationGalleries' => DocumentationGallery::active()
+                ->orderBy('order_index')
+                ->latest()
+                ->get(),
         ]);
     }
 }

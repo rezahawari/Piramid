@@ -3,6 +3,7 @@
 // ADM-01/02 — CRUD layanan master, inventaris & pointing. Owner: Agent A.
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DocumentationGalleryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\UserController;
@@ -22,6 +23,11 @@ Route::middleware(['auth', 'admin'])
         // Manajemen Produk Hewan
         Route::resource('produk', ProductController::class)
             ->parameters(['produk' => 'produk'])
+            ->except(['show']);
+
+        // Manajemen Galeri Dokumentasi & Edukasi Landing Page
+        Route::resource('galeri', DocumentationGalleryController::class)
+            ->parameters(['galeri' => 'galeri'])
             ->except(['show']);
 
         // Manajemen Pengguna (CRUD, Soft Delete, Status, Reset Password)

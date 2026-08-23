@@ -4,10 +4,28 @@ import HeroSlider from '@/Components/HeroSlider.vue';
 import PublicFooter from '@/Components/PublicFooter.vue';
 import PublicNavbar from '@/Components/PublicNavbar.vue';
 import { Head, Link } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
 
 const props = defineProps({
     services: Array,
     products: Array,
+    documentationGalleries: {
+        type: Array,
+        default: () => [],
+    },
+});
+
+const selectedCategory = ref('all');
+const activeMediaModal = ref(null);
+
+const filteredGalleries = computed(() => {
+    if (!props.documentationGalleries || props.documentationGalleries.length === 0) {
+        return [];
+    }
+    if (selectedCategory.value === 'all') {
+        return props.documentationGalleries;
+    }
+    return props.documentationGalleries.filter((item) => item.category === selectedCategory.value);
 });
 
 // Atribut tampilan per layanan, meniru kartu "Layanan Kami" di referensi.
@@ -241,21 +259,137 @@ const coverageCountries = [
             </div>
         </section>
 
-        <!-- Video Dokumentasi & Edukasi -->
-        <section class="bg-zinc-50 py-16">
+<!-- Section Galeri Dokumentasi & Edukasi -->
+        <section class="bg-zinc-50 py-20">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="mx-auto max-w-3xl text-center">
-                    <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Dokumentasi &amp; Edukasi</span>
-                    <h2 class="mt-2 text-3xl font-extrabold text-zinc-900 sm:text-4xl">
-                        Lihat Proses Ibadah Bersama Piramid
+                    <span class="text-xs font-bold uppercase tracking-widest text-brand-600">Dokumentasi &amp; Edukasi Syariat</span>
+                    <h2 class="mt-2 text-3xl font-black text-zinc-900 sm:text-4xl">
+                        Galeri Proses Ibadah &amp; Distribusi
                     </h2>
-                    <p class="mt-3 text-zinc-600">
+                    <p class="mt-3 text-sm text-zinc-600 leading-relaxed">
                         Saksikan bagaimana tim kami menjalankan amanah ibadah qurban dan aqiqah Anda secara profesional,
-                        higienis, dan sesuai syariat Islam dari peternakan hingga distribusi.
+                        higienis, dan sesuai syariat Islam dari peternakan hingga disalurkan ke pelosok nusantara.
                     </p>
+
+                    <!-- Kategori Filter Pills -->
+                    <div class="mt-8 flex flex-wrap justify-center gap-2">
+                        <button
+                            type="button"
+                            @click="selectedCategory = 'all'"
+                            class="rounded-xl px-4 py-2 text-xs font-bold transition shadow-xs"
+                            :class="selectedCategory === 'all' ? 'bg-brand-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'"
+                        >
+                            Semua Dokumentasi
+                        </button>
+                        <button
+                            type="button"
+                            @click="selectedCategory = 'qurban'"
+                            class="rounded-xl px-4 py-2 text-xs font-bold transition shadow-xs"
+                            :class="selectedCategory === 'qurban' ? 'bg-brand-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'"
+                        >
+                            Qurban
+                        </button>
+                        <button
+                            type="button"
+                            @click="selectedCategory = 'aqiqah'"
+                            class="rounded-xl px-4 py-2 text-xs font-bold transition shadow-xs"
+                            :class="selectedCategory === 'aqiqah' ? 'bg-brand-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'"
+                        >
+                            Aqiqah
+                        </button>
+                        <button
+                            type="button"
+                            @click="selectedCategory = 'edukasi'"
+                            class="rounded-xl px-4 py-2 text-xs font-bold transition shadow-xs"
+                            :class="selectedCategory === 'edukasi' ? 'bg-brand-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'"
+                        >
+                            Edukasi Syariat
+                        </button>
+                        <button
+                            type="button"
+                            @click="selectedCategory = 'distribusi'"
+                            class="rounded-xl px-4 py-2 text-xs font-bold transition shadow-xs"
+                            :class="selectedCategory === 'distribusi' ? 'bg-brand-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'"
+                        >
+                            Penyaluran Pelosok
+                        </button>
+                    </div>
                 </div>
 
-                <div class="mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl ring-1 ring-zinc-900/10">
+                <!-- Gallery Cards Grid -->
+                <div v-if="filteredGalleries.length" class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <div
+                        v-for="item in filteredGalleries"
+                        :key="item.id"
+                        class="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-500/40 hover:shadow-xl cursor-pointer"
+                        @click="activeMediaModal = item"
+                    >
+                        <!-- Media Thumbnail Container -->
+                        <div class="relative aspect-video w-full overflow-hidden bg-zinc-900">
+                            <!-- Image -->
+                            <img
+                                v-if="item.type === 'image' && item.file_url"
+                                :src="item.file_url"
+                                :alt="item.title"
+                                class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                            />
+
+                            <!-- Video Thumbnail / Player -->
+                            <video
+                                v-else-if="item.type === 'video' && item.file_url"
+                                :src="item.file_url"
+                                class="h-full w-full object-cover pointer-events-none"
+                            ></video>
+
+                            <!-- YouTube Embed Preview -->
+                            <iframe
+                                v-else-if="item.type === 'youtube' && item.youtube_url"
+                                :src="item.youtube_url"
+                                class="h-full w-full pointer-events-none"
+                            ></iframe>
+
+                            <!-- Play Overlay Icon -->
+                            <div
+                                v-if="item.type === 'video' || item.type === 'youtube'"
+                                class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition"
+                            >
+                                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-500 text-white shadow-lg transition duration-200 group-hover:scale-110">
+                                    <svg class="h-6 w-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <!-- Category Badge -->
+                            <div class="absolute left-3 top-3">
+                                <span class="rounded-lg bg-black/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
+                                    {{ item.category }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Info Content -->
+                        <div class="flex flex-1 flex-col justify-between p-5">
+                            <div>
+                                <h3 class="text-base font-bold text-zinc-900 group-hover:text-brand-600 transition line-clamp-1">
+                                    {{ item.title }}
+                                </h3>
+                                <p v-if="item.description" class="mt-1.5 line-clamp-2 text-xs text-zinc-500 leading-relaxed">
+                                    {{ item.description }}
+                                </p>
+                            </div>
+
+                            <div class="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3 text-[11px] font-bold text-brand-600">
+                                <span>{{ item.type === 'image' ? 'Lihat Foto Lengkap' : 'Putar Video' }}</span>
+                                <span>&rarr;</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fallback YouTube Default jika galeri kosong -->
+                <div v-else class="mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl ring-1 ring-zinc-900/10">
                     <div class="relative aspect-video w-full">
                         <iframe
                             class="absolute inset-0 h-full w-full rounded-2xl border-0"
@@ -268,6 +402,61 @@ const coverageCountries = [
                 </div>
             </div>
         </section>
+
+        <!-- Media Popup Modal -->
+        <div
+            v-if="activeMediaModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+            @click.self="activeMediaModal = null"
+        >
+            <div class="relative w-full max-w-4xl overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl">
+                <!-- Close Button -->
+                <button
+                    type="button"
+                    class="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/60 text-white hover:bg-black"
+                    @click="activeMediaModal = null"
+                >
+                    &times;
+                </button>
+
+                <!-- Media Content -->
+                <div class="relative aspect-video w-full bg-black flex items-center justify-center">
+                    <img
+                        v-if="activeMediaModal.type === 'image'"
+                        :src="activeMediaModal.file_url"
+                        :alt="activeMediaModal.title"
+                        class="h-full w-full object-contain"
+                    />
+                    <video
+                        v-else-if="activeMediaModal.type === 'video'"
+                        :src="activeMediaModal.file_url"
+                        class="h-full w-full"
+                        controls
+                        autoplay
+                    ></video>
+                    <iframe
+                        v-else-if="activeMediaModal.type === 'youtube'"
+                        :src="activeMediaModal.youtube_url"
+                        class="h-full w-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen
+                    ></iframe>
+                </div>
+
+                <!-- Media Details -->
+                <div class="bg-white p-5">
+                    <div class="flex items-center gap-2">
+                        <span class="rounded-lg bg-brand-50 border border-brand-100 px-2.5 py-0.5 text-[10px] font-bold uppercase text-brand-700">
+                            {{ activeMediaModal.category }}
+                        </span>
+                        <h3 class="text-base font-bold text-zinc-900">{{ activeMediaModal.title }}</h3>
+                    </div>
+                    <p v-if="activeMediaModal.description" class="mt-2 text-xs text-zinc-600 leading-relaxed">
+                        {{ activeMediaModal.description }}
+                    </p>
+                </div>
+            </div>
+        </div>
 
         <!-- Cakupan Wilayah -->
         <section class="overflow-hidden pt-16">

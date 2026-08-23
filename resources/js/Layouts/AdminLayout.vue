@@ -9,6 +9,7 @@ const navItems = [
     { label: 'Dashboard', href: '/admin' },
     { label: 'Layanan', href: '/admin/layanan' },
     { label: 'Produk Hewan', href: '/admin/produk' },
+    { label: 'Galeri & Edukasi', href: '/admin/galeri' },
     { label: 'Transaksi', href: '/admin/transaksi' },
     { label: 'Pengguna', href: '/admin/users' },
 ];
