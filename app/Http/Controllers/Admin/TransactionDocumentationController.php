@@ -38,18 +38,28 @@ class TransactionDocumentationController extends Controller
             $file = $request->file('file');
 
             if ($cloudinary->isConfigured()) {
-                $upload = $cloudinary->uploadFile(
-                    $file,
-                    config('cloudinary.upload_folder').'/'.$transaction->transaction_code,
-                );
+                try {
+                    $upload = $cloudinary->uploadFile(
+                        $file,
+                        config('cloudinary.upload_folder').'/'.$transaction->transaction_code,
+                    );
 
-                $fileUrl = $upload['secure_url'];
-                $publicId = $upload['public_id'];
-                $type = $upload['resource_type'] === 'video' ? 'video' : 'photo';
+                    $fileUrl = $upload['secure_url'];
+                    $publicId = $upload['public_id'];
+                    $type = $upload['resource_type'] === 'video' ? 'video' : 'photo';
+                } catch (\Throwable $e) {
+                    Log::warning('Cloudinary upload gagal, fallback ke local storage: '.$e->getMessage());
+                    $filename = \Illuminate\Support\Str::random(24).'.'.$file->getClientOriginalExtension();
+                    $file->storeAs('dokumentasi', $filename, 'public');
+                    $fileUrl = '/storage/dokumentasi/'.$filename;
+                    $publicId = null;
+                    $type = str_starts_with($file->getMimeType(), 'video/') ? 'video' : 'photo';
+                }
             } else {
-                // Fallback dev lokal tanpa kredensial Cloudinary (sama seperti ManualTransferController).
-                $path = $file->store('dokumentasi', 'public');
-                $fileUrl = Storage::disk('public')->url($path);
+                // Fallback dev lokal / container tanpa kredensial Cloudinary
+                $filename = \Illuminate\Support\Str::random(24).'.'.$file->getClientOriginalExtension();
+                $file->storeAs('dokumentasi', $filename, 'public');
+                $fileUrl = '/storage/dokumentasi/'.$filename;
                 $publicId = null;
                 $type = str_starts_with($file->getMimeType(), 'video/') ? 'video' : 'photo';
             }
