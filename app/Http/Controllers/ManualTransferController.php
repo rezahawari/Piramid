@@ -33,15 +33,22 @@ class ManualTransferController extends Controller
         ]);
 
         if ($cloudinary->isConfigured()) {
-            $upload = $cloudinary->uploadFile(
-                $request->file('proof'),
-                config('cloudinary.upload_folder').'/bukti-transfer',
-            );
-            $url = $upload['secure_url'];
+            try {
+                $upload = $cloudinary->uploadFile(
+                    $request->file('proof'),
+                    config('cloudinary.upload_folder').'/bukti-transfer',
+                );
+                $url = $upload['secure_url'];
+            } catch (\Throwable) {
+                $filename = \Illuminate\Support\Str::random(24).'.'.$request->file('proof')->getClientOriginalExtension();
+                $request->file('proof')->storeAs('bukti-transfer', $filename, 'public');
+                $url = '/storage/bukti-transfer/'.$filename;
+            }
         } else {
-            // Fallback dev lokal tanpa kredensial Cloudinary.
-            $path = $request->file('proof')->store('bukti-transfer', 'public');
-            $url = \Illuminate\Support\Facades\Storage::disk('public')->url($path);
+            // Fallback dev lokal / tanpa kredensial Cloudinary.
+            $filename = \Illuminate\Support\Str::random(24).'.'.$request->file('proof')->getClientOriginalExtension();
+            $request->file('proof')->storeAs('bukti-transfer', $filename, 'public');
+            $url = '/storage/bukti-transfer/'.$filename;
         }
 
         $transaction->update(['manual_transfer_proof_url' => $url]);
