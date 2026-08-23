@@ -28,8 +28,13 @@ class PaymentController extends Controller
             'Transaksi ini tidak dapat dibayar melalui Midtrans.',
         );
 
-        $token = $midtrans->createSnapTransaction($transaction);
-
-        return response()->json(['snap_token' => $token]);
+        try {
+            $token = $midtrans->createSnapTransaction($transaction);
+            return response()->json(['snap_token' => $token]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Gagal menghubungkan ke payment gateway: ' . $e->getMessage(),
+            ], 500);
+        }
     }
 }

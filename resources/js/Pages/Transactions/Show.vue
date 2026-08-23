@@ -93,7 +93,10 @@ onMounted(() => {
 });
 
 const paying = useForm({});
+const paymentErrorMessage = ref(null);
+
 const payNow = async () => {
+    paymentErrorMessage.value = null;
     try {
         const res = await window.axios.post(
             `/pembayaran/${props.transaction.transaction_code}/snap-token`,
@@ -106,8 +109,11 @@ const payNow = async () => {
                 onError: () => window.location.reload(),
                 onClose: () => {},
             });
+        } else if (!window.snap) {
+            paymentErrorMessage.value = 'Script Midtrans Snap belum berhasil dimuat. Silakan muat ulang halaman.';
         }
     } catch (e) {
+        paymentErrorMessage.value = e.response?.data?.message || 'Gagal memproses pembayaran Midtrans. Pastikan kredensial Sandbox sudah benar.';
         console.error(e);
     }
 };
@@ -270,6 +276,10 @@ const failLabel = {
                             <p class="text-2xl font-black text-brand-600 mt-0.5">
                                 {{ rupiah(transaction.total_amount) }}
                             </p>
+                        </div>
+
+                        <div v-if="paymentErrorMessage" class="mt-4 rounded-xl bg-rose-50 border border-rose-200 p-3.5 text-xs text-rose-700">
+                            {{ paymentErrorMessage }}
                         </div>
 
                         <div class="mt-5">

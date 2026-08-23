@@ -34,29 +34,44 @@ class MidtransService
             return $transaction->midtrans_snap_token;
         }
 
+        Config::$serverKey = (string) config('midtrans.server_key');
+        Config::$clientKey = (string) config('midtrans.client_key');
+        Config::$isProduction = (bool) config('midtrans.is_production');
+        Config::$isSanitized = (bool) config('midtrans.is_sanitized', true);
+        Config::$is3ds = (bool) config('midtrans.is_3ds', true);
+
         $transaction->loadMissing(['user', 'product']);
 
         $params = [
             'transaction_details' => [
                 'order_id' => $transaction->transaction_code,
-                'gross_amount' => (int) $transaction->total_amount,
+                'gross_amount' => (int) round($transaction->total_amount),
             ],
             'customer_details' => [
-                'first_name' => $transaction->user->name,
-                'email' => $transaction->user->email,
+                'first_name' => $transaction->user ? $transaction->user->name : ($transaction->recipient_name ?? 'Pelanggan'),
+                'email' => $transaction->user ? $transaction->user->email : 'customer@piramidqurban.com',
+                'phone' => $transaction->recipient_phone ?? '',
             ],
             'item_details' => [
                 [
-                    'id' => (string) $transaction->product_id,
+                    'id' => (string) ($transaction->product_id ?? 'item-1'),
                     // Midtrans limits item name to 50 chars.
-                    'name' => Str::limit($transaction->product->name, 50, ''),
+                    'name' => Str::limit($transaction->product ? $transaction->product->name : 'Hewan Qurban/Aqiqah', 50, ''),
                     'quantity' => (int) $transaction->quantity,
-                    'price' => (int) $transaction->unit_price,
+                    'price' => (int) round($transaction->unit_price),
                 ],
             ],
         ];
 
-        $token = Snap::getSnapToken($params);
+        try {
+            $token = Snap::getSnapToken($params);
+        } catch (\Throwable $e) {
+            Log::error('Gagal membuat Midtrans Snap token: ' . $e->getMessage(), [
+                'params' => $params,
+                'error' => $e->getTraceAsString(),
+            ]);
+            throw $e;
+        }
 
         $transaction->fill([
             'midtrans_order_id' => $transaction->transaction_code,
