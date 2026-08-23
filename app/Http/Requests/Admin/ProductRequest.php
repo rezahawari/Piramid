@@ -39,6 +39,7 @@ class ProductRequest extends FormRequest
             'weight_estimate_kg' => ['nullable', 'numeric', 'min:0'],
             'stock' => ['required', 'integer', 'min:0'],
             'primary_image_url' => ['nullable', 'string', 'max:2048'],
+            'image_file' => ['nullable', 'image', 'max:5120'], // Max 5MB
             'is_active' => ['boolean'],
             'service_ids' => ['nullable', 'array'],
             'service_ids.*' => ['integer', Rule::exists('services', 'id')],
@@ -58,6 +59,7 @@ class ProductRequest extends FormRequest
             'weight_estimate_kg' => 'estimasi berat (kg)',
             'stock' => 'stok',
             'primary_image_url' => 'URL gambar utama',
+            'image_file' => 'file gambar produk',
             'service_ids' => 'layanan',
         ];
     }
