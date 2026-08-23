@@ -8,10 +8,34 @@ const props = defineProps({
 });
 
 const animals = [
-    { id: 'sapi', name: 'Sapi', icon: '/assets/images/animals/sapi2.png', keywords: ['sapi'] },
-    { id: 'kambing', name: 'Kambing', icon: '/assets/images/animals/kambing2.png', keywords: ['kambing'] },
-    { id: 'domba', name: 'Domba', icon: '/assets/images/animals/domba.png', keywords: ['domba'] },
-    { id: 'unta', name: 'Unta', icon: '/assets/images/animals/domba.png', keywords: ['unta'] },
+    {
+        id: 'sapi',
+        name: 'Sapi',
+        icon: '/assets/images/animals/sapi_opt.png',
+        thumb: '/assets/images/animals/sapi_thumb.png',
+        keywords: ['sapi'],
+    },
+    {
+        id: 'kambing',
+        name: 'Kambing',
+        icon: '/assets/images/animals/kambing_opt.png',
+        thumb: '/assets/images/animals/kambing_thumb.png',
+        keywords: ['kambing'],
+    },
+    {
+        id: 'domba',
+        name: 'Domba',
+        icon: '/assets/images/animals/domba_opt.png',
+        thumb: '/assets/images/animals/domba_thumb.png',
+        keywords: ['domba'],
+    },
+    {
+        id: 'unta',
+        name: 'Unta',
+        icon: '/assets/images/animals/domba_opt.png',
+        thumb: '/assets/images/animals/domba_thumb.png',
+        keywords: ['unta'],
+    },
 ];
 
 const active = ref(0);
@@ -89,7 +113,10 @@ onBeforeUnmount(stop);
                     :key="animal.id"
                     :src="animal.icon"
                     :alt="`Ilustrasi ${animal.name}`"
-                    class="absolute inset-0 h-full w-full object-cover object-top transition-all duration-500"
+                    width="800"
+                    height="800"
+                    decoding="async"
+                    class="absolute inset-0 h-full w-full object-cover object-top will-change-transform transition-all duration-500 transform-gpu"
                     :class="
                         i === active
                             ? 'scale-90 opacity-100'
@@ -107,7 +134,7 @@ onBeforeUnmount(stop);
                 type="button"
                 :aria-pressed="i === active"
                 :aria-label="`Pilih ${animal.name}`"
-                class="group flex items-stretch overflow-hidden rounded-xl text-left transition hover:-translate-y-0.5 hover:shadow-lg"
+                class="group flex items-stretch overflow-hidden rounded-xl text-left transition hover:-translate-y-0.5 hover:shadow-lg cursor-pointer"
                 @click="select(i)"
             >
                 <span
@@ -119,8 +146,11 @@ onBeforeUnmount(stop);
                     "
                 >
                     <img
-                        :src="animal.icon"
+                        :src="animal.thumb || animal.icon"
                         :alt="animal.name"
+                        width="80"
+                        height="80"
+                        decoding="async"
                         class="h-20 w-20 object-contain"
                     />
                 </span>
