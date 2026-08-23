@@ -60,6 +60,7 @@ const reasons = [
 ];
 
 const heroSliderImages = [
+    '/images/hero-slider/g1.jpeg',
     '/images/hero-slider/8.jpg',
     '/images/hero-slider/9.jpg',
     '/images/hero-slider/10.jpg',
@@ -236,6 +237,34 @@ const coverageCountries = [
                     >
                         Pesan Sekarang
                     </Link>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Dokumentasi & Edukasi -->
+        <section class="bg-zinc-50 py-16">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-3xl text-center">
+                    <span class="text-xs font-bold uppercase tracking-wider text-brand-600">Dokumentasi &amp; Edukasi</span>
+                    <h2 class="mt-2 text-3xl font-extrabold text-zinc-900 sm:text-4xl">
+                        Lihat Proses Ibadah Bersama Piramid
+                    </h2>
+                    <p class="mt-3 text-zinc-600">
+                        Saksikan bagaimana tim kami menjalankan amanah ibadah qurban dan aqiqah Anda secara profesional,
+                        higienis, dan sesuai syariat Islam dari peternakan hingga distribusi.
+                    </p>
+                </div>
+
+                <div class="mx-auto mt-10 max-w-4xl overflow-hidden rounded-2xl bg-zinc-900 shadow-2xl ring-1 ring-zinc-900/10">
+                    <div class="relative aspect-video w-full">
+                        <iframe
+                            class="absolute inset-0 h-full w-full rounded-2xl border-0"
+                            src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?rel=0"
+                            title="Video Dokumentasi Piramid Qurban"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            allowfullscreen
+                        ></iframe>
+                    </div>
                 </div>
             </div>
         </section>
