@@ -317,73 +317,54 @@ const coverageCountries = [
                     </div>
                 </div>
 
-                <!-- Gallery Cards Grid -->
-                <div v-if="filteredGalleries.length" class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <!-- Pure Photo Gallery Grid (Berjejer Bersih) -->
+                <div v-if="filteredGalleries.length" class="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:gap-4">
                     <div
                         v-for="item in filteredGalleries"
                         :key="item.id"
-                        class="group relative flex flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:border-brand-500/40 hover:shadow-xl cursor-pointer"
+                        class="group relative aspect-square overflow-hidden rounded-2xl bg-zinc-900 shadow-sm cursor-pointer"
                         @click="activeMediaModal = item"
                     >
-                        <!-- Media Thumbnail Container -->
-                        <div class="relative aspect-video w-full overflow-hidden bg-zinc-900">
-                            <!-- Image -->
-                            <img
-                                v-if="item.type === 'image' && item.file_url"
-                                :src="item.file_url"
-                                :alt="item.title"
-                                class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                            />
+                        <!-- Media View (Image / Video / YouTube Thumbnail) -->
+                        <img
+                            v-if="item.type === 'image' && item.file_url"
+                            :src="item.file_url"
+                            :alt="item.title"
+                            class="h-full w-full object-cover transition duration-500 group-hover:scale-110"
+                        />
 
-                            <!-- Video Thumbnail / Player -->
-                            <video
-                                v-else-if="item.type === 'video' && item.file_url"
-                                :src="item.file_url"
-                                class="h-full w-full object-cover pointer-events-none"
-                            ></video>
+                        <video
+                            v-else-if="item.type === 'video' && item.file_url"
+                            :src="item.file_url"
+                            class="h-full w-full object-cover pointer-events-none transition duration-500 group-hover:scale-110"
+                        ></video>
 
-                            <!-- YouTube Embed Preview -->
-                            <iframe
-                                v-else-if="item.type === 'youtube' && item.youtube_url"
-                                :src="item.youtube_url"
-                                class="h-full w-full pointer-events-none"
-                            ></iframe>
+                        <iframe
+                            v-else-if="item.type === 'youtube' && item.youtube_url"
+                            :src="item.youtube_url"
+                            class="h-full w-full pointer-events-none"
+                        ></iframe>
 
-                            <!-- Play Overlay Icon -->
-                            <div
-                                v-if="item.type === 'video' || item.type === 'youtube'"
-                                class="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/40 transition"
-                            >
-                                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-500 text-white shadow-lg transition duration-200 group-hover:scale-110">
-                                    <svg class="h-6 w-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M8 5v14l11-7z" />
-                                    </svg>
-                                </div>
-                            </div>
-
-                            <!-- Category Badge -->
-                            <div class="absolute left-3 top-3">
-                                <span class="rounded-lg bg-black/60 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white backdrop-blur-md">
-                                    {{ item.category }}
-                                </span>
+                        <!-- Play Icon Indicator for Videos -->
+                        <div
+                            v-if="item.type === 'video' || item.type === 'youtube'"
+                            class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-transparent transition"
+                        >
+                            <div class="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-brand-500/90 text-white shadow-lg backdrop-blur-xs transition duration-300 group-hover:scale-110">
+                                <svg class="h-5 w-5 sm:h-6 sm:w-6 ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z" />
+                                </svg>
                             </div>
                         </div>
 
-                        <!-- Info Content -->
-                        <div class="flex flex-1 flex-col justify-between p-5">
-                            <div>
-                                <h3 class="text-base font-bold text-zinc-900 group-hover:text-brand-600 transition line-clamp-1">
-                                    {{ item.title }}
-                                </h3>
-                                <p v-if="item.description" class="mt-1.5 line-clamp-2 text-xs text-zinc-500 leading-relaxed">
-                                    {{ item.description }}
-                                </p>
-                            </div>
-
-                            <div class="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3 text-[11px] font-bold text-brand-600">
-                                <span>{{ item.type === 'image' ? 'Lihat Foto Lengkap' : 'Putar Video' }}</span>
-                                <span>&rarr;</span>
-                            </div>
+                        <!-- Hover Overlay with Title & Category -->
+                        <div class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/85 via-black/30 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                            <span class="inline-block self-start rounded-md bg-brand-500/90 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white backdrop-blur-xs">
+                                {{ item.category }}
+                            </span>
+                            <h4 class="mt-1.5 text-xs sm:text-sm font-bold text-white line-clamp-2 leading-snug">
+                                {{ item.title }}
+                            </h4>
                         </div>
                     </div>
                 </div>
