@@ -1,11 +1,11 @@
 <script setup>
-import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
+import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 
@@ -52,117 +52,154 @@ const submit = () => {
 </script>
 
 <template>
-    <Head :title="isEdit ? 'Ubah Layanan' : 'Tambah Layanan'" />
+    <Head :title="isEdit ? `Ubah Layanan: ${service.name}` : 'Tambah Layanan Baru'" />
 
     <AdminLayout>
         <template #header>
-            <h2 class="text-xl font-semibold leading-tight text-gray-800">
-                {{ isEdit ? `Ubah Layanan: ${service.name}` : 'Tambah Layanan' }}
+            <div class="flex items-center gap-2">
+                <Link :href="route('admin.layanan.index')" class="text-xs font-semibold text-gray-500 hover:text-brand-600">
+                    &larr; Kembali ke Layanan
+                </Link>
+                <span class="text-xs text-gray-300">/</span>
+                <span class="text-xs font-bold text-gray-800">{{ isEdit ? 'Ubah Layanan' : 'Layanan Baru' }}</span>
+            </div>
+            <h2 class="mt-1 text-xl font-bold leading-tight text-gray-900">
+                {{ isEdit ? `Ubah Layanan: ${service.name}` : 'Tambah Layanan Baru' }}
             </h2>
         </template>
 
-        <div class="mx-auto max-w-2xl">
+        <div class="mx-auto max-w-3xl">
             <form
-                class="space-y-6 bg-white p-6 shadow-sm sm:rounded-lg"
+                class="space-y-6 rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm"
                 @submit.prevent="submit"
             >
-                <div>
-                    <InputLabel for="name" value="Nama" />
-                    <TextInput
-                        id="name"
-                        v-model="form.name"
-                        type="text"
-                        class="mt-1 block w-full"
-                        required
-                        autofocus
-                    />
-                    <InputError class="mt-2" :message="form.errors.name" />
-                </div>
+                <!-- Informasi Utama -->
+                <div class="border-b border-gray-100 pb-5">
+                    <h3 class="text-base font-bold text-gray-900">Informasi Layanan</h3>
+                    <p class="text-xs text-gray-500">Isi detail nama dan identifikasi layanan qurban/aqiqah.</p>
 
-                <div>
-                    <InputLabel for="slug" value="Slug" />
-                    <TextInput
-                        id="slug"
-                        v-model="form.slug"
-                        type="text"
-                        class="mt-1 block w-full"
-                        placeholder="Kosongkan untuk membuat otomatis dari nama"
-                    />
-                    <InputError class="mt-2" :message="form.errors.slug" />
-                </div>
-
-                <div>
-                    <InputLabel for="description" value="Deskripsi" />
-                    <textarea
-                        id="description"
-                        v-model="form.description"
-                        rows="4"
-                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-500 focus:ring-brand-500"
-                    ></textarea>
-                    <InputError class="mt-2" :message="form.errors.description" />
-                </div>
-
-                <div class="space-y-4 rounded-lg border border-gray-200 bg-gray-50/50 p-4">
-                    <span class="block text-sm font-medium text-gray-700">Gambar Sampul Layanan</span>
-
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div class="mt-5 space-y-4">
                         <div>
-                            <InputLabel for="image_file" value="Upload File Gambar" />
-                            <input
-                                id="image_file"
-                                type="file"
-                                accept="image/*"
-                                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-brand-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-700 hover:file:bg-brand-100"
-                                @change="handleFileChange"
-                            />
-                            <InputError class="mt-2" :message="form.errors.image_file" />
-                            <p class="mt-1 text-xs text-gray-500">Maks. 5MB (PNG, JPG, JPEG, WEBP)</p>
-                        </div>
-
-                        <div>
-                            <InputLabel for="cover_image_url" value="Atau Link URL Gambar (Opsional)" />
+                            <InputLabel for="name" value="Nama Layanan *" class="!text-xs font-bold" />
                             <TextInput
-                                id="cover_image_url"
-                                v-model="form.cover_image_url"
+                                id="name"
+                                v-model="form.name"
                                 type="text"
-                                class="mt-1 block w-full"
-                                placeholder="https://..."
+                                class="mt-1 block w-full !rounded-xl !text-xs"
+                                placeholder="Contoh: Qurban Pelosok Negeri / Aqiqah Berkah"
+                                required
+                                autofocus
                             />
-                            <InputError class="mt-2" :message="form.errors.cover_image_url" />
-                            <p class="mt-1 text-xs text-gray-500">Digunakan jika tidak memilih upload file</p>
+                            <InputError class="mt-1" :message="form.errors.name" />
                         </div>
-                    </div>
 
-                    <!-- Preview Gambar -->
-                    <div v-if="imagePreview || form.cover_image_url" class="mt-3 flex items-center gap-4">
-                        <div class="h-20 w-28 overflow-hidden rounded-md border border-gray-200 bg-white">
-                            <img
-                                :src="imagePreview || form.cover_image_url"
-                                alt="Preview Sampul"
-                                class="h-full w-full object-cover"
-                            />
+                        <div>
+                            <InputLabel for="slug" value="Slug Kustom (Opsional)" class="!text-xs font-bold" />
+                            <div class="relative mt-1">
+                                <span class="absolute left-3.5 top-2.5 text-xs text-gray-400 font-mono">/layanan/</span>
+                                <TextInput
+                                    id="slug"
+                                    v-model="form.slug"
+                                    type="text"
+                                    class="block w-full !rounded-xl !text-xs !pl-20 font-mono"
+                                    placeholder="qurban-pelosok"
+                                />
+                            </div>
+                            <InputError class="mt-1" :message="form.errors.slug" />
+                            <p class="mt-1 text-[11px] text-gray-400">Kosongkan jika ingin dibuat otomatis dari nama layanan.</p>
                         </div>
-                        <div class="text-xs text-gray-500">
-                            Preview tampilan gambar sampul layanan
+
+                        <div>
+                            <InputLabel for="description" value="Deskripsi Lengkap" class="!text-xs font-bold" />
+                            <textarea
+                                id="description"
+                                v-model="form.description"
+                                rows="4"
+                                placeholder="Jelaskan rincian keutamaan, alur penyaluran, dan manfaat layanan ini..."
+                                class="mt-1 block w-full rounded-xl border-gray-300 text-xs shadow-sm focus:border-brand-500 focus:ring-brand-500"
+                            ></textarea>
+                            <InputError class="mt-1" :message="form.errors.description" />
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <label class="flex items-center gap-2">
-                        <Checkbox v-model:checked="form.is_active" />
-                        <span class="text-sm text-gray-700">
-                            Aktif (tampil di halaman pengguna)
-                        </span>
+                <!-- Foto Sampul Layanan -->
+                <div class="border-b border-gray-100 pb-5">
+                    <h3 class="text-base font-bold text-gray-900">Foto Sampul Layanan</h3>
+                    <p class="text-xs text-gray-500">Unggah foto banner yang menarik untuk ditampilkan pada katalog dan header.</p>
+
+                    <div class="mt-5 rounded-2xl border border-gray-200/80 bg-gray-50/50 p-5 space-y-4">
+                        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                            <div>
+                                <InputLabel for="image_file" value="Upload File Foto" class="!text-xs font-bold" />
+                                <input
+                                    id="image_file"
+                                    type="file"
+                                    accept="image/*"
+                                    class="mt-1 block w-full text-xs text-gray-500 file:mr-3 file:rounded-xl file:border-0 file:bg-brand-50 file:px-3 file:py-2 file:text-xs file:font-semibold file:text-brand-700 hover:file:bg-brand-100"
+                                    @change="handleFileChange"
+                                />
+                                <InputError class="mt-1" :message="form.errors.image_file" />
+                                <p class="mt-1 text-[11px] text-gray-400">Format: PNG, JPG, JPEG, WEBP (Maks. 5MB)</p>
+                            </div>
+
+                            <div>
+                                <InputLabel for="cover_image_url" value="Atau Input URL Foto" class="!text-xs font-bold" />
+                                <TextInput
+                                    id="cover_image_url"
+                                    v-model="form.cover_image_url"
+                                    type="text"
+                                    class="mt-1 block w-full !rounded-xl !text-xs"
+                                    placeholder="https://..."
+                                />
+                                <InputError class="mt-1" :message="form.errors.cover_image_url" />
+                                <p class="mt-1 text-[11px] text-gray-400">Opsional bila tidak menggunakan file upload.</p>
+                            </div>
+                        </div>
+
+                        <!-- Live Preview Banner -->
+                        <div v-if="imagePreview || form.cover_image_url" class="mt-3">
+                            <span class="text-xs font-semibold text-gray-600 block mb-1.5">Preview Banner:</span>
+                            <div class="relative h-44 w-full overflow-hidden rounded-xl border border-gray-200 bg-white">
+                                <img
+                                    :src="imagePreview || form.cover_image_url"
+                                    alt="Preview Sampul"
+                                    class="h-full w-full object-cover"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Publikasi -->
+                <div class="pt-1">
+                    <label class="flex items-center gap-3 cursor-pointer">
+                        <Checkbox v-model:checked="form.is_active" class="!rounded-md" />
+                        <div>
+                            <span class="text-xs font-bold text-gray-900 block">
+                                Publikasikan Layanan
+                            </span>
+                            <span class="text-[11px] text-gray-500 block">
+                                Layanan akan tampil aktif di navbar dan dapat dipesan oleh pengunjung.
+                            </span>
+                        </div>
                     </label>
-                    <InputError class="mt-2" :message="form.errors.is_active" />
+                    <InputError class="mt-1" :message="form.errors.is_active" />
                 </div>
 
-                <div class="flex items-center justify-end gap-3">
+                <!-- Action Buttons -->
+                <div class="flex items-center justify-end gap-3 border-t border-gray-100 pt-5">
                     <Link :href="route('admin.layanan.index')">
-                        <SecondaryButton type="button">Batal</SecondaryButton>
+                        <SecondaryButton type="button" class="!rounded-xl !text-xs !py-2.5">
+                            Batal
+                        </SecondaryButton>
                     </Link>
-                    <PrimaryButton :disabled="form.processing">Simpan</PrimaryButton>
+                    <PrimaryButton
+                        class="!rounded-xl !text-xs !py-2.5 !bg-brand-500 hover:!bg-brand-600 shadow-sm"
+                        :disabled="form.processing"
+                    >
+                        {{ form.processing ? 'Menyimpan...' : (isEdit ? 'Simpan Perubahan' : 'Buat Layanan') }}
+                    </PrimaryButton>
                 </div>
             </form>
         </div>
