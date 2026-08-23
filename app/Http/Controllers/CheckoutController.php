@@ -27,11 +27,12 @@ class CheckoutController extends Controller
         abort_unless($service->is_active && $product->is_active, 404);
 
         return Inertia::render('Checkout/Create', [
-            'service' => $service->only(['id', 'name', 'slug']),
+            'service' => $service->only(['id', 'name', 'slug', 'description', 'cover_image_url']),
             'product' => $product->only([
                 'id',
                 'name',
                 'slug',
+                'description',
                 'price',
                 'weight_estimate_kg',
                 'stock',
