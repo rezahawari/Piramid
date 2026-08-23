@@ -46,7 +46,7 @@ class ProductController extends Controller
                 $data['primary_image_url'] = $upload['secure_url'];
             } else {
                 $path = $file->store('products', 'public');
-                $data['primary_image_url'] = Storage::disk('public')->url($path);
+                $data['primary_image_url'] = '/storage/' . $path;
             }
         }
 
@@ -81,7 +81,7 @@ class ProductController extends Controller
                 $data['primary_image_url'] = $upload['secure_url'];
             } else {
                 $path = $file->store('products', 'public');
-                $data['primary_image_url'] = Storage::disk('public')->url($path);
+                $data['primary_image_url'] = '/storage/' . $path;
             }
         }
 
