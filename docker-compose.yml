@@ -1,23 +1,38 @@
 services:
-  # App container — dipakai untuk deploy (Dokploy) atau uji image lokal.
-  # Untuk dev lokal sehari-hari cukup `php artisan serve` + service postgres.
   app:
     build: .
-    profiles: ["app"]
     restart: unless-stopped
     ports:
       - "${APP_PORT:-4000}:80"
     environment:
-      APP_ENV: production
-      APP_URL: ${APP_URL:-http://localhost:4000}
+      APP_NAME: "${APP_NAME:-Piramid}"
+      APP_ENV: "${APP_ENV:-production}"
+      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_KEY: "${APP_KEY:-base64:j6g+0eK8Y6T6o7rQ4yvVf8Uv9Hq1c+O6ZpB5wzQy8l4=}"
+      APP_URL: "${APP_URL:-http://localhost:4000}"
+      LOG_CHANNEL: "${LOG_CHANNEL:-stack}"
+      LOG_LEVEL: "${LOG_LEVEL:-error}"
+
       DB_CONNECTION: pgsql
-      DB_HOST: ${DB_HOST:-pgpiramid}
+      DB_HOST: "${DB_HOST:-pgpiramid}"
       DB_PORT: 5432
-      DB_DATABASE: ${DB_DATABASE:-qurban_pyramid}
-      DB_USERNAME: ${DB_USERNAME:-qurban_app}
-      DB_PASSWORD: ${DB_PASSWORD:-qurban_dev_secret}
-    env_file:
-      - .env
+      DB_DATABASE: "${DB_DATABASE:-qurban_pyramid}"
+      DB_USERNAME: "${DB_USERNAME:-qurban_app}"
+      DB_PASSWORD: "${DB_PASSWORD:-qurban_dev_secret}"
+
+      SESSION_DRIVER: "${SESSION_DRIVER:-database}"
+      CACHE_STORE: "${CACHE_STORE:-database}"
+      QUEUE_CONNECTION: "${QUEUE_CONNECTION:-database}"
+      FILESYSTEM_DISK: "${FILESYSTEM_DISK:-local}"
+
+      # Integrasi pihak ketiga (opsional/bisa dioverride di Dokploy)
+      MIDTRANS_SERVER_KEY: "${MIDTRANS_SERVER_KEY:-}"
+      MIDTRANS_CLIENT_KEY: "${MIDTRANS_CLIENT_KEY:-}"
+      MIDTRANS_IS_PRODUCTION: "${MIDTRANS_IS_PRODUCTION:-false}"
+      CLOUDINARY_CLOUD_NAME: "${CLOUDINARY_CLOUD_NAME:-}"
+      CLOUDINARY_API_KEY: "${CLOUDINARY_API_KEY:-}"
+      CLOUDINARY_API_SECRET: "${CLOUDINARY_API_SECRET:-}"
+      CLOUDINARY_UPLOAD_FOLDER: "${CLOUDINARY_UPLOAD_FOLDER:-qurban-pyramid}"
     depends_on:
       pgpiramid:
         condition: service_healthy
@@ -26,11 +41,11 @@ services:
     image: postgres:18
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${DB_DATABASE:-qurban_pyramid}
-      POSTGRES_USER: ${DB_USERNAME:-qurban_app}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-qurban_dev_secret}
+      POSTGRES_DB: "${DB_DATABASE:-qurban_pyramid}"
+      POSTGRES_USER: "${DB_USERNAME:-qurban_app}"
+      POSTGRES_PASSWORD: "${DB_PASSWORD:-qurban_dev_secret}"
     ports:
-      - "${DB_PORT:-5434}:5432"
+      - "${DB_PORT:-5434}:5434"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
