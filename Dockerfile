@@ -44,4 +44,9 @@ RUN mkdir -p storage/app/public storage/logs \
     && php artisan storage:link \
     && chown -R www-data:www-data storage bootstrap/cache
 
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 80
+
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
