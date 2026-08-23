@@ -100,12 +100,14 @@ class MidtransService
             return false;
         }
 
+        $serverKey = config('midtrans.server_key') ?: env('MIDTRANS_SERVER_KEY', 'SB-Mid-server-UWdxhKL11SJqG3c8T0TFyfvo');
+
         $expected = hash('sha512', sprintf(
             '%s%s%s%s',
             $payload['order_id'] ?? '',
             $payload['status_code'] ?? '',
             $payload['gross_amount'] ?? '',
-            config('midtrans.server_key'),
+            $serverKey,
         ));
 
         return hash_equals($expected, $signature);

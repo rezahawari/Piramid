@@ -25,9 +25,10 @@ services:
       QUEUE_CONNECTION: "${QUEUE_CONNECTION:-database}"
       FILESYSTEM_DISK: "${FILESYSTEM_DISK:-local}"
 
-      # Integrasi pihak ketiga (opsional/bisa dioverride di Dokploy)
-      MIDTRANS_SERVER_KEY: "${MIDTRANS_SERVER_KEY:-}"
-      MIDTRANS_CLIENT_KEY: "${MIDTRANS_CLIENT_KEY:-}"
+      # Integrasi pihak ketiga (Midtrans Gateway)
+      MIDTRANS_MERCHANT_ID: "${MIDTRANS_MERCHANT_ID:-G778086072}"
+      MIDTRANS_SERVER_KEY: "${MIDTRANS_SERVER_KEY:-SB-Mid-server-UWdxhKL11SJqG3c8T0TFyfvo}"
+      MIDTRANS_CLIENT_KEY: "${MIDTRANS_CLIENT_KEY:-SB-Mid-client-yq36YrCJTtq0Cb2A}"
       MIDTRANS_IS_PRODUCTION: "${MIDTRANS_IS_PRODUCTION:-false}"
       CLOUDINARY_CLOUD_NAME: "${CLOUDINARY_CLOUD_NAME:-}"
       CLOUDINARY_API_KEY: "${CLOUDINARY_API_KEY:-}"

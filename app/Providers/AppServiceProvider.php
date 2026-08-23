@@ -26,6 +26,13 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') === 'production' || str_starts_with((string) config('app.url'), 'https://')) {
             URL::forceScheme('https');
         }
+
+        // Global Midtrans Config Initialization
+        \Midtrans\Config::$serverKey = (string) (config('midtrans.server_key') ?: env('MIDTRANS_SERVER_KEY', 'SB-Mid-server-UWdxhKL11SJqG3c8T0TFyfvo'));
+        \Midtrans\Config::$clientKey = (string) (config('midtrans.client_key') ?: env('MIDTRANS_CLIENT_KEY', 'SB-Mid-client-yq36YrCJTtq0Cb2A'));
+        \Midtrans\Config::$isProduction = (bool) config('midtrans.is_production', false);
+        \Midtrans\Config::$isSanitized = (bool) config('midtrans.is_sanitized', true);
+        \Midtrans\Config::$is3ds = (bool) config('midtrans.is_3ds', true);
     }
 }
 
