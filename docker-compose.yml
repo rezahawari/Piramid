@@ -7,7 +7,7 @@ services:
     environment:
       APP_NAME: "${APP_NAME:-Piramid}"
       APP_ENV: "${APP_ENV:-production}"
-      APP_DEBUG: "${APP_DEBUG:-false}"
+      APP_DEBUG: "${APP_DEBUG:-true}"
       APP_KEY: "${APP_KEY:-base64:j6g+0eK8Y6T6o7rQ4yvVf8Uv9Hq1c+O6ZpB5wzQy8l4=}"
       APP_URL: "${APP_URL:-http://localhost:4001}"
       LOG_CHANNEL: "${LOG_CHANNEL:-stack}"
