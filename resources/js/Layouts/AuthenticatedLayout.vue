@@ -22,7 +22,7 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="flex shrink-0 items-center">
-                                <Link :href="route('dashboard')">
+                                <Link href="/layanan">
                                     <BrandLogo variant="full" />
                                 </Link>
                             </div>
@@ -32,22 +32,16 @@ const showingNavigationDropdown = ref(false);
                                 class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
                             >
                                 <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
+                                    href="/layanan"
+                                    :active="route().current('catalog.*') || $page.url === '/layanan'"
                                 >
-                                    Dashboard
-                                </NavLink>
-                                <NavLink
-                                    href="/layanan/qurban"
-                                    :active="route().current('catalog.*')"
-                                >
-                                    Pemesanan
+                                    Pemesanan Layanan
                                 </NavLink>
                                 <NavLink
                                     :href="route('transactions.index')"
                                     :active="route().current('transactions.*')"
                                 >
-                                    Transaksi
+                                    Riwayat Transaksi
                                 </NavLink>
                             </div>
                         </div>
@@ -151,22 +145,16 @@ const showingNavigationDropdown = ref(false);
                 >
                     <div class="space-y-1 pb-3 pt-2">
                         <ResponsiveNavLink
-                            :href="route('dashboard')"
-                            :active="route().current('dashboard')"
+                            href="/layanan"
+                            :active="route().current('catalog.*') || $page.url === '/layanan'"
                         >
-                            Dashboard
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href="/layanan/qurban"
-                            :active="route().current('catalog.*')"
-                        >
-                            Pemesanan
+                            Pemesanan Layanan
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             :href="route('transactions.index')"
                             :active="route().current('transactions.*')"
                         >
-                            Transaksi
+                            Riwayat Transaksi
                         </ResponsiveNavLink>
                     </div>
 

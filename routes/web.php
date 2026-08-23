@@ -9,7 +9,7 @@ Route::get('/dashboard', function () {
         return redirect('/admin');
     }
 
-    return Inertia::render('Dashboard');
+    return redirect('/layanan');
 })->middleware('auth')->name('dashboard');
 
 Route::middleware('auth')->group(function () {
