@@ -132,20 +132,19 @@ const cards = computed(() => [
 ]);
 
 const statusLabels = {
-    pending: { label: 'Pending', color: 'bg-gray-100 text-gray-800' },
-    penyembelihan: { label: 'Penyembelihan', color: 'bg-amber-100 text-amber-800' },
-    pencacahan: { label: 'Pencacahan', color: 'bg-indigo-100 text-indigo-800' },
-    pengemasan: { label: 'Pengemasan', color: 'bg-purple-100 text-purple-800' },
-    pendistribusian: { label: 'Pendistribusian', color: 'bg-blue-100 text-blue-800' },
-    selesai: { label: 'Selesai', color: 'bg-emerald-100 text-emerald-800' },
-    dibatalkan: { label: 'Dibatalkan', color: 'bg-rose-100 text-rose-800' },
+    menunggu: { label: 'Menunggu', color: 'bg-gray-100 text-gray-800' },
+    dibayar: { label: 'Dibayar', color: 'bg-blue-100 text-blue-800' },
+    hewan_disiapkan: { label: 'Hewan Disiapkan', color: 'bg-amber-100 text-amber-800' },
+    tersembelih: { label: 'Tersembelih', color: 'bg-purple-100 text-purple-800' },
+    didistribusikan: { label: 'Didistribusikan', color: 'bg-emerald-100 text-emerald-800' },
 };
 
 const paymentStatusLabels = {
-    pending: { label: 'Menunggu Pembayaran', color: 'text-amber-600' },
-    paid: { label: 'Lunas / Berhasil', color: 'text-emerald-600' },
-    failed: { label: 'Gagal', color: 'text-rose-600' },
-    expired: { label: 'Kadaluarsa', color: 'text-gray-500' },
+    pending: { label: 'Menunggu Bayar', color: 'text-amber-600' },
+    paid: { label: 'Lunas', color: 'text-emerald-600' },
+    rejected: { label: 'Ditolak', color: 'text-rose-600' },
+    expired: { label: 'Kedaluwarsa', color: 'text-gray-500' },
+    cancelled: { label: 'Dibatalkan', color: 'text-gray-400' },
 };
 </script>
 
