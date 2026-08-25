@@ -65,14 +65,14 @@
   ],
   "screenshots": [
     {
-      "src": "/images/hero-slider/g1.jpeg",
+      "src": "/images/screenshot-wide.jpg",
       "sizes": "1280x720",
       "type": "image/jpeg",
       "form_factor": "wide",
       "label": "Tampilan Beranda Piramid Qurban & Aqiqah"
     },
     {
-      "src": "/images/hero-slider/8.jpg",
+      "src": "/images/screenshot-narrow.jpg",
       "sizes": "750x1334",
       "type": "image/jpeg",
       "form_factor": "narrow",
