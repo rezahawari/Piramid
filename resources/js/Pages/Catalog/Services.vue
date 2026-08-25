@@ -281,6 +281,8 @@ const serviceIcons = {
             </div>
         </div>
 
-        <PublicFooter />
+        <div class="hidden md:block">
+            <PublicFooter />
+        </div>
     </div>
 </template>
