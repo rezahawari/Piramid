@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.piramidqurban.app.twa",
+        "sha256_cert_fingerprints": ["7F:93:C4:30:6A:90:17:B0:D6:DB:49:5B:2F:55:9F:04:8F:35:70:79:22:7C:21:7F:E8:65:59:8C:B9:10:66:ED"]
+      }
+    }]
