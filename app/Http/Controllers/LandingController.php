@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\DocumentationGallery;
 use App\Models\Product;
 use App\Models\Service;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -13,7 +14,7 @@ class LandingController extends Controller
     /**
      * Display the landing page with the active services, featured products, and documentation gallery.
      */
-    public function index(): \Symfony\Component\HttpFoundation\Response
+    public function index(): Response|RedirectResponse
     {
         // Jika user sudah login, redirect langsung sesuai role (Admin -> /admin, User -> /layanan)
         if (auth()->check()) {
