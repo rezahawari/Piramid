@@ -32,8 +32,8 @@ const animals = [
     {
         id: 'unta',
         name: 'Unta',
-        icon: '/assets/images/animals/domba_opt.png',
-        thumb: '/assets/images/animals/domba_thumb.png',
+        icon: '/assets/images/animals/unta_opt.png',
+        thumb: '/assets/images/animals/unta_thumb.png',
         keywords: ['unta'],
     },
 ];
@@ -116,7 +116,7 @@ onBeforeUnmount(stop);
                     width="800"
                     height="800"
                     decoding="async"
-                    @error="$event.target.src = animal.id === 'sapi' ? '/assets/images/animals/sapi.png' : (animal.id === 'kambing' ? '/assets/images/animals/kambing.png' : '/assets/images/animals/domba.png')"
+                    @error="$event.target.src = animal.id === 'sapi' ? '/assets/images/animals/sapi.png' : (animal.id === 'kambing' ? '/assets/images/animals/kambing.png' : (animal.id === 'unta' ? '/assets/images/animals/unta2.jpg' : '/assets/images/animals/domba2.jpg'))"
                     class="absolute inset-0 h-full w-full object-cover object-top will-change-transform transition-all duration-500 transform-gpu"
                     :class="
                         i === active
@@ -152,7 +152,7 @@ onBeforeUnmount(stop);
                         width="80"
                         height="80"
                         decoding="async"
-                        @error="$event.target.src = animal.id === 'sapi' ? '/assets/images/animals/sapi.png' : (animal.id === 'kambing' ? '/assets/images/animals/kambing.png' : '/assets/images/animals/domba.png')"
+                        @error="$event.target.src = animal.id === 'sapi' ? '/assets/images/animals/sapi.png' : (animal.id === 'kambing' ? '/assets/images/animals/kambing.png' : (animal.id === 'unta' ? '/assets/images/animals/unta2.jpg' : '/assets/images/animals/domba2.jpg'))"
                         class="h-20 w-20 object-contain"
                     />
                 </span>
