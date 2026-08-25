@@ -9,3 +9,16 @@
     font-style: normal;
     font-display: swap;
 }
+
+@layer utilities {
+    /* Spacer khusus mobile agar snackbar floating tidak menutupi tombol / konten terbawah */
+    .pb-mobile-nav {
+        padding-bottom: 6.5rem !important; /* 104px */
+    }
+}
+
+@media (max-width: 767px) {
+    body {
+        padding-bottom: 2rem;
+    }
+}

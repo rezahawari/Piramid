@@ -13,7 +13,7 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
-        <div class="min-h-screen bg-gray-100 pb-20 md:pb-0">
+        <div class="min-h-screen bg-gray-100 pb-28 md:pb-0">
             <!-- Desktop Top Navbar (Disembunyikan di Mobile) -->
             <nav class="border-b border-gray-100 bg-white hidden md:block">
                 <!-- Primary Navigation Menu -->

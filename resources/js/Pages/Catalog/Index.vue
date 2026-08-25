@@ -107,7 +107,7 @@ const filteredProducts = computed(() => {
 <template>
     <Head :title="`Layanan ${service.name} - Piramid`" />
 
-    <div class="min-h-screen bg-brand-50/40 font-sans text-gray-900">
+    <div class="min-h-screen bg-brand-50/40 font-sans text-gray-900 pb-28 md:pb-0">
         <PublicNavbar />
 
         <!-- HERO SECTION: Detail Layanan -->

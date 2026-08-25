@@ -40,7 +40,7 @@ const serviceIcons = {
 <template>
     <Head title="Pilihan Layanan Pemesanan" />
 
-    <div class="min-h-screen bg-brand-50 font-sans">
+    <div class="min-h-screen bg-brand-50 font-sans pb-28 md:pb-0">
         <PublicNavbar />
 
         <!-- Header Section -->
