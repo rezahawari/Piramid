@@ -116,6 +116,7 @@ onBeforeUnmount(stop);
                     width="800"
                     height="800"
                     decoding="async"
+                    @error="$event.target.src = animal.id === 'sapi' ? '/assets/images/animals/sapi.png' : (animal.id === 'kambing' ? '/assets/images/animals/kambing.png' : '/assets/images/animals/domba.png')"
                     class="absolute inset-0 h-full w-full object-cover object-top will-change-transform transition-all duration-500 transform-gpu"
                     :class="
                         i === active
@@ -151,6 +152,7 @@ onBeforeUnmount(stop);
                         width="80"
                         height="80"
                         decoding="async"
+                        @error="$event.target.src = animal.id === 'sapi' ? '/assets/images/animals/sapi.png' : (animal.id === 'kambing' ? '/assets/images/animals/kambing.png' : '/assets/images/animals/domba.png')"
                         class="h-20 w-20 object-contain"
                     />
                 </span>

@@ -1,9 +1,8 @@
-const CACHE_NAME = 'piramid-pwa-v1';
+const CACHE_NAME = 'piramid-pwa-v2';
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
   '/logo.ico',
-  '/images/logo.png',
 ];
 
 // Install Event
@@ -11,7 +10,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(STATIC_ASSETS).catch((err) => {
-        console.warn('PWA: Gagal meng-cache beberapa aset statis saat instalasi', err);
+        console.warn('PWA: Cache install notice', err);
       });
     })
   );
@@ -34,9 +33,8 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch Event (Network First with Cache Fallback for navigation, Cache First for static images)
+// Fetch Event (Network First untuk aset dan halaman)
 self.addEventListener('fetch', (event) => {
-  // Hanya proses request GET
   if (event.request.method !== 'GET') return;
 
   const url = new URL(event.request.url);
@@ -51,27 +49,20 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Untuk request HTML / Halaman: Network First
-  if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
-    event.respondWith(
-      fetch(event.request).catch(() => {
-        return caches.match(event.request).then((res) => res || caches.match('/'));
-      })
-    );
-    return;
-  }
-
-  // Untuk file statis / gambar: Cache First -> Network Fallback
+  // Network First strategy
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
+    fetch(event.request)
+      .then((networkResponse) => {
         if (
           networkResponse &&
           networkResponse.status === 200 &&
-          (url.pathname.startsWith('/images') || url.pathname.endsWith('.png') || url.pathname.endsWith('.jpg') || url.pathname.endsWith('.ico'))
+          (url.pathname.startsWith('/images') ||
+            url.pathname.startsWith('/assets') ||
+            url.pathname.endsWith('.png') ||
+            url.pathname.endsWith('.jpg') ||
+            url.pathname.endsWith('.jpeg') ||
+            url.pathname.endsWith('.ico') ||
+            url.pathname.endsWith('.svg'))
         ) {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -79,7 +70,11 @@ self.addEventListener('fetch', (event) => {
           });
         }
         return networkResponse;
-      });
-    })
+      })
+      .catch(() => {
+        return caches.match(event.request).then((cachedResponse) => {
+          return cachedResponse || (event.request.mode === 'navigate' ? caches.match('/') : null);
+        });
+      })
   );
 });
