@@ -3,8 +3,8 @@ import AnimalPicker from '@/Components/AnimalPicker.vue';
 import HeroSlider from '@/Components/HeroSlider.vue';
 import PublicFooter from '@/Components/PublicFooter.vue';
 import PublicNavbar from '@/Components/PublicNavbar.vue';
-import { Head, Link } from '@inertiajs/vue3';
-import { computed, ref } from 'vue';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { computed, onMounted, ref } from 'vue';
 
 const props = defineProps({
     services: Array,
@@ -13,6 +13,14 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+});
+
+onMounted(() => {
+    // Deteksi jika dibuka dari PWA Android standalone / APK TWA
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    if (isStandalone) {
+        router.visit('/login');
+    }
 });
 
 const selectedCategory = ref('all');
