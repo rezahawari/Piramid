@@ -1,8 +1,11 @@
-const CACHE_NAME = 'piramid-pwa-v2';
+const CACHE_NAME = 'piramid-pwa-v3';
 const STATIC_ASSETS = [
   '/',
+  '/offline.html',
   '/manifest.json',
   '/logo.ico',
+  '/images/icon-192x192.png',
+  '/images/icon-512x512.png',
 ];
 
 // Install Event
@@ -33,7 +36,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch Event (Network First untuk aset dan halaman)
+// Fetch Event (Network First dengan fallback offline.html untuk halaman)
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
 
@@ -73,7 +76,13 @@ self.addEventListener('fetch', (event) => {
       })
       .catch(() => {
         return caches.match(event.request).then((cachedResponse) => {
-          return cachedResponse || (event.request.mode === 'navigate' ? caches.match('/') : null);
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          if (event.request.mode === 'navigate' || event.request.headers.get('accept')?.includes('text/html')) {
+            return caches.match('/offline.html');
+          }
+          return null;
         });
       })
   );
