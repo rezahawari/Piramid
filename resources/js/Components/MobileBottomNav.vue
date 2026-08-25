@@ -20,17 +20,17 @@ const isActive = (path) => {
         <nav
             class="pointer-events-auto flex items-center justify-around gap-1 w-full max-w-sm rounded-3xl p-1.5 backdrop-blur-2xl bg-slate-950/80 border border-white/20 shadow-[0_12px_40px_rgba(0,0,0,0.45)] ring-1 ring-white/10 text-white transition-all duration-300 transform-gpu"
         >
-            <!-- 1. Beranda (Hanya jika belum login atau jika mode web) -->
-            <Link
-                href="/"
-                class="flex flex-col items-center justify-center flex-1 py-2 px-1 rounded-2xl transition-all duration-200"
-                :class="isActive('/') ? 'bg-white/15 text-amber-300 font-bold shadow-inner' : 'text-zinc-400 hover:text-white'"
-            >
-                <svg class="h-5 w-5 transition-transform" :class="isActive('/') ? 'scale-110 text-amber-300' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                </svg>
-                <span class="text-[10px] mt-0.5 tracking-tight">Beranda</span>
-            </Link>
+            <!-- 1. Logo Piramid Statis (Non-Clickable) -->
+            <div class="flex items-center justify-center py-1.5 px-3 select-none">
+                <div class="flex items-center gap-1.5 bg-white/10 rounded-2xl px-2.5 py-1.5 border border-white/15 shadow-inner">
+                    <img
+                        src="/images/logo.png"
+                        alt="Logo Piramid"
+                        class="h-6 w-auto object-contain"
+                    />
+                    <span class="font-script text-lg text-amber-300 leading-none">Piramid</span>
+                </div>
+            </div>
 
             <!-- 2. Layanan / Pemesanan -->
             <Link
