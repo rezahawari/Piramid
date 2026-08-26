@@ -60,20 +60,10 @@ const isFailed = computed(() =>
     ['rejected', 'expired', 'cancelled'].includes(props.transaction.payment_status),
 );
 
-// Toast Copy Rekening
-const copiedAccount = ref('');
-const showToast = ref(false);
-let toastTimer = null;
-
+// Copy Rekening menggunakan Global Toast
 const copyAccountNumber = async (acc) => {
     try {
         await navigator.clipboard.writeText(acc.account_number);
-        copiedAccount.value = `${acc.bank} (${acc.account_number})`;
-        showToast.value = true;
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-            showToast.value = false;
-        }, 2500);
     } catch (err) {
         // Fallback jika clipboard API tidak diizinkan
         const el = document.createElement('textarea');
@@ -82,13 +72,10 @@ const copyAccountNumber = async (acc) => {
         el.select();
         document.execCommand('copy');
         document.body.removeChild(el);
+    }
 
-        copiedAccount.value = `${acc.bank} (${acc.account_number})`;
-        showToast.value = true;
-        if (toastTimer) clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => {
-            showToast.value = false;
-        }, 2500);
+    if (window.piramidToast) {
+        window.piramidToast.success('Nomor Rekening Disalin!', `${acc.bank} • ${acc.account_number}`);
     }
 };
 
@@ -184,33 +171,6 @@ const failLabel = {
         </template>
 
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <!-- Toast Notification Copy Rekening -->
-            <transition
-                enter-active-class="transition ease-out duration-300 transform"
-                enter-from-class="opacity-0 -translate-y-4 scale-95"
-                enter-to-class="opacity-100 translate-y-0 scale-100"
-                leave-active-class="transition ease-in duration-200 transform"
-                leave-from-class="opacity-100 translate-y-0 scale-100"
-                leave-to-class="opacity-0 -translate-y-4 scale-95"
-            >
-                <div
-                    v-if="showToast"
-                    class="fixed top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none"
-                >
-                    <div class="pointer-events-auto flex items-center gap-2.5 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-emerald-500/40 px-4 py-3 text-xs font-bold text-white shadow-2xl ring-1 ring-white/10">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white shrink-0">
-                            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
-                            </svg>
-                        </div>
-                        <div>
-                            <span>Nomor Rekening berhasil disalin!</span>
-                            <p class="text-[10px] font-normal text-zinc-400 font-mono">{{ copiedAccount }}</p>
-                        </div>
-                    </div>
-                </div>
-            </transition>
-
             <!-- Flash Notice -->
             <div
                 v-if="flash?.success"

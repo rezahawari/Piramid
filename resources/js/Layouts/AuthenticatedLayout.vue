@@ -7,6 +7,7 @@ import MobileBottomNav from '@/Components/MobileBottomNav.vue';
 import NavLink from '@/Components/NavLink.vue';
 import PushNotificationPrompt from '@/Components/PushNotificationPrompt.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import ToastNotification from '@/Components/ToastNotification.vue';
 import { Link } from '@inertiajs/vue3';
 
 const showingNavigationDropdown = ref(false);
@@ -14,6 +15,7 @@ const showingNavigationDropdown = ref(false);
 
 <template>
     <div>
+        <ToastNotification />
         <PushNotificationPrompt />
         <div class="min-h-screen bg-gray-100 pb-28 md:pb-0">
             <!-- Desktop Top Navbar (Disembunyikan di Mobile) -->

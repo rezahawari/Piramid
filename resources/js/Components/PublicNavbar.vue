@@ -2,6 +2,7 @@
 import BrandLogo from '@/Components/BrandLogo.vue';
 import MobileBottomNav from '@/Components/MobileBottomNav.vue';
 import PushNotificationPrompt from '@/Components/PushNotificationPrompt.vue';
+import ToastNotification from '@/Components/ToastNotification.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -13,7 +14,8 @@ const isActive = (href) =>
 </script>
 
 <template>
-    <!-- Push Notification Modal Prompt for PWA Mobile -->
+    <!-- Global Liquid Glass Toast Notification & Push Prompt -->
+    <ToastNotification />
     <PushNotificationPrompt />
 
     <!-- Desktop Header Navbar (Disembunyikan di Mobile) -->

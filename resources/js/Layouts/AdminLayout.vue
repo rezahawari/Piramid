@@ -1,5 +1,6 @@
 <script setup>
 import BrandLogo from '@/Components/BrandLogo.vue';
+import ToastNotification from '@/Components/ToastNotification.vue';
 import { Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
@@ -17,6 +18,7 @@ const navItems = [
 
 <template>
     <div class="min-h-screen bg-gray-100">
+        <ToastNotification />
         <nav class="border-b border-gray-100 bg-white">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
