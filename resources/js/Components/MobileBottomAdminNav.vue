@@ -42,19 +42,19 @@ const secondaryNav = [
 
 <template>
     <!-- Floating Liquid Glass Mobile Snackbar for Admin -->
-    <div class="fixed bottom-4 inset-x-0 z-50 flex justify-center px-3 pointer-events-none md:hidden">
+    <div class="fixed bottom-3 inset-x-0 z-50 flex justify-center px-3 pointer-events-none md:hidden">
         <nav
-            class="pointer-events-auto flex items-center justify-around gap-1 w-full max-w-md rounded-3xl p-1.5 backdrop-blur-2xl bg-slate-950/85 border border-white/20 shadow-[0_12px_40px_rgba(0,0,0,0.5)] ring-1 ring-white/10 text-white relative transition-all duration-300 transform-gpu"
+            class="pointer-events-auto flex items-center justify-around gap-0.5 w-full max-w-sm rounded-2xl p-1 backdrop-blur-2xl bg-slate-950/85 border border-white/20 shadow-[0_10px_35px_rgba(0,0,0,0.5)] ring-1 ring-white/10 text-white relative transition-all duration-300 transform-gpu"
         >
             <!-- 1. Logo Statis Brand -->
-            <div class="flex items-center justify-center py-1.5 px-2 select-none shrink-0">
-                <div class="flex items-center gap-1.5 bg-amber-400/20 rounded-2xl px-2 py-1.5 border border-amber-300/30 shadow-inner">
+            <div class="flex items-center justify-center py-1 px-1.5 select-none shrink-0">
+                <div class="flex items-center gap-1 bg-amber-400/15 rounded-xl px-1.5 py-1 border border-amber-300/25">
                     <img
                         src="/images/logo.png"
-                        alt="Piramid Logo"
-                        class="h-5 w-auto object-contain"
+                        alt="Logo"
+                        class="h-4 w-auto object-contain"
                     />
-                    <span class="font-bold text-[10px] text-amber-300 uppercase tracking-wider">Admin</span>
+                    <span class="font-bold text-[9px] text-amber-300 uppercase tracking-tight">Adm</span>
                 </div>
             </div>
 
@@ -63,43 +63,43 @@ const secondaryNav = [
                 v-for="item in navItems"
                 :key="item.href"
                 :href="item.href"
-                class="flex flex-col items-center justify-center flex-1 py-2 px-1 rounded-2xl transition-all duration-200"
-                :class="isActive(item.href) ? 'bg-brand-500/90 text-white font-bold shadow-lg shadow-brand-500/30' : 'text-zinc-400 hover:text-white'"
+                class="flex flex-col items-center justify-center flex-1 py-1.5 px-0.5 rounded-xl transition-all duration-200"
+                :class="isActive(item.href) ? 'bg-brand-500/90 text-white font-bold shadow-md shadow-brand-500/30' : 'text-zinc-400 hover:text-white'"
             >
                 <!-- Dashboard Icon -->
-                <svg v-if="item.icon === 'dashboard'" class="h-4.5 w-4.5" :class="isActive(item.href) ? 'scale-110' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg v-if="item.icon === 'dashboard'" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                 </svg>
 
                 <!-- Transactions Icon -->
-                <svg v-else-if="item.icon === 'transactions'" class="h-4.5 w-4.5" :class="isActive(item.href) ? 'scale-110' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg v-else-if="item.icon === 'transactions'" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
                 </svg>
 
                 <!-- Products Icon -->
-                <svg v-else-if="item.icon === 'products'" class="h-4.5 w-4.5" :class="isActive(item.href) ? 'scale-110' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg v-else-if="item.icon === 'products'" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
 
                 <!-- Services Icon -->
-                <svg v-else class="h-4.5 w-4.5" :class="isActive(item.href) ? 'scale-110' : ''" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg v-else class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
 
-                <span class="text-[9px] mt-0.5 tracking-tight font-medium">{{ item.label }}</span>
+                <span class="text-[8.5px] mt-0.5 tracking-tight font-medium">{{ item.label }}</span>
             </Link>
 
             <!-- 3. More Menu Trigger -->
             <button
                 type="button"
                 @click="showMoreMenu = !showMoreMenu"
-                class="flex flex-col items-center justify-center py-2 px-2 rounded-2xl transition-all duration-200"
+                class="flex flex-col items-center justify-center py-1.5 px-1.5 rounded-xl transition-all duration-200"
                 :class="showMoreMenu || isActive('/admin/galeri') || isActive('/admin/users') ? 'bg-white/15 text-amber-300 font-bold' : 'text-zinc-400 hover:text-white'"
             >
-                <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
-                <span class="text-[9px] mt-0.5 tracking-tight font-medium">Menu</span>
+                <span class="text-[8.5px] mt-0.5 tracking-tight font-medium">Menu</span>
             </button>
         </nav>
     </div>
