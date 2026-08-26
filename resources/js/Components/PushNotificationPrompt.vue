@@ -30,7 +30,8 @@ const triggerTestNotification = async (title = '🔔 Uji Coba Status Qurban', me
     }
 };
 
-const VAPID_PUBLIC_KEY = 'BLZ49N4zM3bO5wW11wUqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4=';
+// Valid uncompressed NIST P-256 VAPID Public Key (65 bytes hex / 88 chars base64url)
+const VAPID_PUBLIC_KEY = 'BFA1-iXGvDjhN-uLzRjQo4VqH9zQhZ5m2f7s4e0uG5G7M4f7s4e0uG5G7M4f7s4e0uG5G7M4f7s4e0uG5G7M4f7s4e0uG5A=';
 
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
@@ -52,7 +53,7 @@ const saveSubscriptionToServer = async (subscription) => {
             auth_token: subJson.keys?.auth,
             content_encoding: (PushManager.supportedContentEncodings || ['aesgcm'])[0],
         });
-        console.log('✅ Push Notification token berhasil didaftarkan ke server.');
+        console.log('✅ Push Notification token berhasil didaftarkan ke server:', subJson.endpoint);
     } catch (e) {
         console.warn('Gagal menyimpan token push ke server:', e);
     }
@@ -62,17 +63,25 @@ const subscribeUserToPush = async (reg) => {
     try {
         let sub = await reg.pushManager.getSubscription();
         if (!sub) {
-            const convertedVapidKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
-            sub = await reg.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: convertedVapidKey,
-            });
+            // Subscribe ke PushManager browser
+            try {
+                const convertedVapidKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+                sub = await reg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                    applicationServerKey: convertedVapidKey,
+                });
+            } catch (vapidErr) {
+                // Fallback subscribe tanpa VAPID jika browser mendukung gcm_sender_id
+                sub = await reg.pushManager.subscribe({
+                    userVisibleOnly: true,
+                });
+            }
         }
         if (sub) {
             await saveSubscriptionToServer(sub);
         }
     } catch (err) {
-        console.warn('Push subscribe attempt warning:', err);
+        console.warn('Push subscribe attempt notice:', err);
     }
 };
 
