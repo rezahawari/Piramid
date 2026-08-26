@@ -6,13 +6,18 @@ return [
     'bank_accounts' => [
         [
             'bank' => 'BCA',
-            'account_number' => '1234567890',
-            'account_name' => 'PT Pyramid Amanah Indonesia',
+            'account_number' => '8035676763',
+            'account_name' => 'Delapan Penjuru Piramida',
         ],
         [
-            'bank' => 'Bank Syariah Indonesia (BSI)',
-            'account_number' => '9876543210',
-            'account_name' => 'PT Pyramid Amanah Indonesia',
+            'bank' => 'Bank Mandiri',
+            'account_number' => '1350023452830',
+            'account_name' => 'Delapan Penjuru Piramida',
+        ],
+        [
+            'bank' => 'Bank Rakyat Indonesia (BRI)',
+            'account_number' => '100601000863560',
+            'account_name' => 'PT Delapan Penjuru Piramida',
         ],
     ],
 ];
