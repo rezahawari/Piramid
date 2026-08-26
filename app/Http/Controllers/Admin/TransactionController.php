@@ -137,6 +137,33 @@ class TransactionController extends Controller
         return back()->with('success', "Pembayaran {$transaction->transaction_code} ditolak.");
     }
 
+    public function updateDistributionNote(Request $request, Transaction $transaction): RedirectResponse
+    {
+        $validated = $request->validate([
+            'distribution_location_note' => ['nullable', 'string', 'max:500'],
+        ]);
+
+        $transaction->update([
+            'distribution_location_note' => $validated['distribution_location_note'],
+        ]);
+
+        // Kirim Push Notif jika admin mengupdate info lokasi penyaluran
+        if ($transaction->user && !empty($validated['distribution_location_note'])) {
+            try {
+                app(\App\Services\Notification\WebPushService::class)->sendToUser(
+                    $transaction->user,
+                    '📍 Info Penyaluran Daging!',
+                    "Lokasi penyaluran pesanan #{$transaction->transaction_code}: {$validated['distribution_location_note']}",
+                    route('transactions.show', $transaction->transaction_code)
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Gagal push notif note: ' . $e->getMessage());
+            }
+        }
+
+        return back()->with('success', 'Keterangan lokasi penyaluran berhasil diperbarui.');
+    }
+
     public function destroy(Transaction $transaction): RedirectResponse
     {
         DB::transaction(function () use ($transaction): void {

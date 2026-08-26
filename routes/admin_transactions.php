@@ -17,4 +17,6 @@ Route::middleware(['auth', 'admin'])
             ->name('transactions.approve');
         Route::post('/transaksi/{transaction:transaction_code}/tolak', [TransactionController::class, 'reject'])
             ->name('transactions.reject');
+        Route::post('/transaksi/{transaction:transaction_code}/penyaluran', [TransactionController::class, 'updateDistributionNote'])
+            ->name('transactions.distribution-note');
     });

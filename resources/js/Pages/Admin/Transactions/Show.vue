@@ -95,6 +95,16 @@ const submitDelete = () => {
     });
 };
 
+// Update Keterangan Lokasi Penyaluran (Admin Manual Input)
+const distributionForm = useForm({
+    distribution_location_note: props.transaction.distribution_location_note || '',
+});
+const submitDistributionNote = () => {
+    distributionForm.post(`/admin/transaksi/${props.transaction.transaction_code}/penyaluran`, {
+        preserveScroll: true,
+    });
+};
+
 // Upload dokumentasi
 const docForm = useForm({
     stage: props.transaction.status,
@@ -476,15 +486,39 @@ const t = computed(() => props.transaction);
 
                         <!-- Rincian Alamat Penyaluran -->
                         <div class="mt-5 rounded-xl bg-gray-50 p-3.5 text-xs">
-                            <span class="font-bold uppercase tracking-wider text-gray-500 block mb-1">
-                                Penyaluran:
-                            </span>
-                            <div v-if="t.distribution_type === 'pt_yayasan'">
+                            <div class="flex items-center justify-between mb-1.5">
+                                <span class="font-bold uppercase tracking-wider text-gray-500 block">
+                                    Penyaluran:
+                                </span>
+                                <span v-if="t.distribution_type === 'pt_yayasan'" class="rounded bg-brand-100 px-2 py-0.5 text-[10px] font-bold text-brand-800">
+                                    Piramid
+                                </span>
+                            </div>
+                            
+                            <div v-if="t.distribution_type === 'pt_yayasan'" class="space-y-2">
                                 <p class="font-semibold text-gray-800">Disalurkan oleh Piramid</p>
-                                <p v-if="t.distribution_location_note" class="text-brand-700 font-medium mt-1 bg-brand-50/70 p-2 rounded-lg border border-brand-100">
-                                    📍 Catatan Lokasi: {{ t.distribution_location_note }}
-                                </p>
-                                <p v-else class="text-gray-500 mt-0.5">Daging disalurkan kepada kaum dhuafa pelosok.</p>
+                                
+                                <!-- Form Input Manual Lokasi Penyaluran oleh Admin -->
+                                <form @submit.prevent="submitDistributionNote" class="mt-2 pt-2 border-t border-gray-200/60 space-y-2">
+                                    <label class="block text-[11px] font-bold text-gray-700">
+                                        📍 Lokasi / Keterangan Penyaluran Daging (Input Admin):
+                                    </label>
+                                    <textarea
+                                        v-model="distributionForm.distribution_location_note"
+                                        rows="2"
+                                        class="block w-full rounded-xl border-gray-300 text-xs shadow-xs focus:border-brand-500 focus:ring-brand-500"
+                                        placeholder="Ketik lokasi penyaluran transparan (misal: Ponpes Tahfidz Al-Ihsan Garut, 50 Paket Daging Dhuafa Desa Sukamaju, dll.)"
+                                    ></textarea>
+                                    <div class="flex justify-end">
+                                        <button
+                                            type="submit"
+                                            :disabled="distributionForm.processing"
+                                            class="inline-flex items-center gap-1 rounded-lg bg-brand-600 px-3 py-1.5 text-[11px] font-bold text-white shadow-xs hover:bg-brand-700 disabled:opacity-50"
+                                        >
+                                            {{ distributionForm.processing ? 'Menyimpan...' : 'Simpan Keterangan Lokasi' }}
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                             <div v-else class="text-gray-700 space-y-0.5">
                                 <p class="font-bold">{{ t.recipient_name }} ({{ t.recipient_phone }})</p>

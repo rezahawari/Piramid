@@ -266,24 +266,6 @@ const submit = () => form.post(route('checkout.store'));
                             </div>
                             <InputError class="mt-2" :message="form.errors.distribution_type" />
 
-                            <!-- Input Keterangan Penyaluran Custom (Jika Disalurkan oleh Piramid) -->
-                            <div v-if="form.distribution_type === 'pt_yayasan'" class="mt-4 rounded-xl border border-brand-200 bg-brand-50/30 p-4">
-                                <label for="distribution_location_note" class="block text-xs font-bold text-gray-800">
-                                    Keterangan / Preferensi Lokasi Penyaluran (Ketik Manual)
-                                </label>
-                                <p class="text-[11px] text-gray-500 mt-0.5">
-                                    Tuliskan permintaan khusus lokasi penyaluran (misal: "Pondok Pesantren Tahfidz Garut", "Warga Dhuafa Sekitar Kandang", atau "Bebas sesuai kebutuhan mendesak").
-                                </p>
-                                <textarea
-                                    id="distribution_location_note"
-                                    v-model="form.distribution_location_note"
-                                    rows="2"
-                                    class="mt-2 block w-full rounded-xl border-gray-300 text-xs shadow-xs focus:border-brand-500 focus:ring-brand-500"
-                                    placeholder="Contoh: Salurkan ke Panti Asuhan Al-Barokah Bogor atau masyarakat pelosok yang membutuhkan."
-                                ></textarea>
-                                <InputError class="mt-1" :message="form.errors.distribution_location_note" />
-                            </div>
-
                             <!-- Form Alamat Pengiriman (Kondisional Mandiri) -->
                             <div v-if="isMandiri" class="mt-6 rounded-xl border border-brand-200 bg-white p-4 space-y-4">
                                 <h4 class="text-xs font-bold uppercase tracking-wider text-brand-800">
