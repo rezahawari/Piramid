@@ -1,6 +1,7 @@
 <script setup>
 import BrandLogo from '@/Components/BrandLogo.vue';
 import MobileBottomNav from '@/Components/MobileBottomNav.vue';
+import PushNotificationPrompt from '@/Components/PushNotificationPrompt.vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -12,6 +13,9 @@ const isActive = (href) =>
 </script>
 
 <template>
+    <!-- Push Notification Modal Prompt for PWA Mobile -->
+    <PushNotificationPrompt />
+
     <!-- Desktop Header Navbar (Disembunyikan di Mobile) -->
     <nav class="sticky top-0 z-40 border-b border-zinc-100 bg-white/95 backdrop-blur hidden md:block">
         <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -82,4 +86,5 @@ const isActive = (href) =>
     <!-- Mobile Floating Liquid Glass Snackbar / Nav -->
     <MobileBottomNav />
 </template>
+
 
