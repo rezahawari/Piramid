@@ -7,11 +7,37 @@ const isSubscribed = ref(false);
 const showPrompt = ref(false);
 const isProcessing = ref(false);
 
+const triggerTestNotification = async (title = '🔔 Uji Coba Status Qurban', message = 'Hewan qurban Anda telah selesai disembelih & video dokumentasi siap diunduh!') => {
+    if (!('serviceWorker' in navigator)) {
+        alert('Browser tidak mendukung Service Worker.');
+        return;
+    }
+
+    const reg = await navigator.serviceWorker.ready;
+    if (Notification.permission === 'granted') {
+        reg.showNotification(title, {
+            body: message,
+            icon: '/images/icon-192x192.png',
+            badge: '/images/icon-72x72.png',
+            vibrate: [100, 50, 100, 50, 150],
+            data: {
+                url: '/transaksi',
+                dateOfArrival: Date.now(),
+            },
+        });
+    } else {
+        requestPermission();
+    }
+};
+
 onMounted(() => {
     if ('Notification' in window && 'serviceWorker' in navigator) {
         isSupported.value = true;
         permission.value = Notification.permission;
         
+        // Expose ke window agar bisa di-test kapan saja lewat Console Browser: window.testPiramidNotif()
+        window.testPiramidNotif = triggerTestNotification;
+
         // Tampilkan prompt persetujuan jika user belum pernah memilih atau belum di-dismiss
         const dismissed = localStorage.getItem('piramid_notif_dismissed');
         if (permission.value === 'default' && !dismissed) {
@@ -33,15 +59,13 @@ const requestPermission = async () => {
         if (result === 'granted') {
             showPrompt.value = false;
             // Kirim notifikasi sambutan uji coba langsung di smartphone
-            if (navigator.serviceWorker.controller) {
-                const reg = await navigator.serviceWorker.ready;
-                reg.showNotification('🎉 Notifikasi Piramid Aktif!', {
-                    body: 'Anda akan menerima pembaruan status pesanan qurban & dokumentasi tepat waktu.',
-                    icon: '/images/icon-192x192.png',
-                    badge: '/images/icon-72x72.png',
-                    vibrate: [100, 50, 100],
-                });
-            }
+            const reg = await navigator.serviceWorker.ready;
+            reg.showNotification('🎉 Notifikasi Piramid Aktif!', {
+                body: 'Anda akan menerima pembaruan status pesanan qurban & dokumentasi tepat waktu.',
+                icon: '/images/icon-192x192.png',
+                badge: '/images/icon-72x72.png',
+                vibrate: [100, 50, 100],
+            });
         } else {
             showPrompt.value = false;
             localStorage.setItem('piramid_notif_dismissed', 'true');
