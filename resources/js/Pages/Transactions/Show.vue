@@ -60,6 +60,38 @@ const isFailed = computed(() =>
     ['rejected', 'expired', 'cancelled'].includes(props.transaction.payment_status),
 );
 
+// Toast Copy Rekening
+const copiedAccount = ref('');
+const showToast = ref(false);
+let toastTimer = null;
+
+const copyAccountNumber = async (acc) => {
+    try {
+        await navigator.clipboard.writeText(acc.account_number);
+        copiedAccount.value = `${acc.bank} (${acc.account_number})`;
+        showToast.value = true;
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            showToast.value = false;
+        }, 2500);
+    } catch (err) {
+        // Fallback jika clipboard API tidak diizinkan
+        const el = document.createElement('textarea');
+        el.value = acc.account_number;
+        document.body.appendChild(el);
+        el.select();
+        document.execCommand('copy');
+        document.body.removeChild(el);
+
+        copiedAccount.value = `${acc.bank} (${acc.account_number})`;
+        showToast.value = true;
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => {
+            showToast.value = false;
+        }, 2500);
+    }
+};
+
 // Bukti transfer manual
 const proofPreview = ref(null);
 const proofForm = useForm({ proof: null });
@@ -152,6 +184,33 @@ const failLabel = {
         </template>
 
         <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <!-- Toast Notification Copy Rekening -->
+            <transition
+                enter-active-class="transition ease-out duration-300 transform"
+                enter-from-class="opacity-0 -translate-y-4 scale-95"
+                enter-to-class="opacity-100 translate-y-0 scale-100"
+                leave-active-class="transition ease-in duration-200 transform"
+                leave-from-class="opacity-100 translate-y-0 scale-100"
+                leave-to-class="opacity-0 -translate-y-4 scale-95"
+            >
+                <div
+                    v-if="showToast"
+                    class="fixed top-6 inset-x-0 z-50 flex justify-center px-4 pointer-events-none"
+                >
+                    <div class="pointer-events-auto flex items-center gap-2.5 rounded-2xl bg-slate-900/95 backdrop-blur-xl border border-emerald-500/40 px-4 py-3 text-xs font-bold text-white shadow-2xl ring-1 ring-white/10">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-500 text-white shrink-0">
+                            <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span>Nomor Rekening berhasil disalin!</span>
+                            <p class="text-[10px] font-normal text-zinc-400 font-mono">{{ copiedAccount }}</p>
+                        </div>
+                    </div>
+                </div>
+            </transition>
+
             <!-- Flash Notice -->
             <div
                 v-if="flash?.success"
@@ -315,15 +374,29 @@ const failLabel = {
                             <div
                                 v-for="acc in bank_accounts"
                                 :key="acc.account_number"
-                                class="rounded-xl border border-gray-200 bg-gray-50 p-3.5 text-xs"
+                                @click="copyAccountNumber(acc)"
+                                class="group relative cursor-pointer rounded-xl border border-gray-200 bg-gray-50 p-3.5 text-xs transition duration-150 hover:border-brand-500 hover:bg-brand-50/40 hover:shadow-xs active:scale-[0.99]"
+                                title="Klik untuk menyalin nomor rekening"
                             >
                                 <div class="flex items-center justify-between font-bold text-gray-900">
-                                    <span>Bank {{ acc.bank }}</span>
-                                    <span class="font-mono text-brand-700 text-sm bg-white px-2 py-0.5 rounded border border-gray-200">
-                                        {{ acc.account_number }}
+                                    <div class="flex items-center gap-1.5">
+                                        <span>Bank {{ acc.bank }}</span>
+                                    </div>
+                                    <div class="flex items-center gap-1.5">
+                                        <span class="font-mono text-brand-700 text-sm bg-white px-2.5 py-1 rounded-lg border border-gray-200 group-hover:border-brand-300 group-hover:text-brand-800 transition flex items-center gap-1">
+                                            <span>{{ acc.account_number }}</span>
+                                            <svg class="h-3.5 w-3.5 text-gray-400 group-hover:text-brand-600 transition" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mt-1 flex items-center justify-between">
+                                    <p class="text-gray-500 text-[11px]">a.n. {{ acc.account_name }}</p>
+                                    <span class="text-[10px] font-semibold text-brand-600 opacity-0 group-hover:opacity-100 transition">
+                                        Klik untuk Salin 📋
                                     </span>
                                 </div>
-                                <p class="mt-1 text-gray-500 text-[11px]">a.n. {{ acc.account_name }}</p>
                             </div>
                         </div>
 
