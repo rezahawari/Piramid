@@ -78,6 +78,20 @@ class TransactionController extends Controller
 
         $transaction->save();
 
+        // Kirim Push Notification otomatis ke HP user
+        if ($transaction->user) {
+            try {
+                app(\App\Services\Notification\WebPushService::class)->sendToUser(
+                    $transaction->user,
+                    '✅ Pembayaran Disetujui!',
+                    "Pembayaran pesanan #{$transaction->transaction_code} telah diverifikasi lunas. Hewan Anda siap disiapkan.",
+                    route('transactions.show', $transaction->transaction_code)
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Gagal push notif approve: ' . $e->getMessage());
+            }
+        }
+
         return back()->with('success', "Pembayaran {$transaction->transaction_code} disetujui.");
     }
 
@@ -105,6 +119,20 @@ class TransactionController extends Controller
             // Return the reserved stock to the product.
             $transaction->product?->increment('stock', $transaction->quantity);
         });
+
+        // Kirim Push Notification otomatis penolakan ke HP user
+        if ($transaction->user) {
+            try {
+                app(\App\Services\Notification\WebPushService::class)->sendToUser(
+                    $transaction->user,
+                    '⚠️ Status Pembayaran Pesanan',
+                    "Bukti pembayaran pesanan #{$transaction->transaction_code} ditolak: {$validated['reason']}",
+                    route('transactions.show', $transaction->transaction_code)
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Gagal push notif reject: ' . $e->getMessage());
+            }
+        }
 
         return back()->with('success', "Pembayaran {$transaction->transaction_code} ditolak.");
     }

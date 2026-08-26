@@ -18,6 +18,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::post('/api/push-subscribe', [\App\Http\Controllers\PushSubscriptionController::class, 'subscribe'])
+    ->name('api.push.subscribe');
+
 require __DIR__.'/auth.php';
 require __DIR__.'/landing.php';
 require __DIR__.'/user_catalog.php';

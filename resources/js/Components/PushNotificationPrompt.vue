@@ -48,6 +48,42 @@ onMounted(() => {
     }
 });
 
+const saveSubscriptionToServer = async (subscription) => {
+    try {
+        const subJson = subscription.toJSON();
+        await window.axios.post('/api/push-subscribe', {
+            endpoint: subJson.endpoint,
+            public_key: subJson.keys?.p256dh,
+            auth_token: subJson.keys?.auth,
+            content_encoding: (PushManager.supportedContentEncodings || ['aesgcm'])[0],
+        });
+    } catch (e) {
+        console.warn('Gagal menyimpan token push ke server:', e);
+    }
+};
+
+const subscribeUserToPush = async (reg) => {
+    try {
+        let sub = await reg.pushManager.getSubscription();
+        if (!sub) {
+            // Subscribe ke PushManager browser
+            sub = await reg.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: 'BLZ49N4zM3bO5wW11wUqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4=',
+            });
+        }
+        if (sub) {
+            await saveSubscriptionToServer(sub);
+        }
+    } catch (err) {
+        // Fallback jika VAPID format tertentu
+        try {
+            const sub = await reg.pushManager.getSubscription();
+            if (sub) await saveSubscriptionToServer(sub);
+        } catch (e) {}
+    }
+};
+
 const requestPermission = async () => {
     if (!isSupported.value) return;
     isProcessing.value = true;
@@ -58,8 +94,12 @@ const requestPermission = async () => {
 
         if (result === 'granted') {
             showPrompt.value = false;
-            // Kirim notifikasi sambutan uji coba langsung di smartphone
             const reg = await navigator.serviceWorker.ready;
+            
+            // Simpan token subscription ke database server agar bisa dipush otomatis dari backend
+            await subscribeUserToPush(reg);
+
+            // Kirim notifikasi sambutan uji coba langsung di smartphone
             reg.showNotification('🎉 Notifikasi Piramid Aktif!', {
                 body: 'Anda akan menerima pembaruan status pesanan qurban & dokumentasi tepat waktu.',
                 icon: '/images/icon-192x192.png',

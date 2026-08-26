@@ -88,6 +88,20 @@ class TransactionStatusController extends Controller
 
         $transaction->update(['status' => $new]);
 
+        // Kirim Push Notification otomatis ke HP user
+        if ($transaction->user) {
+            try {
+                app(\App\Services\Notification\WebPushService::class)->sendToUser(
+                    $transaction->user,
+                    '🎉 Status Ibadah Diperbarui!',
+                    "Pesanan #{$transaction->transaction_code} kini memasuki tahap: {$new->label()}.",
+                    route('transactions.show', $transaction->transaction_code)
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Gagal push notif update status: ' . $e->getMessage());
+            }
+        }
+
         return back()->with('success', "Status dinaikkan ke {$new->label()}.");
     }
 }

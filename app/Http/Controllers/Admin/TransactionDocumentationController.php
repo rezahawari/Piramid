@@ -69,16 +69,39 @@ class TransactionDocumentationController extends Controller
             $type = $validated['type'];
         }
 
-        $transaction->documentations()->create([
+        $doc = $transaction->documentations()->create([
             'stage' => $validated['stage'],
-            'type' => $type,
+            'caption' => $validated['caption'] ?? null,
             'file_url' => $fileUrl,
             'cloudinary_public_id' => $publicId,
-            'caption' => $validated['caption'] ?? null,
+            'type' => $type,
             'uploaded_by' => $request->user()->id,
         ]);
 
-        return back()->with('success', 'Dokumentasi tersimpan.');
+        // Kirim Push Notification otomatis ke smartphone user pemesan
+        if ($transaction->user) {
+            try {
+                $stageName = match($validated['stage']->value ?? $validated['stage']) {
+                    'hewan_disiapkan' => 'Hewan Disiapkan',
+                    'tersembelih' => 'Penyembelihan Hewan',
+                    'didistribusikan' => 'Pendistribusian Daging',
+                    default => 'Pembaruan Tahapan',
+                };
+
+                app(\App\Services\Notification\WebPushService::class)->sendToUser(
+                    $transaction->user,
+                    '📹 Dokumentasi Baru Tersedia!',
+                    "Admin telah mengunggah dokumentasi tahap {$stageName} untuk pesanan #{$transaction->transaction_code}.",
+                    route('transactions.show', $transaction->transaction_code)
+                );
+            } catch (\Throwable $e) {
+                Log::warning('Gagal memicu push notifikasi dokumentasi: ' . $e->getMessage());
+            }
+        }
+
+        return redirect()
+            ->back()
+            ->with('success', 'Dokumentasi berhasil diunggah.');
     }
 
     public function destroy(TransactionDocumentation $documentation, CloudinaryService $cloudinary): RedirectResponse
