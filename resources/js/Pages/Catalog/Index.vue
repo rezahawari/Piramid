@@ -108,10 +108,36 @@ const filteredProducts = computed(() => {
     <Head :title="`Layanan ${service.name} - Piramid`" />
 
     <div class="min-h-screen bg-brand-50/40 font-sans text-gray-900 pb-28 md:pb-0">
-        <PublicNavbar />
+        <PublicNavbar class="hidden md:flex" />
 
-        <!-- HERO SECTION: Detail Layanan -->
-        <section class="relative overflow-hidden bg-zinc-900 text-white">
+        <!-- ================= MOBILE APP NATIVE HEADER (Tampil Khusus di Layar HP) ================= -->
+        <div class="block md:hidden bg-gradient-to-b from-slate-900 via-zinc-900 to-zinc-900 text-white pt-4 pb-6 px-4 rounded-b-[2rem] shadow-xl relative overflow-hidden">
+            <div class="flex items-center justify-between relative z-10 mb-3">
+                <Link
+                    href="/layanan"
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs font-bold text-zinc-200 hover:text-white"
+                >
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <span>Layanan</span>
+                </Link>
+                <span class="rounded-full bg-brand-500/90 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white">
+                    {{ service.name }}
+                </span>
+            </div>
+
+            <div class="relative z-10">
+                <h1 class="text-2xl font-black text-white tracking-tight leading-tight">{{ service.name }}</h1>
+                <p class="text-xs text-amber-300 font-medium mt-0.5">{{ meta.tagline }}</p>
+                <p class="text-[11px] text-zinc-300 line-clamp-2 mt-2 leading-relaxed">
+                    {{ service.description || 'Pilih hewan terbaik yang telah terawat dan memenuhi kriteria syariat.' }}
+                </p>
+            </div>
+        </div>
+
+        <!-- ================= DESKTOP HERO SECTION (Tampil Khusus di Layar Besar) ================= -->
+        <section class="hidden md:block relative overflow-hidden bg-zinc-900 text-white">
             <!-- Background Image with Overlay -->
             <div class="absolute inset-0 z-0">
                 <img
@@ -136,7 +162,7 @@ const filteredProducts = computed(() => {
                         <div class="flex items-center gap-3">
                             <Link
                                 href="/layanan"
-                                class="inline-flex items-center gap-1 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-zinc-300 backdrop-blur transition hover:bg-white/20 hover:text-white"
+                                class="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-brand-300 hover:text-brand-200 transition"
                             >
                                 &larr; Semua Layanan
                             </Link>
