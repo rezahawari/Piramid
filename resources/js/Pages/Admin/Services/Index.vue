@@ -31,6 +31,25 @@ const executeDelete = () => {
     <Head title="Manajemen Layanan - Admin" />
 
     <AdminLayout>
+        <!-- ================= MOBILE APP NATIVE TOP HEADER ================= -->
+        <div class="block md:hidden bg-gradient-to-b from-slate-900 via-zinc-900 to-zinc-900 text-white pt-4 pb-6 px-4 -mx-3 -mt-4 rounded-b-[2rem] shadow-xl relative overflow-hidden mb-5">
+            <div class="flex items-center justify-between relative z-10">
+                <div>
+                    <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Kategori Ibadah</span>
+                    <h2 class="text-base font-black text-white leading-tight">Kelola Layanan</h2>
+                </div>
+                <Link
+                    :href="route('admin.layanan.create')"
+                    class="inline-flex items-center gap-1 rounded-xl bg-brand-500 hover:bg-brand-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs"
+                >
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>Tambah</span>
+                </Link>
+            </div>
+        </div>
+
         <template #header>
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>

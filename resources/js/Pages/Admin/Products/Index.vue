@@ -39,6 +39,25 @@ const executeDelete = () => {
     <Head title="Manajemen Produk Hewan - Admin" />
 
     <AdminLayout>
+        <!-- ================= MOBILE APP NATIVE TOP HEADER ================= -->
+        <div class="block md:hidden bg-gradient-to-b from-slate-900 via-zinc-900 to-zinc-900 text-white pt-4 pb-6 px-4 -mx-3 -mt-4 rounded-b-[2rem] shadow-xl relative overflow-hidden mb-5">
+            <div class="flex items-center justify-between relative z-10">
+                <div>
+                    <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Katalog Hewan</span>
+                    <h2 class="text-base font-black text-white leading-tight">Kelola Produk</h2>
+                </div>
+                <Link
+                    :href="route('admin.produk.create')"
+                    class="inline-flex items-center gap-1 rounded-xl bg-brand-500 hover:bg-brand-600 px-3 py-1.5 text-xs font-bold text-white shadow-xs"
+                >
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>Tambah</span>
+                </Link>
+            </div>
+        </div>
+
         <template #header>
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -57,8 +76,73 @@ const executeDelete = () => {
             </div>
         </template>
 
-        <!-- Modern Products Table Card -->
-        <div class="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm">
+        <!-- ================= MOBILE VIEW: NATIVE CARDS ================= -->
+        <div class="block md:hidden space-y-3 mb-6">
+            <div
+                v-for="product in products"
+                :key="product.id"
+                class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-xs space-y-3"
+            >
+                <div class="flex gap-3.5">
+                    <img
+                        v-if="product.primary_image_url"
+                        :src="product.primary_image_url"
+                        :alt="product.name"
+                        class="h-16 w-16 rounded-2xl object-cover border border-gray-100 shrink-0"
+                    />
+                    <div v-else class="h-16 w-16 rounded-2xl bg-gray-100 flex items-center justify-center text-xs text-gray-400 shrink-0">
+                        No Pic
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between gap-1">
+                            <h4 class="text-sm font-bold text-gray-900 truncate">{{ product.name }}</h4>
+                            <span
+                                class="inline-flex items-center rounded-lg px-2 py-0.5 text-[10px] font-bold"
+                                :class="product.is_active ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-600'"
+                            >
+                                {{ product.is_active ? 'Aktif' : 'Draft' }}
+                            </span>
+                        </div>
+                        <p class="text-sm font-black text-brand-600 mt-0.5">{{ formatRupiah(product.price) }}</p>
+                        <div class="flex flex-wrap items-center gap-1.5 mt-1 text-[11px]">
+                            <span class="text-zinc-500 font-medium">Stok: <strong>{{ product.stock }} Ekor</strong></span>
+                            <span v-if="product.weight_estimate_kg" class="text-zinc-400">· ~{{ product.weight_estimate_kg }} Kg</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2 border-t border-gray-100 flex items-center justify-between gap-2">
+                    <div class="flex flex-wrap gap-1">
+                        <span
+                            v-for="s in product.services"
+                            :key="s.id"
+                            class="rounded bg-brand-50 px-2 py-0.5 text-[10px] font-bold text-brand-700"
+                        >
+                            {{ s.name }}
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5">
+                        <Link
+                            :href="route('admin.produk.edit', product.id)"
+                            class="rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 text-xs font-bold transition"
+                        >
+                            Edit
+                        </Link>
+                        <button
+                            type="button"
+                            @click="confirmDelete(product)"
+                            class="rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 px-2.5 py-1.5 text-xs font-bold transition"
+                        >
+                            Hapus
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= DESKTOP VIEW: TABLE CARD ================= -->
+        <div class="hidden md:block overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
                     <thead class="border-b border-gray-200 bg-gray-50/75 text-[11px] font-bold uppercase tracking-wider text-gray-500">

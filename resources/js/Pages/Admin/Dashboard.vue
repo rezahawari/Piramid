@@ -152,6 +152,33 @@ const paymentStatusLabels = {
     <Head title="Dashboard Admin" />
 
     <AdminLayout>
+        <!-- ================= MOBILE APP NATIVE TOP HEADER ================= -->
+        <div class="block md:hidden bg-gradient-to-b from-slate-900 via-zinc-900 to-zinc-900 text-white pt-4 pb-6 px-4 -mx-3 -mt-4 rounded-b-[2rem] shadow-xl relative overflow-hidden mb-5">
+            <!-- Ambient Glow -->
+            <div class="absolute -top-12 -right-12 w-32 h-32 bg-amber-400/15 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="flex items-center justify-between relative z-10">
+                <div class="flex items-center gap-2.5">
+                    <div class="h-9 w-9 rounded-2xl bg-amber-400/20 border border-amber-300/30 p-1 flex items-center justify-center">
+                        <img src="/images/logo.png" alt="Logo" class="h-full w-auto object-contain" />
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Panel Kontrol</span>
+                        <h2 class="text-base font-black text-white leading-tight">Dashboard Admin</h2>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1.5">
+                    <Link
+                        :href="route('admin.produk.create')"
+                        class="inline-flex items-center gap-1 rounded-xl bg-brand-500/90 hover:bg-brand-500 px-3 py-1.5 text-xs font-bold text-white shadow-xs"
+                    >
+                        <span>+ Hewan</span>
+                    </Link>
+                </div>
+            </div>
+        </div>
+
         <template #header>
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -179,30 +206,30 @@ const paymentStatusLabels = {
         </template>
 
         <!-- KPI Statistic Cards -->
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="grid grid-cols-2 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <Link
                 v-for="card in cards"
                 :key="card.key"
                 :href="card.href"
-                class="group relative overflow-hidden rounded-xl border border-gray-100 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                class="group relative overflow-hidden rounded-2xl border border-gray-200/80 bg-white p-4 sm:p-5 shadow-xs transition duration-200 hover:-translate-y-0.5 hover:shadow-md"
             >
                 <div class="flex items-start justify-between">
                     <div>
-                        <p class="text-xs font-medium uppercase tracking-wider text-gray-500">{{ card.label }}</p>
-                        <p class="mt-2 text-2xl font-bold tracking-tight text-gray-900" :class="card.color">
+                        <p class="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400">{{ card.label }}</p>
+                        <p class="mt-1 sm:mt-2 text-lg sm:text-2xl font-black tracking-tight text-gray-900" :class="card.color">
                             {{ card.value }}
                         </p>
                     </div>
                     <span
                         v-if="card.badge"
-                        class="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-800 animate-pulse"
+                        class="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-[9px] sm:text-xs font-bold text-amber-800 animate-pulse"
                     >
                         {{ card.badge }}
                     </span>
                 </div>
-                <div class="mt-3 flex items-center text-xs font-medium text-gray-400 group-hover:text-brand-500">
+                <div class="mt-2 sm:mt-3 flex items-center text-[10px] sm:text-xs font-semibold text-gray-400 group-hover:text-brand-500">
                     <span>Lihat rincian</span>
-                    <svg class="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="ml-1 h-3 w-3 sm:h-3.5 sm:w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                 </div>

@@ -95,22 +95,49 @@ const canModerate = (t) =>
 </script>
 
 <template>
-    <Head title="Manajemen Transaksi - Admin" />
+    <Head title="Kelola Transaksi - Admin" />
 
     <AdminLayout>
+        <!-- ================= MOBILE APP NATIVE TOP HEADER ================= -->
+        <div class="block md:hidden bg-gradient-to-b from-slate-900 via-zinc-900 to-zinc-900 text-white pt-4 pb-6 px-4 -mx-3 -mt-4 rounded-b-[2rem] shadow-xl relative overflow-hidden mb-5">
+            <div class="flex items-center justify-between relative z-10">
+                <div>
+                    <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Manajemen Pesanan</span>
+                    <h2 class="text-base font-black text-white leading-tight">Daftar Transaksi</h2>
+                </div>
+                <span class="rounded-full bg-white/10 px-3 py-1 text-[11px] font-bold text-amber-300 border border-white/10">
+                    {{ transactions.total ?? transactions.data.length }} Pesanan
+                </span>
+            </div>
+        </div>
+
         <template #header>
-            <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h2 class="text-xl font-bold leading-tight text-gray-900">Manajemen Transaksi</h2>
-                    <p class="text-xs text-gray-500">Kelola dan pantau seluruh transaksi pesanan, validasi pembayaran, dan hapus transaksi.</p>
+                    <p class="text-xs text-gray-500">Kelola status pembayaran, review bukti transfer, dan progres pengerjaan.</p>
                 </div>
+                <span class="text-xs font-semibold text-gray-500">
+                    Total: <strong class="text-gray-900">{{ transactions.total ?? transactions.data.length }}</strong> transaksi
+                </span>
             </div>
         </template>
 
+        <!-- Flash Message Notification -->
+        <div
+            v-if="$page.props.flash?.success"
+            class="mb-6 flex items-center gap-3 rounded-2xl bg-emerald-50 border border-emerald-200 p-4 text-sm text-emerald-800 shadow-sm"
+        >
+            <svg class="h-5 w-5 text-emerald-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{{ $page.props.flash.success }}</span>
+        </div>
+
         <!-- Filter & Search Bar -->
-        <div class="mb-6 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm">
-            <div class="flex flex-wrap items-center gap-3">
-                <div class="flex-1 min-w-[200px]">
+        <div class="mb-5 rounded-2xl border border-gray-200/80 bg-white p-3.5 sm:p-4 shadow-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div>
                     <select
                         v-model="filterState.payment_status"
                         class="w-full rounded-xl border-gray-300 bg-gray-50/50 py-2 text-xs focus:border-brand-500 focus:bg-white focus:ring-brand-500"
@@ -125,7 +152,7 @@ const canModerate = (t) =>
                     </select>
                 </div>
 
-                <div class="flex-1 min-w-[180px]">
+                <div>
                     <select
                         v-model="filterState.payment_method"
                         class="w-full rounded-xl border-gray-300 bg-gray-50/50 py-2 text-xs focus:border-brand-500 focus:bg-white focus:ring-brand-500"
@@ -137,7 +164,7 @@ const canModerate = (t) =>
                     </select>
                 </div>
 
-                <div class="flex-1 min-w-[180px]">
+                <div class="flex gap-2">
                     <select
                         v-model="filterState.status"
                         class="w-full rounded-xl border-gray-300 bg-gray-50/50 py-2 text-xs focus:border-brand-500 focus:bg-white focus:ring-brand-500"
@@ -150,20 +177,78 @@ const canModerate = (t) =>
                         <option value="tersembelih">Penyembelihan</option>
                         <option value="didistribusikan">Pendistribusian</option>
                     </select>
+                    
+                    <button
+                        type="button"
+                        @click="resetFilters"
+                        class="shrink-0 rounded-xl border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 shadow-xs hover:bg-gray-50"
+                    >
+                        Reset
+                    </button>
                 </div>
-
-                <button
-                    type="button"
-                    @click="resetFilters"
-                    class="rounded-xl border border-gray-300 bg-white px-3.5 py-2 text-xs font-semibold text-gray-700 shadow-sm hover:bg-gray-50 transition"
-                >
-                    Reset Filter
-                </button>
             </div>
         </div>
 
-        <!-- Modern Transaction Table Card -->
-        <div class="overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm">
+        <!-- ================= MOBILE VIEW: NATIVE APP CARDS ================= -->
+        <div class="block md:hidden space-y-3 mb-6">
+            <div
+                v-for="t in transactions.data"
+                :key="t.id"
+                class="rounded-2xl border border-gray-200/80 bg-white p-4 shadow-xs space-y-3"
+            >
+                <div class="flex items-center justify-between border-b border-gray-100 pb-2.5">
+                    <Link
+                        :href="route('admin.transactions.show', t.transaction_code)"
+                        class="font-mono text-xs font-black text-brand-700 flex items-center gap-1"
+                    >
+                        <span>#{{ t.transaction_code }}</span>
+                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </Link>
+                    <span class="text-[10px] text-gray-400 font-medium">{{ tanggal(t.created_at) }}</span>
+                </div>
+
+                <div class="flex gap-3">
+                    <img
+                        v-if="t.product_image_url"
+                        :src="t.product_image_url"
+                        :alt="t.product_name"
+                        class="h-14 w-14 rounded-xl object-cover border border-gray-100 shrink-0"
+                    />
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-xs font-bold text-gray-900 truncate">{{ t.product_name }}</h4>
+                        <p class="text-[11px] text-gray-500">{{ t.service_name }} · {{ t.quantity }} ekor</p>
+                        <p class="text-[11px] font-medium text-zinc-600 truncate mt-0.5">
+                            👤 {{ t.user_name || 'Tamu' }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-1 border-t border-gray-100 text-xs">
+                    <div>
+                        <span class="text-[10px] text-gray-400 block">Total</span>
+                        <span class="font-extrabold text-brand-600">{{ rupiah(t.total_amount) }}</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <StatusBadge :status="t.payment_status" />
+                        <StatusBadge :status="t.status" />
+                    </div>
+                </div>
+
+                <div class="pt-2 flex items-center gap-2">
+                    <Link
+                        :href="route('admin.transactions.show', t.transaction_code)"
+                        class="flex-1 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-center py-2 text-xs font-bold transition shadow-xs"
+                    >
+                        Kelola Transaksi & Dokumentasi
+                    </Link>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= DESKTOP VIEW: TABLE CARD ================= -->
+        <div class="hidden md:block overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-sm">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-xs">
                     <thead class="border-b border-gray-200 bg-gray-50/75 text-[11px] font-bold uppercase tracking-wider text-gray-500">

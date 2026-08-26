@@ -182,6 +182,31 @@ const t = computed(() => props.transaction);
     <Head :title="`Detail Transaksi #${transaction.transaction_code} - Admin`" />
 
     <AdminLayout>
+        <!-- ================= MOBILE APP NATIVE TOP HEADER ================= -->
+        <div class="block md:hidden bg-gradient-to-b from-slate-900 via-zinc-900 to-zinc-900 text-white pt-4 pb-6 px-4 -mx-3 -mt-4 rounded-b-[2rem] shadow-xl relative overflow-hidden mb-5">
+            <div class="flex items-center justify-between relative z-10">
+                <div class="flex items-center gap-2">
+                    <Link
+                        :href="route('admin.transactions.index')"
+                        class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-white/10 text-white"
+                    >
+                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </Link>
+                    <div>
+                        <span class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider block">Kelola Transaksi</span>
+                        <h2 class="text-sm font-mono font-bold text-amber-300 leading-tight">#{{ transaction.transaction_code }}</h2>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-1">
+                    <StatusBadge :status="t.payment_status" />
+                    <StatusBadge :status="t.status" />
+                </div>
+            </div>
+        </div>
+
         <template #header>
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
