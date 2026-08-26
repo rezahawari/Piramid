@@ -480,8 +480,11 @@ const t = computed(() => props.transaction);
                                 Penyaluran:
                             </span>
                             <div v-if="t.distribution_type === 'pt_yayasan'">
-                                <p class="font-semibold text-gray-800">Disalurkan Yayasan & Dhuafa</p>
-                                <p class="text-gray-500 mt-0.5">Daging disalurkan kepada kaum dhuafa pelosok.</p>
+                                <p class="font-semibold text-gray-800">Disalurkan oleh Piramid</p>
+                                <p v-if="t.distribution_location_note" class="text-brand-700 font-medium mt-1 bg-brand-50/70 p-2 rounded-lg border border-brand-100">
+                                    📍 Catatan Lokasi: {{ t.distribution_location_note }}
+                                </p>
+                                <p v-else class="text-gray-500 mt-0.5">Daging disalurkan kepada kaum dhuafa pelosok.</p>
                             </div>
                             <div v-else class="text-gray-700 space-y-0.5">
                                 <p class="font-bold">{{ t.recipient_name }} ({{ t.recipient_phone }})</p>

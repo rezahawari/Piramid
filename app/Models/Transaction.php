@@ -25,6 +25,7 @@ class Transaction extends Model
         'unit_price',
         'total_amount',
         'distribution_type',
+        'distribution_location_note',
         'recipient_name',
         'recipient_phone',
         'recipient_province',

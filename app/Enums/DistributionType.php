@@ -10,7 +10,7 @@ enum DistributionType: string
     public function label(): string
     {
         return match ($this) {
-            self::PtYayasan => 'Disalurkan oleh PT/Yayasan',
+            self::PtYayasan => 'Disalurkan oleh Piramid',
             self::AlamatMandiri => 'Kirim ke Alamat Sendiri',
         };
     }

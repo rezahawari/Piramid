@@ -27,6 +27,7 @@ class StoreCheckoutRequest extends FormRequest
             'product_id' => ['required', 'integer', 'exists:products,id'],
             'quantity' => ['required', 'integer', 'min:1'],
             'distribution_type' => ['required', Rule::enum(DistributionType::class)],
+            'distribution_location_note' => ['nullable', 'string', 'max:500'],
             'recipient_name' => ['nullable', 'required_if:distribution_type,'.DistributionType::AlamatMandiri->value, 'string', 'max:255'],
             'recipient_phone' => ['nullable', 'required_if:distribution_type,'.DistributionType::AlamatMandiri->value, 'string', 'max:30'],
             'recipient_province' => ['nullable', 'required_if:distribution_type,'.DistributionType::AlamatMandiri->value, 'string', 'max:100'],
