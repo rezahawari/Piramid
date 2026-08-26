@@ -30,23 +30,18 @@ const triggerTestNotification = async (title = '🔔 Uji Coba Status Qurban', me
     }
 };
 
-onMounted(() => {
-    if ('Notification' in window && 'serviceWorker' in navigator) {
-        isSupported.value = true;
-        permission.value = Notification.permission;
-        
-        // Expose ke window agar bisa di-test kapan saja lewat Console Browser: window.testPiramidNotif()
-        window.testPiramidNotif = triggerTestNotification;
+const VAPID_PUBLIC_KEY = 'BLZ49N4zM3bO5wW11wUqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4=';
 
-        // Tampilkan prompt persetujuan jika user belum pernah memilih atau belum di-dismiss
-        const dismissed = localStorage.getItem('piramid_notif_dismissed');
-        if (permission.value === 'default' && !dismissed) {
-            setTimeout(() => {
-                showPrompt.value = true;
-            }, 2500); // Muncul setelah 2.5 detik agar tidak mengagetkan user
-        }
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
     }
-});
+    return outputArray;
+}
 
 const saveSubscriptionToServer = async (subscription) => {
     try {
@@ -57,6 +52,7 @@ const saveSubscriptionToServer = async (subscription) => {
             auth_token: subJson.keys?.auth,
             content_encoding: (PushManager.supportedContentEncodings || ['aesgcm'])[0],
         });
+        console.log('✅ Push Notification token berhasil didaftarkan ke server.');
     } catch (e) {
         console.warn('Gagal menyimpan token push ke server:', e);
     }
@@ -66,23 +62,45 @@ const subscribeUserToPush = async (reg) => {
     try {
         let sub = await reg.pushManager.getSubscription();
         if (!sub) {
-            // Subscribe ke PushManager browser
+            const convertedVapidKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
             sub = await reg.pushManager.subscribe({
                 userVisibleOnly: true,
-                applicationServerKey: 'BLZ49N4zM3bO5wW11wUqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4h11w3UqyX7E9qK4=',
+                applicationServerKey: convertedVapidKey,
             });
         }
         if (sub) {
             await saveSubscriptionToServer(sub);
         }
     } catch (err) {
-        // Fallback jika VAPID format tertentu
-        try {
-            const sub = await reg.pushManager.getSubscription();
-            if (sub) await saveSubscriptionToServer(sub);
-        } catch (e) {}
+        console.warn('Push subscribe attempt warning:', err);
     }
 };
+
+onMounted(async () => {
+    if ('Notification' in window && 'serviceWorker' in navigator) {
+        isSupported.value = true;
+        permission.value = Notification.permission;
+        
+        // Expose ke window agar bisa di-test kapan saja lewat Console Browser: window.testPiramidNotif()
+        window.testPiramidNotif = triggerTestNotification;
+
+        // Jika user sebelumnya sudah allow, pastikan token tetap terdaftar ke server
+        if (permission.value === 'granted') {
+            try {
+                const reg = await navigator.serviceWorker.ready;
+                await subscribeUserToPush(reg);
+            } catch (e) {}
+        } else {
+            // Tampilkan prompt persetujuan jika user belum pernah memilih atau belum di-dismiss
+            const dismissed = localStorage.getItem('piramid_notif_dismissed');
+            if (permission.value === 'default' && !dismissed) {
+                setTimeout(() => {
+                    showPrompt.value = true;
+                }, 2000);
+            }
+        }
+    }
+});
 
 const requestPermission = async () => {
     if (!isSupported.value) return;
