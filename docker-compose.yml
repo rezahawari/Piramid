@@ -34,6 +34,8 @@ services:
       CLOUDINARY_API_KEY: "${CLOUDINARY_API_KEY:-}"
       CLOUDINARY_API_SECRET: "${CLOUDINARY_API_SECRET:-}"
       CLOUDINARY_UPLOAD_FOLDER: "${CLOUDINARY_UPLOAD_FOLDER:-qurban-pyramid}"
+    volumes:
+      - storage_data:/var/www/html/storage/app/public
     depends_on:
       pgpiramid:
         condition: service_healthy
@@ -58,3 +60,4 @@ services:
 
 volumes:
   pgdata:
+  storage_data:

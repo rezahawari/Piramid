@@ -14,6 +14,10 @@ echo "🔄 Running database migrations and seeders..."
 php artisan migrate --force || echo "⚠️ Migration failed or database not ready yet."
 php artisan db:seed --force || echo "⚠️ Seeding failed or already seeded."
 
+# Pastikan storage link dan folder permission selalu siap
+php artisan storage:link || true
+chown -R www-data:www-data /var/www/html/storage
+
 # Jalankan Apache foreground
 exec apache2-foreground "$@"
 
