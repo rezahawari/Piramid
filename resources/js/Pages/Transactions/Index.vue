@@ -69,24 +69,26 @@ const filteredTransactions = computed(() => {
             </div>
         </template>
 
-        <!-- ================= MOBILE APP NATIVE HEADER ================= -->
-        <div class="block md:hidden bg-gradient-to-b from-slate-900 via-zinc-900 to-zinc-900 text-white pt-4 pb-6 px-4 rounded-b-[2rem] shadow-xl relative overflow-hidden mb-4">
+        <!-- ================= MOBILE APP NATIVE HEADER (Full Width Edge-to-Edge) ================= -->
+        <div class="block md:hidden bg-gradient-to-b from-slate-900 via-zinc-900 to-zinc-900 text-white pt-4 pb-6 px-4 rounded-b-[2rem] shadow-xl relative overflow-hidden -mt-0 mb-4 w-full">
             <div class="flex items-center justify-between relative z-10 mb-3">
-                <div class="flex items-center gap-2">
-                    <div class="h-8 w-8 rounded-full bg-brand-600 flex items-center justify-center text-amber-300">
-                        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                        </svg>
+                <div class="flex items-center gap-2.5">
+                    <div class="h-9 w-9 rounded-2xl bg-gradient-to-tr from-brand-600 to-amber-400 p-0.5 shadow-md flex items-center justify-center">
+                        <div class="h-full w-full rounded-2xl bg-slate-900 flex items-center justify-center text-amber-300">
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                        </div>
                     </div>
                     <div>
-                        <h1 class="text-base font-extrabold text-white">Riwayat Transaksi</h1>
-                        <p class="text-[10px] text-zinc-400">Status pesanan & dokumentasi</p>
+                        <h1 class="text-base font-extrabold text-white leading-none">Riwayat Transaksi</h1>
+                        <p class="text-[10px] text-zinc-400 mt-1">Status pesanan & dokumentasi</p>
                     </div>
                 </div>
 
                 <Link
                     href="/layanan"
-                    class="inline-flex items-center gap-1 rounded-full bg-brand-500/90 border border-brand-400/30 px-3 py-1 text-[11px] font-bold text-white shadow-sm"
+                    class="inline-flex items-center gap-1 rounded-full bg-brand-500 hover:bg-brand-600 border border-brand-400/30 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition active:scale-95"
                 >
                     <span>+ Pesan</span>
                 </Link>
@@ -104,7 +106,7 @@ const filteredTransactions = computed(() => {
                         v-model="searchQuery"
                         type="text"
                         placeholder="Cari kode pesanan / hewan..."
-                        class="w-full bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl pl-10 pr-4 py-2 text-xs text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-400/50"
+                        class="w-full bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl pl-10 pr-4 py-2.5 text-xs text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-amber-400/50 shadow-inner"
                     />
                 </div>
             </div>
