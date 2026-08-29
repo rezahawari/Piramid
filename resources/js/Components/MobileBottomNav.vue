@@ -21,14 +21,14 @@ const isActive = (path) => {
             class="pointer-events-auto flex items-center justify-around gap-1 w-full max-w-xs rounded-2xl p-1 backdrop-blur-2xl bg-slate-950/80 border border-white/20 shadow-[0_10px_35px_rgba(0,0,0,0.45)] ring-1 ring-white/10 text-white transition-all duration-300 transform-gpu"
         >
             <!-- 1. Logo Piramid Statis (Non-Clickable) -->
-            <div class="flex items-center justify-center py-1 px-2 select-none">
-                <div class="flex items-center gap-1 bg-white/10 rounded-xl px-2 py-1 border border-white/15 shadow-inner">
+            <div class="flex items-center justify-center py-1 px-1.5 select-none shrink-0">
+                <div class="flex items-center gap-1 bg-white/10 rounded-xl px-1.5 py-1 border border-white/15 shadow-inner">
                     <img
                         src="/images/logo.png"
                         alt="Logo Piramid"
-                        class="h-4.5 w-auto object-contain"
+                        class="h-3.5 w-auto object-contain"
                     />
-                    <span class="font-script text-base text-amber-300 leading-none">Piramid</span>
+                    <span class="font-script text-xs text-amber-300 leading-none">Piramid</span>
                 </div>
             </div>
 
