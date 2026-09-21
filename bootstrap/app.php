@@ -22,6 +22,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // asset/link ter-generate dengan skema yang benar.
         $middleware->trustProxies(at: '*');
 
+        $middleware->append(\App\Http\Middleware\HandleCors::class);
+
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
             \Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets::class,
@@ -32,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->validateCsrfTokens(except: [
+            'api/*',
             'webhooks/midtrans/notification',
         ]);
     })
