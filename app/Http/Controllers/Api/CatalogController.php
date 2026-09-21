@@ -31,7 +31,30 @@ class CatalogController extends Controller
                     ]);
             }])
             ->orderBy('name')
-            ->get(['id', 'name', 'slug', 'description', 'cover_image_url', 'has_sohibul']);
+            ->get(['id', 'name', 'slug', 'description', 'cover_image_url', 'has_sohibul'])
+            ->map(function ($s) {
+                return [
+                    'id' => $s->id,
+                    'name' => $s->name,
+                    'slug' => $s->slug,
+                    'description' => $s->description,
+                    'cover_image_url' => LandingController::formatMediaUrl($s->cover_image_url),
+                    'has_sohibul' => $s->has_sohibul,
+                    'products' => $s->products->map(function ($p) {
+                        return [
+                            'id' => $p->id,
+                            'name' => $p->name,
+                            'slug' => $p->slug,
+                            'description' => $p->description,
+                            'price' => $p->price,
+                            'weight_estimate_kg' => $p->weight_estimate_kg,
+                            'stock' => $p->stock,
+                            'max_sohibul' => $p->max_sohibul,
+                            'primary_image_url' => LandingController::formatMediaUrl($p->primary_image_url),
+                        ];
+                    }),
+                ];
+            });
 
         return response()->json([
             'data' => $services,
@@ -60,14 +83,42 @@ class CatalogController extends Controller
                 'products.stock',
                 'products.max_sohibul',
                 'products.primary_image_url',
-            ]);
+            ])
+            ->map(function ($p) {
+                return [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'slug' => $p->slug,
+                    'description' => $p->description,
+                    'price' => $p->price,
+                    'weight_estimate_kg' => $p->weight_estimate_kg,
+                    'stock' => $p->stock,
+                    'max_sohibul' => $p->max_sohibul,
+                    'primary_image_url' => LandingController::formatMediaUrl($p->primary_image_url),
+                ];
+            });
 
         $otherServices = Service::where('is_active', true)
             ->where('id', '!=', $service->id)
-            ->get(['id', 'name', 'slug', 'cover_image_url']);
+            ->get(['id', 'name', 'slug', 'cover_image_url'])
+            ->map(function ($s) {
+                return [
+                    'id' => $s->id,
+                    'name' => $s->name,
+                    'slug' => $s->slug,
+                    'cover_image_url' => LandingController::formatMediaUrl($s->cover_image_url),
+                ];
+            });
 
         return response()->json([
-            'service' => $service->only(['id', 'name', 'slug', 'description', 'cover_image_url', 'has_sohibul']),
+            'service' => [
+                'id' => $service->id,
+                'name' => $service->name,
+                'slug' => $service->slug,
+                'description' => $service->description,
+                'cover_image_url' => LandingController::formatMediaUrl($service->cover_image_url),
+                'has_sohibul' => $service->has_sohibul,
+            ],
             'products' => $products,
             'other_services' => $otherServices,
         ]);
@@ -82,20 +133,29 @@ class CatalogController extends Controller
             return response()->json(['message' => 'Produk tidak ditemukan atau tidak aktif.'], 404);
         }
 
+        $gallery = collect($product->gallery ?? [])
+            ->map(fn ($img) => LandingController::formatMediaUrl($img))
+            ->values();
+
         return response()->json([
-            'service' => $service->only(['id', 'name', 'slug', 'has_sohibul']),
-            'product' => $product->only([
-                'id',
-                'name',
-                'slug',
-                'description',
-                'price',
-                'weight_estimate_kg',
-                'stock',
-                'max_sohibul',
-                'primary_image_url',
-                'gallery',
-            ]),
+            'service' => [
+                'id' => $service->id,
+                'name' => $service->name,
+                'slug' => $service->slug,
+                'has_sohibul' => $service->has_sohibul,
+            ],
+            'product' => [
+                'id' => $product->id,
+                'name' => $product->name,
+                'slug' => $product->slug,
+                'description' => $product->description,
+                'price' => $product->price,
+                'weight_estimate_kg' => $product->weight_estimate_kg,
+                'stock' => $product->stock,
+                'max_sohibul' => $product->max_sohibul,
+                'primary_image_url' => LandingController::formatMediaUrl($product->primary_image_url),
+                'gallery' => $gallery,
+            ],
         ]);
     }
 }

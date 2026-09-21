@@ -53,8 +53,19 @@ class TransactionController extends Controller
                 'distribution_type' => $t->distribution_type->value,
                 'distribution_type_label' => $t->distribution_type->label(),
                 'created_at' => $t->created_at,
-                'service' => $t->service,
-                'product' => $t->product,
+                'service' => $t->service ? [
+                    'id' => $t->service->id,
+                    'name' => $t->service->name,
+                    'slug' => $t->service->slug,
+                    'cover_image_url' => LandingController::formatMediaUrl($t->service->cover_image_url),
+                ] : null,
+                'product' => $t->product ? [
+                    'id' => $t->product->id,
+                    'name' => $t->product->name,
+                    'slug' => $t->product->slug,
+                    'primary_image_url' => LandingController::formatMediaUrl($t->product->primary_image_url),
+                    'weight_estimate_kg' => $t->product->weight_estimate_kg,
+                ] : null,
             ];
         });
 
@@ -89,6 +100,17 @@ class TransactionController extends Controller
             'is_current' => $st === $transaction->status,
         ]);
 
+        $documentations = $transaction->documentations->map(function ($doc) {
+            return [
+                'id' => $doc->id,
+                'stage' => $doc->stage?->value ?? $doc->stage,
+                'type' => $doc->type,
+                'file_url' => LandingController::formatMediaUrl($doc->file_url),
+                'caption' => $doc->caption,
+                'created_at' => $doc->created_at,
+            ];
+        });
+
         return response()->json([
             'transaction' => [
                 'id' => $transaction->id,
@@ -113,16 +135,27 @@ class TransactionController extends Controller
                 'recipient_district' => $transaction->recipient_district,
                 'recipient_address' => $transaction->recipient_address,
                 'sohibul_names' => $transaction->sohibul_names,
-                'manual_transfer_proof_url' => $transaction->manual_transfer_proof_url,
+                'manual_transfer_proof_url' => LandingController::formatMediaUrl($transaction->manual_transfer_proof_url),
                 'rejected_reason' => $transaction->rejected_reason,
                 'approved_at' => $transaction->approved_at,
                 'midtrans_va_number' => $transaction->midtrans_va_number,
                 'midtrans_payment_type' => $transaction->midtrans_payment_type,
                 'midtrans_settlement_time' => $transaction->midtrans_settlement_time,
                 'created_at' => $transaction->created_at,
-                'service' => $transaction->service,
-                'product' => $transaction->product,
-                'documentations' => $transaction->documentations,
+                'service' => $transaction->service ? [
+                    'id' => $transaction->service->id,
+                    'name' => $transaction->service->name,
+                    'slug' => $transaction->service->slug,
+                    'cover_image_url' => LandingController::formatMediaUrl($transaction->service->cover_image_url),
+                ] : null,
+                'product' => $transaction->product ? [
+                    'id' => $transaction->product->id,
+                    'name' => $transaction->product->name,
+                    'slug' => $transaction->product->slug,
+                    'primary_image_url' => LandingController::formatMediaUrl($transaction->product->primary_image_url),
+                    'weight_estimate_kg' => $transaction->product->weight_estimate_kg,
+                ] : null,
+                'documentations' => $documentations,
             ],
             'status_pipeline' => $pipeline,
             'bank_accounts' => $transaction->payment_method === PaymentMethod::ManualTransfer
