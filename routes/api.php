@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CatalogController;
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\LandingController;
+use App\Http\Controllers\Api\MediaController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\TransactionController;
@@ -62,3 +63,6 @@ Route::prefix('v1')->group(function () {
         Route::post('/push-subscribe', [PushSubscriptionController::class, 'subscribe']);
     });
 });
+
+// Explicit CORS Media Route fallback untuk localhost/mobile browser
+Route::get('/media/{path}', [MediaController::class, 'serve'])->where('path', '.*');
