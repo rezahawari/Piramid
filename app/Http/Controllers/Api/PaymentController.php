@@ -20,11 +20,15 @@ class PaymentController extends Controller
     public function snapToken(Request $request, Transaction $transaction, MidtransService $midtrans): JsonResponse
     {
         if ($request->user()->id !== $transaction->user_id) {
-            return response()->json(['message' => 'Unauthorized.'], 403);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized.',
+            ], 403);
         }
 
         if ($transaction->payment_method !== PaymentMethod::Midtrans || $transaction->payment_status !== PaymentStatus::Pending) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Transaksi ini tidak dapat dibayar melalui Midtrans.',
             ], 422);
         }
@@ -33,11 +37,13 @@ class PaymentController extends Controller
             $token = $midtrans->createSnapTransaction($transaction);
 
             return response()->json([
+                'status' => 'success',
                 'snap_token' => $token,
                 'client_key' => config('midtrans.client_key'),
             ]);
         } catch (\Throwable $e) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Gagal menghubungkan ke payment gateway: '.$e->getMessage(),
             ], 500);
         }
@@ -52,17 +58,21 @@ class PaymentController extends Controller
         CloudinaryService $cloudinary,
     ): JsonResponse {
         if ($request->user()->id !== $transaction->user_id) {
-            return response()->json(['message' => 'Unauthorized.'], 403);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized.',
+            ], 403);
         }
 
         if ($transaction->payment_method !== PaymentMethod::ManualTransfer || $transaction->payment_status !== PaymentStatus::Pending) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Transaksi ini tidak menerima bukti transfer.',
             ], 422);
         }
 
         $request->validate([
-            'proof' => ['required', 'image', 'max:5120'],
+            'proof' => ['required', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
         ]);
 
         if ($cloudinary->isConfigured()) {
@@ -83,11 +93,19 @@ class PaymentController extends Controller
             $url = '/storage/bukti-transfer/'.$filename;
         }
 
+        $fullUrl = LandingController::formatMediaUrl($url);
+
         $transaction->update(['manual_transfer_proof_url' => $url]);
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Bukti transfer terkirim, menunggu verifikasi admin.',
-            'proof_url' => $url,
+            'data' => [
+                'transaction_code' => $transaction->transaction_code,
+                'proof_url' => $fullUrl,
+                'payment_status' => $transaction->payment_status->value,
+                'payment_status_label' => $transaction->payment_status->label(),
+            ],
         ]);
     }
 }
