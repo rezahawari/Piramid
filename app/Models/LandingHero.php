@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class LandingHero extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'title',
+        'description',
+        'image_url',
+        'icon_name',
+        'order',
+        'is_active',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'order' => 'integer',
+            'is_active' => 'boolean',
+        ];
+    }
+
+    public function scopeActive(Builder $query): Builder
+    {
+        return $query->where('is_active', true);
+    }
+}

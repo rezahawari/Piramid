@@ -1,8 +1,10 @@
 <script setup>
 import BrandLogo from '@/Components/BrandLogo.vue';
+import LanguageSelector from '@/Components/LanguageSelector.vue';
 import MobileBottomNav from '@/Components/MobileBottomNav.vue';
 import PushNotificationPrompt from '@/Components/PushNotificationPrompt.vue';
 import ToastNotification from '@/Components/ToastNotification.vue';
+import { t } from '@/i18n';
 import { Link, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
@@ -30,25 +32,28 @@ const isActive = (href) =>
                         href="/"
                         :class="isActive('/') ? 'text-brand-500' : 'text-zinc-900 hover:text-brand-500'"
                     >
-                        Beranda
+                        {{ t('Beranda') }}
                     </Link>
                     <Link
                         href="/layanan"
                         :class="isActive('/layanan') ? 'text-brand-500' : 'text-zinc-900 hover:text-brand-500'"
                     >
-                        Pemesanan
+                        {{ t('Pemesanan') }}
                     </Link>
                     <Link
                         v-if="user"
                         href="/transaksi"
                         :class="isActive('/transaksi') ? 'text-brand-500' : 'text-zinc-900 hover:text-brand-500'"
                     >
-                        Transaksi
+                        {{ t('Transaksi') }}
                     </Link>
                 </div>
             </div>
 
             <div class="flex items-center gap-3">
+                <!-- Pilihan Bahasa (ID, EN, ZH, AR) -->
+                <LanguageSelector />
+
                 <template v-if="user">
                     <span class="text-sm font-semibold text-zinc-700">{{ user.name }}</span>
                     <Link
@@ -56,15 +61,15 @@ const isActive = (href) =>
                         href="/admin"
                         class="rounded-md border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-900 hover:border-brand-500 hover:text-brand-500"
                     >
-                        Admin
+                        {{ t('Admin') }}
                     </Link>
                     <Link
                         href="/logout"
                         method="post"
                         as="button"
-                        class="rounded-md bg-brand-500 px-4 py-2 text-sm font-semibold text-brand-50 hover:bg-brand-600"
+                        class="rounded-md bg-brand-500 px-4 py-2 text-sm font-semibold text-brand-50 hover:bg-brand-600 cursor-pointer"
                     >
-                        Keluar
+                        {{ t('Keluar') }}
                     </Link>
                 </template>
                 <template v-else>
@@ -72,13 +77,13 @@ const isActive = (href) =>
                         :href="route('login')"
                         class="rounded-md border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-900 hover:border-brand-500 hover:text-brand-500"
                     >
-                        Sign In
+                        {{ t('Sign In') }}
                     </Link>
                     <Link
                         :href="route('register')"
                         class="rounded-md bg-brand-500 px-4 py-2 text-sm font-semibold text-brand-50 hover:bg-brand-600"
                     >
-                        Sign Up
+                        {{ t('Sign Up') }}
                     </Link>
                 </template>
             </div>
@@ -88,5 +93,3 @@ const isActive = (href) =>
     <!-- Mobile Floating Liquid Glass Snackbar / Nav -->
     <MobileBottomNav />
 </template>
-
-

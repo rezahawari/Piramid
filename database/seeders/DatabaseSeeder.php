@@ -14,9 +14,12 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        // Guard: Jika data awal sudah ada (misal pada proses redeploy), lewati seeder.
+        // Pastikan LandingHero selalu di-seed jika kosong
+        $this->call(LandingHeroSeeder::class);
+
+        // Guard: Jika data awal sudah ada (misal pada proses redeploy), lewati seeder catalog.
         if (User::where('role', 'admin')->exists() || Service::exists() || Product::exists()) {
-            $this->command?->info('Data sudah ada di database. Seeder dilewati (skipped).');
+            $this->command?->info('Data catalog sudah ada di database.');
             return;
         }
 
@@ -108,5 +111,7 @@ class DatabaseSeeder extends Seeder
         $kambingStandar->services()->syncWithoutDetaching([$qurban->id, $aqiqah->id, $sedekah->id]);
         $kambingPremium->services()->syncWithoutDetaching([$qurban->id, $aqiqah->id]);
         $sapiPatungan->services()->syncWithoutDetaching([$qurban->id]);
+
+        $this->call(LandingHeroSeeder::class);
     }
 }

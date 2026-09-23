@@ -28,6 +28,10 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/forgot-password', [AuthController::class, 'forgotPassword']);
     Route::post('/auth/reset-password', [AuthController::class, 'resetPassword']);
 
+    // Onboarding Heroes (Dua alias endpoint sesuai spesifikasi)
+    Route::get('/landing/heroes', [LandingController::class, 'heroes']);
+    Route::get('/onboarding', [LandingController::class, 'heroes']);
+
     // Landing & Catalog Discovery
     Route::get('/landing', [LandingController::class, 'index']);
     Route::get('/services', [CatalogController::class, 'services']);

@@ -3,6 +3,7 @@ import AnimalPicker from '@/Components/AnimalPicker.vue';
 import HeroSlider from '@/Components/HeroSlider.vue';
 import PublicFooter from '@/Components/PublicFooter.vue';
 import PublicNavbar from '@/Components/PublicNavbar.vue';
+import { t } from '@/i18n';
 import { Head, Link, router } from '@inertiajs/vue3';
 import { computed, onMounted, ref } from 'vue';
 

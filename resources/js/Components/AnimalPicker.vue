@@ -1,4 +1,5 @@
 <script setup>
+import { t } from '@/i18n';
 import { Link } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
@@ -157,16 +158,16 @@ onBeforeUnmount(stop);
                     />
                 </span>
                 <span class="flex flex-1 flex-col justify-center gap-0.5 bg-night-soft px-5 py-4 text-white">
-                    <span class="text-lg font-bold">{{ animal.name }}</span>
+                    <span class="text-lg font-bold">{{ t(animal.name) }}</span>
                     <span v-if="animal.weightLabel" class="text-xs text-zinc-400">
                         {{ animal.weightLabel }}
                     </span>
-                    <span class="mt-1 text-xs text-zinc-400">Mulai dari</span>
+                    <span class="mt-1 text-xs text-zinc-400">{{ t('Mulai dari') }}</span>
                     <span
                         class="text-lg font-extrabold"
                         :class="i === active ? 'text-brand-300' : 'text-white'"
                     >
-                        {{ animal.price ? rupiah(animal.price) : 'Hubungi kami' }}
+                        {{ animal.price ? rupiah(animal.price) : t('Hubungi kami') }}
                     </span>
                 </span>
             </button>
@@ -176,7 +177,7 @@ onBeforeUnmount(stop);
                     :href="orderHref"
                     class="inline-flex items-center gap-2 rounded-md bg-sun-400 px-6 py-3 font-bold text-cocoa transition hover:bg-sun-500"
                 >
-                    Pesan Sekarang
+                    {{ t('Pesan Sekarang') }}
                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M7 17L17 7M17 7H7M17 7v10" />
                     </svg>

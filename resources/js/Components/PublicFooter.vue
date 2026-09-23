@@ -1,5 +1,6 @@
 <script setup>
 import BrandLogo from '@/Components/BrandLogo.vue';
+import { t } from '@/i18n';
 import { Link } from '@inertiajs/vue3';
 </script>
 
@@ -21,8 +22,8 @@ import { Link } from '@inertiajs/vue3';
                 <div>
                     <p class="text-sm uppercase tracking-wide text-zinc-500">Quick Navs</p>
                     <div class="mt-3 flex flex-col gap-2 text-lg text-zinc-200">
-                        <Link href="/" class="hover:text-brand-300">Beranda</Link>
-                        <Link href="/layanan" class="hover:text-brand-300">Pemesanan</Link>
+                        <Link href="/" class="hover:text-brand-300">{{ t('Beranda') }}</Link>
+                        <Link href="/layanan" class="hover:text-brand-300">{{ t('Pemesanan') }}</Link>
                     </div>
                 </div>
                 <div>

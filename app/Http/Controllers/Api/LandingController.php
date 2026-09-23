@@ -4,12 +4,40 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\DocumentationGallery;
+use App\Models\LandingHero;
 use App\Models\Product;
 use App\Models\Service;
 use Illuminate\Http\JsonResponse;
 
 class LandingController extends Controller
 {
+    /**
+     * Data Onboarding & Hero Banner (sebelum login) sesuai spesifikasi baru.
+     */
+    public function heroes(): JsonResponse
+    {
+        $heroes = LandingHero::active()
+            ->orderBy('order')
+            ->get(['id', 'title', 'description', 'image_url', 'icon_name', 'order', 'is_active'])
+            ->map(function ($hero) {
+                return [
+                    'id' => $hero->id,
+                    'title' => $hero->title,
+                    'description' => $hero->description,
+                    'image_url' => self::formatMediaUrl($hero->image_url),
+                    'icon_name' => $hero->icon_name,
+                    'order' => $hero->order,
+                    'is_active' => $hero->is_active,
+                ];
+            });
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Hero onboarding data retrieved successfully',
+            'data' => $heroes,
+        ]);
+    }
+
     /**
      * Data landing page untuk tamu/mobile home preview.
      */
