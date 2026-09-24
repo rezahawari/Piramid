@@ -30,6 +30,13 @@ Route::middleware(['auth', 'admin'])
             ->parameters(['galeri' => 'galeri'])
             ->except(['show']);
 
+        // Manajemen Landing Hero & Onboarding Banners CMS
+        Route::resource('heroes', \App\Http\Controllers\Admin\LandingHeroController::class)
+            ->parameters(['heroes' => 'hero'])
+            ->except(['show']);
+        Route::patch('/heroes/{hero}/toggle-status', [\App\Http\Controllers\Admin\LandingHeroController::class, 'toggleStatus'])
+            ->name('heroes.toggle-status');
+
         // Manajemen Pengguna (CRUD, Soft Delete, Status, Reset Password)
         Route::resource('users', UserController::class)
             ->parameters(['users' => 'user'])
