@@ -26,6 +26,21 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'phone' => ['nullable', 'string', 'max:30'],
+        ];
+    }
+
+    /**
+     * Custom attribute names for validation error messages.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'name' => 'Nama Lengkap',
+            'email' => 'Alamat Email',
+            'phone' => 'Nomor WhatsApp',
         ];
     }
 }

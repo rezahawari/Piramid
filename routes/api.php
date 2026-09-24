@@ -47,7 +47,7 @@ Route::prefix('v1')->group(function () {
 
         // Profile
         Route::get('/profile', [ProfileController::class, 'show']);
-        Route::patch('/profile', [ProfileController::class, 'update']);
+        Route::match(['patch', 'put'], '/profile', [ProfileController::class, 'update']);
         Route::put('/profile/password', [ProfileController::class, 'updatePassword']);
         Route::delete('/profile', [ProfileController::class, 'destroy']);
 

@@ -24,6 +24,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'phone' => ['nullable', 'string', 'max:30'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'device_name' => ['nullable', 'string', 'max:100'],
         ]);
@@ -31,6 +32,7 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
             'is_active' => true,
         ]);
@@ -46,6 +48,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'phone' => $user->phone,
                 'email_verified_at' => $user->email_verified_at,
                 'created_at' => $user->created_at,
             ],
@@ -87,6 +90,7 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'phone' => $user->phone,
                 'role' => $user->role ?? 'user',
                 'email_verified_at' => $user->email_verified_at,
             ],

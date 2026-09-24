@@ -12,17 +12,19 @@ use Illuminate\Validation\Rules\Password;
 class ProfileController extends Controller
 {
     /**
-     * Tampilkan info profil user.
+     * Tampilkan info profil user (Nama, Email, WhatsApp, Role, dsb).
      */
     public function show(Request $request): JsonResponse
     {
         $user = $request->user();
 
         return response()->json([
+            'status' => 'success',
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'phone' => $user->phone,
                 'role' => $user->role ?? 'user',
                 'email_verified_at' => $user->email_verified_at,
                 'created_at' => $user->created_at,
@@ -31,7 +33,7 @@ class ProfileController extends Controller
     }
 
     /**
-     * Update data nama dan email profil.
+     * Update data profil user: Nama Lengkap, Alamat Email, dan Nomor WhatsApp.
      */
     public function update(ProfileUpdateRequest $request): JsonResponse
     {
@@ -45,12 +47,16 @@ class ProfileController extends Controller
         $user->save();
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Profil berhasil diperbarui.',
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'phone' => $user->phone,
+                'role' => $user->role ?? 'user',
                 'email_verified_at' => $user->email_verified_at,
+                'updated_at' => $user->updated_at,
             ],
         ]);
     }
@@ -70,6 +76,7 @@ class ProfileController extends Controller
         ]);
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Password berhasil diperbarui.',
         ]);
     }
@@ -88,6 +95,7 @@ class ProfileController extends Controller
         $user->delete();
 
         return response()->json([
+            'status' => 'success',
             'message' => 'Akun berhasil dihapus.',
         ]);
     }
