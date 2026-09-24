@@ -13,6 +13,9 @@ use Inertia\Response;
 
 class LandingHeroController extends Controller
 {
+    // Default gambar fallback jika tidak diunggah
+    public const DEFAULT_HERO_IMAGE = 'https://images.unsplash.com/photo-1546445317-29f4545e9d53?w=800&auto=format&fit=crop&q=80';
+
     /**
      * Tampilkan daftar slide landing hero / onboarding.
      */
@@ -78,8 +81,9 @@ class LandingHeroController extends Controller
             }
         }
 
+        // Jika kosong, gunakan default fallback image
         if (empty($imageUrl)) {
-            return back()->withErrors(['image_file' => 'Wajib upload gambar atau isi URL gambar.']);
+            $imageUrl = self::DEFAULT_HERO_IMAGE;
         }
 
         LandingHero::create([
@@ -143,6 +147,10 @@ class LandingHeroController extends Controller
                 $file->storeAs('heroes', $filename, 'public');
                 $imageUrl = '/storage/heroes/'.$filename;
             }
+        }
+
+        if (empty($imageUrl)) {
+            $imageUrl = $hero->image_url ?: self::DEFAULT_HERO_IMAGE;
         }
 
         $hero->update([

@@ -139,7 +139,7 @@ const submit = () => {
                     <!-- Upload Gambar / Banner -->
                     <div>
                         <label class="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
-                            Gambar Banner Slide <span class="text-rose-500">*</span>
+                            Gambar Banner Slide <span class="text-xs text-gray-400 font-normal lowercase">(opsional, ada fallback gambar default)</span>
                         </label>
                         
                         <!-- Image Preview -->
