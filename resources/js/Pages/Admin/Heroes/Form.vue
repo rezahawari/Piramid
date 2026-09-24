@@ -40,6 +40,12 @@ const handleFileChange = (e) => {
     }
 };
 
+const handleUrlInput = () => {
+    if (!form.image_file) {
+        previewUrl.value = form.image_url;
+    }
+};
+
 const submit = () => {
     if (isEdit) {
         form.transform((data) => ({
@@ -64,7 +70,7 @@ const submit = () => {
             <div class="flex items-center gap-3">
                 <Link
                     :href="route('admin.heroes.index')"
-                    class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition"
+                    class="h-8 w-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition cursor-pointer"
                 >
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
@@ -159,7 +165,7 @@ const submit = () => {
                                 <input
                                     type="url"
                                     v-model="form.image_url"
-                                    @input="if (!form.image_file) previewUrl = form.image_url"
+                                    @input="handleUrlInput"
                                     placeholder="https://images.unsplash.com/..."
                                     class="w-full rounded-xl border border-gray-200 p-2 text-xs focus:border-brand-500 focus:ring-brand-500"
                                 />
@@ -206,7 +212,7 @@ const submit = () => {
                 <div class="flex items-center justify-end gap-3">
                     <Link
                         :href="route('admin.heroes.index')"
-                        class="rounded-2xl border border-gray-200 bg-white px-5 py-2.5 text-xs font-bold text-gray-700 shadow-2xs hover:bg-gray-50 transition"
+                        class="rounded-2xl border border-gray-200 bg-white px-5 py-2.5 text-xs font-bold text-gray-700 shadow-2xs hover:bg-gray-50 transition cursor-pointer"
                     >
                         Batal
                     </Link>
