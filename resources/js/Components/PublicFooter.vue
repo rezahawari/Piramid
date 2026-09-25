@@ -37,11 +37,11 @@ import { Link } from '@inertiajs/vue3';
 
             <div class="mt-12 grid gap-8 border-t border-white/10 pt-8 md:grid-cols-3">
                 <div class="text-zinc-200">
-                    <p>piramid@gmail.com</p>
-                    <p>081243124123</p>
+                    <p>piramidqurban@gmail.com</p>
+                    <p>+6285738366621</p>
                 </div>
                 <div class="text-sm">
-                    JL. Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    JL. Taman Tegalsari II No. 30, Kota Semarang
                 </div>
                 <div class="md:text-right">
                     <a
