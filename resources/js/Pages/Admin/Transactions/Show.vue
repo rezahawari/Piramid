@@ -447,8 +447,10 @@ const t = computed(() => props.transaction);
                                 </a>
                             </div>
 
-                            <div v-if="t.payment_status === 'pending'" class="grid grid-cols-2 gap-2 pt-2">
+                            <!-- Action Verifikasi Bukti -->
+                            <div v-if="t.payment_method === 'manual_transfer' && t.manual_transfer_proof_url && (t.payment_status === 'pending' || t.status === 'dibayar' || !t.approved_at)" class="grid grid-cols-2 gap-2 pt-2">
                                 <button
+                                    v-if="!t.approved_at"
                                     type="button"
                                     class="rounded-xl bg-emerald-600 px-3 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700"
                                     @click="approvePayment"
@@ -458,6 +460,7 @@ const t = computed(() => props.transaction);
                                 <button
                                     type="button"
                                     class="rounded-xl bg-amber-600 px-3 py-2.5 text-xs font-bold text-white shadow-sm transition hover:bg-amber-700"
+                                    :class="{ 'col-span-2': t.approved_at }"
                                     @click="isRejectOpen = true"
                                 >
                                     Tolak Bukti
@@ -466,6 +469,9 @@ const t = computed(() => props.transaction);
                         </div>
                         <p v-else class="mt-3 text-xs text-gray-500">
                             Pembeli belum mengunggah struk / bukti transfer.
+                        </p>
+                        <p v-if="t.approved_at" class="mt-3 text-xs text-emerald-600 font-semibold flex items-center gap-1">
+                            <span>✓ Pembayaran telah diverifikasi & disetujui.</span>
                         </p>
                         <p v-if="t.rejected_reason" class="mt-3 text-xs text-rose-600">
                             Alasan ditolak: {{ t.rejected_reason }}

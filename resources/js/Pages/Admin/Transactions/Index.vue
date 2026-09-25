@@ -91,7 +91,8 @@ const submitDelete = () => {
 };
 
 const canModerate = (t) =>
-    t.payment_method === 'manual_transfer' && t.payment_status === 'pending';
+    t.payment_method === 'manual_transfer' &&
+    (t.payment_status === 'pending' || t.status === 'dibayar' || (t.manual_transfer_proof_url && !t.approved_at));
 </script>
 
 <template>

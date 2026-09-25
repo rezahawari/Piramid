@@ -47,6 +47,7 @@ class TransactionController extends Controller
                 'payment_status' => $t->payment_status->value,
                 'status' => $t->status->value,
                 'manual_transfer_proof_url' => $t->manual_transfer_proof_url,
+                'approved_at' => $t->approved_at?->toIso8601String(),
                 'created_at' => $t->created_at?->toIso8601String(),
             ]);
 
@@ -60,7 +61,7 @@ class TransactionController extends Controller
     {
         abort_unless(
             $transaction->payment_method === PaymentMethod::ManualTransfer
-                && $transaction->payment_status === PaymentStatus::Pending
+                && ($transaction->payment_status === PaymentStatus::Pending || $transaction->status === TransactionStatus::Dibayar)
                 && $transaction->manual_transfer_proof_url,
             422,
             'Transaksi ini tidak dapat disetujui.',
@@ -68,13 +69,10 @@ class TransactionController extends Controller
 
         $transaction->fill([
             'payment_status' => PaymentStatus::Paid,
+            'status' => TransactionStatus::Dibayar,
             'approved_by' => auth()->id(),
             'approved_at' => now(),
         ]);
-
-        if ($transaction->status === TransactionStatus::Menunggu) {
-            $transaction->status = TransactionStatus::Dibayar;
-        }
 
         $transaction->save();
 
@@ -83,8 +81,8 @@ class TransactionController extends Controller
             try {
                 app(\App\Services\Notification\WebPushService::class)->sendToUser(
                     $transaction->user,
-                    '✅ Pembayaran Disetujui!',
-                    "Pembayaran pesanan #{$transaction->transaction_code} telah diverifikasi lunas. Hewan Anda siap disiapkan.",
+                    '✅ Pembayaran Disetujui Admin!',
+                    "Pembayaran pesanan #{$transaction->transaction_code} telah diverifikasi dan disetujui admin.",
                     route('transactions.show', $transaction->transaction_code)
                 );
             } catch (\Throwable $e) {
@@ -92,7 +90,7 @@ class TransactionController extends Controller
             }
         }
 
-        return back()->with('success', "Pembayaran {$transaction->transaction_code} disetujui.");
+        return back()->with('success', "Pembayaran {$transaction->transaction_code} berhasil disetujui.");
     }
 
     public function reject(Request $request, Transaction $transaction): RedirectResponse
@@ -103,7 +101,7 @@ class TransactionController extends Controller
 
         abort_unless(
             $transaction->payment_method === PaymentMethod::ManualTransfer
-                && $transaction->payment_status === PaymentStatus::Pending,
+                && ($transaction->payment_status === PaymentStatus::Pending || $transaction->status === TransactionStatus::Dibayar),
             422,
             'Transaksi ini tidak dapat ditolak.',
         );
