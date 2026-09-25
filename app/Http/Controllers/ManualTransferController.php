@@ -51,8 +51,26 @@ class ManualTransferController extends Controller
             $url = '/storage/bukti-transfer/'.$filename;
         }
 
-        $transaction->update(['manual_transfer_proof_url' => $url]);
+        $transaction->update([
+            'manual_transfer_proof_url' => $url,
+            'payment_status' => PaymentStatus::Paid,
+            'status' => \App\Enums\TransactionStatus::Dibayar,
+        ]);
 
-        return back()->with('success', 'Bukti transfer terkirim, menunggu verifikasi admin.');
+        // Kirim Push Notification otomatis ke HP user jika aktif
+        if ($transaction->user) {
+            try {
+                app(\App\Services\Notification\WebPushService::class)->sendToUser(
+                    $transaction->user,
+                    '✅ Bukti Pembayaran Diterima!',
+                    "Pembayaran pesanan #{$transaction->transaction_code} telah diterima. Status pesanan kini: Dibayar.",
+                    route('transactions.show', $transaction->transaction_code)
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Gagal push notif manual proof: ' . $e->getMessage());
+            }
+        }
+
+        return back()->with('success', 'Bukti transfer berhasil dikirim. Status transaksi kini telah Dibayar.');
     }
 }

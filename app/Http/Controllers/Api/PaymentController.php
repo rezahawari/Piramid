@@ -95,16 +95,38 @@ class PaymentController extends Controller
 
         $fullUrl = LandingController::formatMediaUrl($url);
 
-        $transaction->update(['manual_transfer_proof_url' => $url]);
+        $transaction->update([
+            'manual_transfer_proof_url' => $url,
+            'payment_status' => PaymentStatus::Paid,
+            'status' => \App\Enums\TransactionStatus::Dibayar,
+        ]);
+
+        // Kirim Push Notification otomatis ke HP user jika aktif
+        if ($transaction->user) {
+            try {
+                app(\App\Services\Notification\WebPushService::class)->sendToUser(
+                    $transaction->user,
+                    '✅ Bukti Pembayaran Diterima!',
+                    "Pembayaran pesanan #{$transaction->transaction_code} telah diterima. Status pesanan kini: Dibayar.",
+                    route('transactions.show', $transaction->transaction_code)
+                );
+            } catch (\Throwable $e) {
+                \Illuminate\Support\Facades\Log::warning('Gagal push notif manual proof API: ' . $e->getMessage());
+            }
+        }
+
+        $transaction->refresh();
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Bukti transfer terkirim, menunggu verifikasi admin.',
+            'message' => 'Bukti transfer berhasil dikirim. Status transaksi kini telah Dibayar.',
             'data' => [
                 'transaction_code' => $transaction->transaction_code,
                 'proof_url' => $fullUrl,
                 'payment_status' => $transaction->payment_status->value,
                 'payment_status_label' => $transaction->payment_status->label(),
+                'status' => $transaction->status->value,
+                'status_label' => $transaction->status->label(),
             ],
         ]);
     }

@@ -446,6 +446,22 @@ const failLabel = {
                                     {{ transaction.payment_method === 'midtrans' ? 'Otomatis (Midtrans)' : 'Transfer Manual' }}
                                 </dd>
                             </div>
+                            <div v-if="transaction.manual_transfer_proof_url" class="flex justify-between items-center py-1">
+                                <dt>Bukti Transfer</dt>
+                                <dd>
+                                    <a
+                                        :href="transaction.manual_transfer_proof_url"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="font-semibold text-brand-600 hover:text-brand-800 underline inline-flex items-center gap-1"
+                                    >
+                                        <span>Lihat Bukti Foto</span>
+                                        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                    </a>
+                                </dd>
+                            </div>
                             <div class="flex justify-between border-t border-gray-100 pt-3 text-sm">
                                 <dt class="font-bold text-gray-900">Total Pembayaran</dt>
                                 <dd class="font-black text-brand-600">{{ rupiah(transaction.total_amount) }}</dd>
