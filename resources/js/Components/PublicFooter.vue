@@ -56,7 +56,7 @@ import { Link } from '@inertiajs/vue3';
             </div>
 
             <p class="mt-10 border-t border-white/10 pt-6 text-sm">
-                Copyright {{ new Date().getFullYear() }} © Piramid. All right reserved.
+                Copyright {{ new Date().getFullYear() }} © PT Delapan Penjuru Piramida. All right reserved.
             </p>
         </div>
     </footer>
