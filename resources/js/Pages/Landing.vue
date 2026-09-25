@@ -224,7 +224,7 @@ const coverageCountries = [
                             {{ svc.name }}
                             <span class="text-xl">{{ metaFor(svc.slug).arabic }}</span>
                         </h3>
-                        <ul class="mt-3 space-y-2 text-sm text-brand-50">
+                        <!-- <ul class="mt-3 space-y-2 text-sm text-brand-50">
                             <li
                                 v-for="f in metaFor(svc.slug).features"
                                 :key="f"
@@ -235,7 +235,7 @@ const coverageCountries = [
                                 </svg>
                                 {{ f }}
                             </li>
-                        </ul>
+                        </ul> -->
                     </div>
                 </div>
             </div>
