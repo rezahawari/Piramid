@@ -16,6 +16,9 @@ class Product extends Model
         'slug',
         'description',
         'price',
+        'price_usd',
+        'price_cny',
+        'price_sar',
         'weight_estimate_kg',
         'stock',
         'max_sohibul',
@@ -28,11 +31,24 @@ class Product extends Model
     {
         return [
             'price' => 'decimal:2',
+            'price_usd' => 'decimal:2',
+            'price_cny' => 'decimal:2',
+            'price_sar' => 'decimal:2',
             'weight_estimate_kg' => 'decimal:2',
             'max_sohibul' => 'integer',
             'gallery' => 'array',
             'is_active' => 'boolean',
         ];
+    }
+
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class)->orderBy('order');
+    }
+
+    public function activeVariants(): HasMany
+    {
+        return $this->hasMany(ProductVariant::class)->where('is_active', true)->orderBy('order');
     }
 
     public function services(): BelongsToMany

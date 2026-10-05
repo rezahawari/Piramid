@@ -30,6 +30,13 @@ Route::middleware(['auth', 'admin'])
             ->parameters(['galeri' => 'galeri'])
             ->except(['show']);
 
+        // Manajemen Opsi Distribusi / Penyaluran
+        Route::resource('distribusi', \App\Http\Controllers\Admin\DistributionOptionController::class)
+            ->parameters(['distribusi' => 'distribusi'])
+            ->except(['show']);
+        Route::patch('/distribusi/{distribusi}/toggle-status', [\App\Http\Controllers\Admin\DistributionOptionController::class, 'toggleStatus'])
+            ->name('distribusi.toggle-status');
+
         // Manajemen Landing Hero & Onboarding Banners CMS
         Route::resource('heroes', \App\Http\Controllers\Admin\LandingHeroController::class)
             ->parameters(['heroes' => 'hero'])

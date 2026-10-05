@@ -18,6 +18,12 @@ class Service extends Model
         'cover_image_url',
         'is_active',
         'has_sohibul',
+        'has_cooking_option',
+        'default_cooking_option',
+        'cooking_fee_idr',
+        'cooking_fee_usd',
+        'cooking_fee_cny',
+        'cooking_fee_sar',
     ];
 
     protected function casts(): array
@@ -25,6 +31,11 @@ class Service extends Model
         return [
             'is_active' => 'boolean',
             'has_sohibul' => 'boolean',
+            'has_cooking_option' => 'boolean',
+            'cooking_fee_idr' => 'decimal:2',
+            'cooking_fee_usd' => 'decimal:2',
+            'cooking_fee_cny' => 'decimal:2',
+            'cooking_fee_sar' => 'decimal:2',
         ];
     }
 

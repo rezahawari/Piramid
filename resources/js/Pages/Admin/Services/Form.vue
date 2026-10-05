@@ -27,6 +27,12 @@ const form = useForm({
     image_file: null,
     is_active: props.service?.is_active ?? true,
     has_sohibul: props.service?.has_sohibul ?? false,
+    has_cooking_option: props.service?.has_cooking_option ?? false,
+    default_cooking_option: props.service?.default_cooking_option ?? 'raw',
+    cooking_fee_idr: props.service?.cooking_fee_idr != null ? String(props.service.cooking_fee_idr) : '0',
+    cooking_fee_usd: props.service?.cooking_fee_usd != null ? String(props.service.cooking_fee_usd) : '0',
+    cooking_fee_cny: props.service?.cooking_fee_cny != null ? String(props.service.cooking_fee_cny) : '0',
+    cooking_fee_sar: props.service?.cooking_fee_sar != null ? String(props.service.cooking_fee_sar) : '0',
 });
 
 const imagePreview = ref(props.service?.cover_image_url ?? null);
@@ -167,6 +173,105 @@ const submit = () => {
                                     alt="Preview Sampul"
                                     class="h-full w-full object-cover"
                                 />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Opsi Pengolahan Daging (Mentah / Matang) -->
+                <div class="border-b border-gray-100 pb-5">
+                    <h3 class="text-base font-bold text-gray-900">Opsi Pengolahan Daging (Mentah / Matang)</h3>
+                    <p class="text-xs text-gray-500">Atur apakah layanan ini menyediakan pilihan daging mentah atau siap saji/matang.</p>
+
+                    <div class="mt-4 space-y-4">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <Checkbox v-model:checked="form.has_cooking_option" class="!rounded-md" />
+                            <div>
+                                <span class="text-xs font-bold text-gray-900 block">
+                                    Aktifkan Opsi Pilihan Pengolahan (Mentah / Matang)
+                                </span>
+                                <span class="text-[11px] text-gray-500 block">
+                                    Jika dicentang, pembeli dapat memilih bentuk daging (Mentah atau Matang).
+                                </span>
+                            </div>
+                        </label>
+
+                        <div v-if="form.has_cooking_option" class="mt-4 rounded-xl border border-brand-200 bg-brand-50/40 p-4 space-y-4">
+                            <div>
+                                <InputLabel value="Opsi Default (Sudah Termasuk Harga / Rp 0) *" class="!text-xs font-bold text-brand-900" />
+                                <div class="mt-2 flex gap-4">
+                                    <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-800">
+                                        <input
+                                            type="radio"
+                                            value="raw"
+                                            v-model="form.default_cooking_option"
+                                            class="text-brand-600 focus:ring-brand-500"
+                                        />
+                                        <span>Mentah (Default)</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-800">
+                                        <input
+                                            type="radio"
+                                            value="cooked"
+                                            v-model="form.default_cooking_option"
+                                            class="text-brand-600 focus:ring-brand-500"
+                                        />
+                                        <span>Matang / Siap Saji (Default)</span>
+                                    </label>
+                                </div>
+                                <p class="mt-1 text-[11px] text-gray-500">
+                                    Jika pembeli memilih opsi non-default (misal default Mentah tapi pembeli pilih Matang), biaya tambahan di bawah ini akan otomatis ditambahkan.
+                                </p>
+                            </div>
+
+                            <div class="border-t border-brand-200/60 pt-3">
+                                <span class="text-xs font-bold text-brand-900 block">Biaya Tambahan Olahan Non-Default:</span>
+                                <div class="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                    <div>
+                                        <InputLabel for="cooking_fee_idr" value="Biaya IDR (Rp)" class="!text-[11px] font-bold" />
+                                        <TextInput
+                                            id="cooking_fee_idr"
+                                            v-model="form.cooking_fee_idr"
+                                            type="number"
+                                            min="0"
+                                            class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                            placeholder="Contoh: 1000000"
+                                        />
+                                    </div>
+                                    <div>
+                                        <InputLabel for="cooking_fee_usd" value="Biaya USD ($)" class="!text-[11px] font-bold" />
+                                        <TextInput
+                                            id="cooking_fee_usd"
+                                            v-model="form.cooking_fee_usd"
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        />
+                                    </div>
+                                    <div>
+                                        <InputLabel for="cooking_fee_cny" value="Biaya CNY (¥)" class="!text-[11px] font-bold" />
+                                        <TextInput
+                                            id="cooking_fee_cny"
+                                            v-model="form.cooking_fee_cny"
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        />
+                                    </div>
+                                    <div>
+                                        <InputLabel for="cooking_fee_sar" value="Biaya SAR (﷼)" class="!text-[11px] font-bold" />
+                                        <TextInput
+                                            id="cooking_fee_sar"
+                                            v-model="form.cooking_fee_sar"
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

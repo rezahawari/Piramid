@@ -19,6 +19,7 @@ class ServiceRequest extends FormRequest
             'slug' => Str::slug($this->input('slug') ?: (string) $this->input('name')),
             'is_active' => $this->boolean('is_active'),
             'has_sohibul' => $this->boolean('has_sohibul'),
+            'has_cooking_option' => $this->boolean('has_cooking_option'),
         ]);
     }
 
@@ -40,6 +41,12 @@ class ServiceRequest extends FormRequest
             'image_file' => ['nullable', 'image', 'max:5120'],
             'is_active' => ['boolean'],
             'has_sohibul' => ['boolean'],
+            'has_cooking_option' => ['boolean'],
+            'default_cooking_option' => ['nullable', 'string', 'in:raw,cooked'],
+            'cooking_fee_idr' => ['nullable', 'numeric', 'min:0'],
+            'cooking_fee_usd' => ['nullable', 'numeric', 'min:0'],
+            'cooking_fee_cny' => ['nullable', 'numeric', 'min:0'],
+            'cooking_fee_sar' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 

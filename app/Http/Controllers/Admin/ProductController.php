@@ -34,7 +34,8 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request, CloudinaryService $cloudinary): RedirectResponse
     {
-        $data = Arr::except($request->validated(), ['service_ids', 'image_file']);
+        $data = Arr::except($request->validated(), ['service_ids', 'image_file', 'variants']);
+        $variants = $request->validated('variants') ?? [];
 
         if ($request->hasFile('image_file')) {
             $file = $request->file('image_file');
@@ -51,8 +52,24 @@ class ProductController extends Controller
         }
 
         $product = Product::create($data);
-
         $product->services()->sync($request->validated('service_ids') ?? []);
+
+        foreach ($variants as $idx => $vData) {
+            $product->variants()->create([
+                'name_id' => $vData['name_id'],
+                'name_en' => $vData['name_en'] ?? null,
+                'name_zh' => $vData['name_zh'] ?? null,
+                'name_ar' => $vData['name_ar'] ?? null,
+                'spec_description' => $vData['spec_description'] ?? null,
+                'price_idr' => $vData['price_idr'],
+                'price_usd' => $vData['price_usd'] ?? null,
+                'price_cny' => $vData['price_cny'] ?? null,
+                'price_sar' => $vData['price_sar'] ?? null,
+                'stock' => $vData['stock'] ?? 0,
+                'order' => $vData['order'] ?? $idx,
+                'is_active' => $vData['is_active'] ?? true,
+            ]);
+        }
 
         return redirect()
             ->route('admin.produk.index')
@@ -62,14 +79,15 @@ class ProductController extends Controller
     public function edit(Product $produk): Response
     {
         return Inertia::render('Admin/Products/Form', [
-            'product' => $produk->load('services:id'),
+            'product' => $produk->load(['services:id', 'variants']),
             'services' => Service::orderBy('name')->get(['id', 'name']),
         ]);
     }
 
     public function update(ProductRequest $request, Product $produk, CloudinaryService $cloudinary): RedirectResponse
     {
-        $data = Arr::except($request->validated(), ['service_ids', 'image_file']);
+        $data = Arr::except($request->validated(), ['service_ids', 'image_file', 'variants']);
+        $variants = $request->validated('variants') ?? [];
 
         if ($request->hasFile('image_file')) {
             $file = $request->file('image_file');
@@ -86,8 +104,40 @@ class ProductController extends Controller
         }
 
         $produk->update($data);
-
         $produk->services()->sync($request->validated('service_ids') ?? []);
+
+        // Sync Variants
+        $existingIds = [];
+        foreach ($variants as $idx => $vData) {
+            $variantAttributes = [
+                'name_id' => $vData['name_id'],
+                'name_en' => $vData['name_en'] ?? null,
+                'name_zh' => $vData['name_zh'] ?? null,
+                'name_ar' => $vData['name_ar'] ?? null,
+                'spec_description' => $vData['spec_description'] ?? null,
+                'price_idr' => $vData['price_idr'],
+                'price_usd' => $vData['price_usd'] ?? null,
+                'price_cny' => $vData['price_cny'] ?? null,
+                'price_sar' => $vData['price_sar'] ?? null,
+                'stock' => $vData['stock'] ?? 0,
+                'order' => $vData['order'] ?? $idx,
+                'is_active' => $vData['is_active'] ?? true,
+            ];
+
+            if (!empty($vData['id'])) {
+                $variant = $produk->variants()->where('id', $vData['id'])->first();
+                if ($variant) {
+                    $variant->update($variantAttributes);
+                    $existingIds[] = $variant->id;
+                }
+            } else {
+                $newVariant = $produk->variants()->create($variantAttributes);
+                $existingIds[] = $newVariant->id;
+            }
+        }
+
+        // Hapus variant yang tidak disertakan lagi
+        $produk->variants()->whereNotIn('id', $existingIds)->delete();
 
         return redirect()
             ->route('admin.produk.index')

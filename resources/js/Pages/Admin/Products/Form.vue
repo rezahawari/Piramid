@@ -22,12 +22,32 @@ const props = defineProps({
 
 const isEdit = computed(() => props.product !== null);
 
+const initialVariants = props.product?.variants?.length
+    ? props.product.variants.map((v) => ({
+          id: v.id,
+          name_id: v.name_id,
+          name_en: v.name_en || '',
+          name_zh: v.name_zh || '',
+          name_ar: v.name_ar || '',
+          spec_description: v.spec_description || '',
+          price_idr: String(v.price_idr),
+          price_usd: v.price_usd != null ? String(v.price_usd) : '',
+          price_cny: v.price_cny != null ? String(v.price_cny) : '',
+          price_sar: v.price_sar != null ? String(v.price_sar) : '',
+          stock: String(v.stock),
+          is_active: v.is_active ?? true,
+      }))
+    : [];
+
 const form = useForm({
     _method: isEdit.value ? 'PUT' : 'POST',
     name: props.product?.name ?? '',
     slug: props.product?.slug ?? '',
     description: props.product?.description ?? '',
     price: props.product?.price != null ? String(props.product.price) : '',
+    price_usd: props.product?.price_usd != null ? String(props.product.price_usd) : '',
+    price_cny: props.product?.price_cny != null ? String(props.product.price_cny) : '',
+    price_sar: props.product?.price_sar != null ? String(props.product.price_sar) : '',
     weight_estimate_kg:
         props.product?.weight_estimate_kg != null
             ? String(props.product.weight_estimate_kg)
@@ -38,6 +58,7 @@ const form = useForm({
     image_file: null,
     is_active: props.product?.is_active ?? true,
     service_ids: props.product?.services?.map((service) => service.id) ?? [],
+    variants: initialVariants,
 });
 
 const imagePreview = ref(props.product?.primary_image_url ?? null);
@@ -57,6 +78,27 @@ const toggleService = (serviceId) => {
     } else {
         form.service_ids.push(serviceId);
     }
+};
+
+const addVariant = () => {
+    form.variants.push({
+        id: null,
+        name_id: '',
+        name_en: '',
+        name_zh: '',
+        name_ar: '',
+        spec_description: '',
+        price_idr: form.price || '0',
+        price_usd: form.price_usd || '',
+        price_cny: form.price_cny || '',
+        price_sar: form.price_sar || '',
+        stock: '10',
+        is_active: true,
+    });
+};
+
+const removeVariant = (index) => {
+    form.variants.splice(index, 1);
 };
 
 const submit = () => {
@@ -89,7 +131,7 @@ const submit = () => {
             </h2>
         </template>
 
-        <div class="mx-auto max-w-3xl">
+        <div class="mx-auto max-w-4xl">
             <form
                 class="space-y-6 rounded-2xl border border-gray-200/80 bg-white p-6 sm:p-8 shadow-sm"
                 @submit.prevent="submit"
@@ -107,7 +149,7 @@ const submit = () => {
                                 v-model="form.name"
                                 type="text"
                                 class="mt-1 block w-full !rounded-xl !text-xs"
-                                placeholder="Contoh: Domba Premium Standar A / Sapi Limosin 1/7"
+                                placeholder="Contoh: Domba Premium Standar / Sapi Limosin"
                                 required
                                 autofocus
                             />
@@ -121,7 +163,7 @@ const submit = () => {
                                 v-model="form.slug"
                                 type="text"
                                 class="mt-1 block w-full !rounded-xl !text-xs font-mono"
-                                placeholder="domba-premium-a"
+                                placeholder="domba-premium-standar"
                             />
                             <InputError class="mt-1" :message="form.errors.slug" />
                             <p class="mt-1 text-[11px] text-gray-400">Kosongkan jika ingin dibuat otomatis dari nama produk.</p>
@@ -141,88 +183,266 @@ const submit = () => {
                     </div>
                 </div>
 
-                <!-- 2. Harga, Bobot, & Stok -->
+                <!-- 2. Harga Dasar (Fallback / Mulai dari) & Multi-Currency -->
                 <div class="border-b border-gray-100 pb-5">
-                    <h3 class="text-base font-bold text-gray-900">Harga, Bobot, & Ketersediaan</h3>
-                    <p class="text-xs text-gray-500">Tentukan harga satuan jual, perkiraan berat hidup, dan jumlah stok tersedia.</p>
+                    <h3 class="text-base font-bold text-gray-900">Harga Acuan Dasar (Mulai dari)</h3>
+                    <p class="text-xs text-gray-500">Harga dasar produk jika tidak memilih varian atau sebagai display card terendah.</p>
 
-                    <div class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                    <div class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-4">
                         <div>
-                            <InputLabel for="price" value="Harga Satuan (Rp) *" class="!text-xs font-bold" />
-                            <div class="relative mt-1">
-                                <span class="absolute left-3 top-2.5 text-xs font-bold text-gray-400">Rp</span>
-                                <TextInput
-                                    id="price"
-                                    v-model="form.price"
-                                    type="number"
-                                    min="0"
-                                    step="1"
-                                    class="block w-full !rounded-xl !text-xs !pl-9 font-bold text-brand-600"
-                                    placeholder="2500000"
-                                    required
-                                />
-                            </div>
+                            <InputLabel for="price" value="Harga IDR (Rp) *" class="!text-xs font-bold" />
+                            <TextInput
+                                id="price"
+                                v-model="form.price"
+                                type="number"
+                                min="0"
+                                class="mt-1 block w-full !rounded-xl !text-xs font-bold text-brand-600"
+                                placeholder="2500000"
+                                required
+                            />
                             <InputError class="mt-1" :message="form.errors.price" />
                         </div>
-
                         <div>
-                            <InputLabel for="weight_estimate_kg" value="Estimasi Bobot (kg)" class="!text-xs font-bold" />
-                            <div class="relative mt-1">
-                                <TextInput
-                                    id="weight_estimate_kg"
-                                    v-model="form.weight_estimate_kg"
-                                    type="number"
-                                    min="0"
-                                    step="0.1"
-                                    class="block w-full !rounded-xl !text-xs !pr-9"
-                                    placeholder="28.5"
-                                />
-                                <span class="absolute right-3 top-2.5 text-xs text-gray-400">kg</span>
-                            </div>
+                            <InputLabel for="price_usd" value="Harga USD ($)" class="!text-xs font-bold" />
+                            <TextInput
+                                id="price_usd"
+                                v-model="form.price_usd"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                class="mt-1 block w-full !rounded-xl !text-xs font-semibold"
+                                placeholder="165"
+                            />
+                        </div>
+                        <div>
+                            <InputLabel for="price_cny" value="Harga CNY (¥)" class="!text-xs font-bold" />
+                            <TextInput
+                                id="price_cny"
+                                v-model="form.price_cny"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                class="mt-1 block w-full !rounded-xl !text-xs font-semibold"
+                                placeholder="1180"
+                            />
+                        </div>
+                        <div>
+                            <InputLabel for="price_sar" value="Harga SAR (﷼)" class="!text-xs font-bold" />
+                            <TextInput
+                                id="price_sar"
+                                v-model="form.price_sar"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                                class="mt-1 block w-full !rounded-xl !text-xs font-semibold"
+                                placeholder="620"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                        <div>
+                            <InputLabel for="weight_estimate_kg" value="Estimasi Bobot Rata-rata (kg)" class="!text-xs font-bold" />
+                            <TextInput
+                                id="weight_estimate_kg"
+                                v-model="form.weight_estimate_kg"
+                                type="number"
+                                min="0"
+                                step="0.1"
+                                class="mt-1 block w-full !rounded-xl !text-xs"
+                                placeholder="28.5"
+                            />
                             <InputError class="mt-1" :message="form.errors.weight_estimate_kg" />
                         </div>
-
                         <div>
-                            <InputLabel for="stock" value="Stok Hewan (Ekor) *" class="!text-xs font-bold" />
-                            <div class="relative mt-1">
-                                <TextInput
-                                    id="stock"
-                                    v-model="form.stock"
-                                    type="number"
-                                    min="0"
-                                    step="1"
-                                    class="block w-full !rounded-xl !text-xs !pr-12"
-                                    placeholder="10"
-                                    required
-                                />
-                                <span class="absolute right-3 top-2.5 text-xs text-gray-400">ekor</span>
-                            </div>
+                            <InputLabel for="stock" value="Total Stok Fallback (Ekor) *" class="!text-xs font-bold" />
+                            <TextInput
+                                id="stock"
+                                v-model="form.stock"
+                                type="number"
+                                min="0"
+                                class="mt-1 block w-full !rounded-xl !text-xs"
+                                placeholder="10"
+                                required
+                            />
                             <InputError class="mt-1" :message="form.errors.stock" />
                         </div>
-
                         <div>
                             <InputLabel for="max_sohibul" value="Batas Maks. Sohibul / Ekor *" class="!text-xs font-bold" />
-                            <div class="relative mt-1">
-                                <TextInput
-                                    id="max_sohibul"
-                                    v-model="form.max_sohibul"
-                                    type="number"
-                                    min="1"
-                                    max="50"
-                                    step="1"
-                                    class="block w-full !rounded-xl !text-xs !pr-14 font-semibold text-brand-700"
-                                    placeholder="1 (Kambing) / 7 (Sapi)"
-                                    required
-                                />
-                                <span class="absolute right-3 top-2.5 text-xs text-gray-400">orang</span>
-                            </div>
-                            <p class="mt-1 text-[10px] text-gray-400">Contoh: Kambing = 1 orang, Sapi = 7 orang.</p>
+                            <TextInput
+                                id="max_sohibul"
+                                v-model="form.max_sohibul"
+                                type="number"
+                                min="1"
+                                max="50"
+                                class="mt-1 block w-full !rounded-xl !text-xs font-semibold text-brand-700"
+                                placeholder="1 (Kambing) / 7 (Sapi)"
+                                required
+                            />
                             <InputError class="mt-1" :message="form.errors.max_sohibul" />
                         </div>
                     </div>
                 </div>
 
-                <!-- 3. Foto Produk Hewan -->
+                <!-- 3. Dynamic Variants Repeater -->
+                <div class="border-b border-gray-100 pb-5">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-base font-bold text-gray-900">Varian Hewan Dinamis</h3>
+                            <p class="text-xs text-gray-500">Tambahkan berbagai pilihan varian (bobot, kelas super/reguler, jenis ras) dengan harga dan stok spesifik.</p>
+                        </div>
+                        <button
+                            type="button"
+                            @click="addVariant"
+                            class="inline-flex items-center gap-1 rounded-xl bg-brand-50 border border-brand-200 px-3 py-1.5 text-xs font-bold text-brand-700 hover:bg-brand-100 transition cursor-pointer"
+                        >
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                            </svg>
+                            Tambah Varian
+                        </button>
+                    </div>
+
+                    <div v-if="form.variants.length" class="mt-4 space-y-4">
+                        <div
+                            v-for="(v, idx) in form.variants"
+                            :key="idx"
+                            class="rounded-2xl border border-gray-200 bg-gray-50/60 p-4 relative"
+                        >
+                            <div class="flex items-center justify-between pb-2 border-b border-gray-200/60 mb-3">
+                                <span class="text-xs font-bold text-brand-900">Varian #{{ idx + 1 }}</span>
+                                <button
+                                    type="button"
+                                    @click="removeVariant(idx)"
+                                    class="text-xs font-bold text-rose-600 hover:text-rose-700 cursor-pointer"
+                                >
+                                    ✕ Hapus
+                                </button>
+                            </div>
+
+                            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                                <div>
+                                    <InputLabel :value="`Nama Varian (ID) *`" class="!text-[11px] font-bold" />
+                                    <TextInput
+                                        v-model="v.name_id"
+                                        type="text"
+                                        class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        placeholder="Contoh: Tipe A (Super)"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <InputLabel :value="`Nama Varian (EN)`" class="!text-[11px] font-bold" />
+                                    <TextInput
+                                        v-model="v.name_en"
+                                        type="text"
+                                        class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        placeholder="e.g. Type A (Super)"
+                                    />
+                                </div>
+                                <div>
+                                    <InputLabel :value="`Nama (ZH Chinese)`" class="!text-[11px] font-bold" />
+                                    <TextInput
+                                        v-model="v.name_zh"
+                                        type="text"
+                                        class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        placeholder="例如: A型（特级）"
+                                    />
+                                </div>
+                                <div>
+                                    <InputLabel :value="`Nama (AR Arabic)`" class="!text-[11px] font-bold" />
+                                    <TextInput
+                                        v-model="v.name_ar"
+                                        type="text"
+                                        dir="rtl"
+                                        class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        placeholder="مثال: فئة أ (ممتاز)"
+                                    />
+                                </div>
+                            </div>
+
+                            <div class="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                                <div>
+                                    <InputLabel value="Keterangan / Bobot Spesifikasi" class="!text-[11px] font-bold" />
+                                    <TextInput
+                                        v-model="v.spec_description"
+                                        type="text"
+                                        class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        placeholder="Contoh: 35-40 kg, Jantan"
+                                    />
+                                </div>
+                                <div>
+                                    <InputLabel value="Stok Varian (Ekor) *" class="!text-[11px] font-bold" />
+                                    <TextInput
+                                        v-model="v.stock"
+                                        type="number"
+                                        min="0"
+                                        class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        required
+                                    />
+                                </div>
+                                <div class="flex items-center pt-5">
+                                    <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700">
+                                        <Checkbox v-model:checked="v.is_active" />
+                                        <span>Aktifkan Varian Ini</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Harga Varian Multi-Mata Uang -->
+                            <div class="mt-3 border-t border-gray-200/60 pt-3">
+                                <span class="text-[11px] font-bold text-gray-600 block mb-1.5">Harga Varian per Mata Uang:</span>
+                                <div class="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                                    <div>
+                                        <InputLabel value="Harga IDR (Rp) *" class="!text-[10px] font-bold" />
+                                        <TextInput
+                                            v-model="v.price_idr"
+                                            type="number"
+                                            min="0"
+                                            class="mt-1 block w-full !rounded-xl !text-xs font-bold text-brand-700 bg-white"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <InputLabel value="Harga USD ($)" class="!text-[10px] font-bold" />
+                                        <TextInput
+                                            v-model="v.price_usd"
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        />
+                                    </div>
+                                    <div>
+                                        <InputLabel value="Harga CNY (¥)" class="!text-[10px] font-bold" />
+                                        <TextInput
+                                            v-model="v.price_cny"
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        />
+                                    </div>
+                                    <div>
+                                        <InputLabel value="Harga SAR (﷼)" class="!text-[10px] font-bold" />
+                                        <TextInput
+                                            v-model="v.price_sar"
+                                            type="number"
+                                            min="0"
+                                            step="0.01"
+                                            class="mt-1 block w-full !rounded-xl !text-xs bg-white"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else class="mt-3 rounded-xl border border-dashed border-gray-200 bg-gray-50/40 p-4 text-center text-xs text-gray-500">
+                        Belum ada varian ditambahkan. Produk akan menggunakan harga dasar di atas.
+                    </div>
+                </div>
+
+                <!-- 4. Foto Produk Hewan -->
                 <div class="border-b border-gray-100 pb-5">
                     <h3 class="text-base font-bold text-gray-900">Foto Produk Hewan</h3>
                     <p class="text-xs text-gray-500">Unggah foto dokumentasi hewan berkualitas baik.</p>
@@ -273,7 +493,7 @@ const submit = () => {
                     </div>
                 </div>
 
-                <!-- 4. Pointing Layanan Terkait -->
+                <!-- 5. Pointing Layanan Terkait -->
                 <div class="border-b border-gray-100 pb-5">
                     <h3 class="text-base font-bold text-gray-900">Tautkan ke Layanan (Pointing)</h3>
                     <p class="text-xs text-gray-500">Pilih satu atau lebih layanan yang menyediakan pilihan hewan ini.</p>
@@ -299,14 +519,13 @@ const submit = () => {
                             />
                             <div>
                                 <p class="text-xs font-bold">{{ service.name }}</p>
-                                <!-- <p class="text-[11px] text-gray-400">/layanan/{{ service.slug }}</p> -->
                             </div>
                         </div>
                     </div>
                     <InputError class="mt-2" :message="form.errors.service_ids" />
                 </div>
 
-                <!-- 5. Status Publikasi -->
+                <!-- 6. Status Publikasi -->
                 <div class="pt-1">
                     <label class="flex items-center gap-3 cursor-pointer">
                         <Checkbox v-model:checked="form.is_active" class="!rounded-md" />

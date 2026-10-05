@@ -1,5 +1,5 @@
 <script setup>
-import { t } from '@/i18n';
+import { formatCurrency, t } from '@/i18n';
 import { Link } from '@inertiajs/vue3';
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 
@@ -42,9 +42,6 @@ const animals = [
 const active = ref(0);
 let timer = null;
 
-const rupiah = (v) =>
-    new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(v);
-
 const animalCards = computed(() =>
     animals.map((animal) => {
         const matched = props.products.filter((p) =>
@@ -65,6 +62,7 @@ const animalCards = computed(() =>
 
         return {
             ...animal,
+            productObj: cheapest,
             price: cheapest?.price ?? null,
             slug: cheapest?.slug ?? null,
             weightLabel,
@@ -167,7 +165,7 @@ onBeforeUnmount(stop);
                         class="text-lg font-extrabold"
                         :class="i === active ? 'text-brand-300' : 'text-white'"
                     >
-                        {{ animal.price ? rupiah(animal.price) : t('Hubungi kami') }}
+                        {{ animal.productObj ? formatCurrency(animal.productObj) : t('Hubungi kami') }}
                     </span>
                 </span>
             </button>

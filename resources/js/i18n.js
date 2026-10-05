@@ -251,6 +251,56 @@ export const t = (text) => {
     return text;
 };
 
+/**
+ * Helper format harga multi-mata uang sesuai bahasa yang sedang aktif
+ * @param {number|object} priceInput - Nilai angka atau object { idr, usd, cny, sar } / object model produk
+ * @param {string} [fieldPrefix='price'] - Prefix field jika input adalah model (misal: 'price', 'fee', 'cooking_fee')
+ */
+export const formatCurrency = (priceInput, fieldPrefix = 'price') => {
+    if (priceInput == null) return '';
+
+    const loc = currentLocale.value;
+    let currency = 'IDR';
+    let amount = 0;
+
+    if (typeof priceInput === 'number' || typeof priceInput === 'string') {
+        amount = Number(priceInput) || 0;
+        return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+    }
+
+    if (typeof priceInput === 'object') {
+        if (loc === 'en') {
+            currency = 'USD';
+            amount = Number(priceInput[`${fieldPrefix}_usd`] ?? priceInput.usd ?? 0);
+        } else if (loc === 'zh') {
+            currency = 'CNY';
+            amount = Number(priceInput[`${fieldPrefix}_cny`] ?? priceInput.cny ?? 0);
+        } else if (loc === 'ar') {
+            currency = 'SAR';
+            amount = Number(priceInput[`${fieldPrefix}_sar`] ?? priceInput.sar ?? 0);
+        } else {
+            currency = 'IDR';
+            amount = Number(priceInput[`${fieldPrefix}_idr`] ?? priceInput[fieldPrefix] ?? priceInput.idr ?? 0);
+        }
+
+        // Fallback jika currency luar belum diset / 0, gunakan IDR
+        if (!amount && loc !== 'id') {
+            amount = Number(priceInput[`${fieldPrefix}_idr`] ?? priceInput[fieldPrefix] ?? priceInput.idr ?? 0);
+            currency = 'IDR';
+        }
+    }
+
+    if (currency === 'USD') {
+        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount);
+    } else if (currency === 'CNY') {
+        return new Intl.NumberFormat('zh-CN', { style: 'currency', currency: 'CNY' }).format(amount);
+    } else if (currency === 'SAR') {
+        return `﷼ ${new Intl.NumberFormat('ar-SA', { minimumFractionDigits: 0 }).format(amount)}`;
+    }
+
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(amount);
+};
+
 // Inisialisasi awal atribut dokumen
 if (typeof window !== 'undefined') {
     document.documentElement.lang = currentLocale.value;

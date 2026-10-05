@@ -21,8 +21,14 @@ class Transaction extends Model
         'user_id',
         'service_id',
         'product_id',
+        'product_variant_id',
         'quantity',
         'unit_price',
+        'cooking_option',
+        'cooking_fee',
+        'distribution_option_id',
+        'distribution_fee',
+        'currency',
         'total_amount',
         'distribution_type',
         'distribution_location_note',
@@ -56,8 +62,9 @@ class Transaction extends Model
         return [
             'quantity' => 'integer',
             'unit_price' => 'decimal:2',
+            'cooking_fee' => 'decimal:2',
+            'distribution_fee' => 'decimal:2',
             'total_amount' => 'decimal:2',
-            'distribution_type' => DistributionType::class,
             'sohibul_names' => 'array',
             'payment_method' => PaymentMethod::class,
             'payment_status' => PaymentStatus::class,
@@ -66,6 +73,16 @@ class Transaction extends Model
             'midtrans_settlement_time' => 'datetime',
             'midtrans_raw_response' => 'array',
         ];
+    }
+
+    public function variant(): BelongsTo
+    {
+        return $this->belongsTo(ProductVariant::class, 'product_variant_id');
+    }
+
+    public function distributionOption(): BelongsTo
+    {
+        return $this->belongsTo(DistributionOption::class, 'distribution_option_id');
     }
 
     public function user(): BelongsTo

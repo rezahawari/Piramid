@@ -34,6 +34,7 @@ const navItems = [
 ];
 
 const secondaryNav = [
+    { label: 'Penyaluran / Distribusi', href: '/admin/distribusi', icon: 'location' },
     { label: 'Landing Hero & Onboarding', href: '/admin/heroes', icon: 'heroes' },
     { label: 'Galeri & Edukasi', href: '/admin/galeri', icon: 'gallery' },
     { label: 'Manajemen Pengguna', href: '/admin/users', icon: 'users' },
