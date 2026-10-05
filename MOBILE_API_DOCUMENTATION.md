@@ -287,15 +287,35 @@ Dokumen ini berisi spesifikasi teknis lengkap untuk tim mobile developer dalam m
 ## 💳 4. Endpoint Pembayaran
 
 ### A. Ambil Midtrans Snap Token
+Digunakan untuk menginisialisasi pembayaran Midtrans Snap secara Server-to-Server dan mengembalikan `snap_token` serta `client_key` ke aplikasi mobile/client (sehingga client tidak perlu memanggil Midtrans API langsung yang akan terbentur CORS).
+
 * **Method:** `POST`
 * **Endpoint:** `/transactions/{transaction_code}/snap-token`
-* **Response:**
+* **Headers:**
+  ```http
+  Authorization: Bearer <SANCTUM_TOKEN>
+  Accept: application/json
+  Content-Type: application/json
+  ```
+* **Contoh Request:**
+  `POST https://domainanda.com/api/v1/transactions/QUR-20261004-9821/snap-token`
+
+* **Contoh Response Sukses (`200 OK`):**
   ```json
   {
-    "snap_token": "xxxx-xxxx-xxxx-xxxx",
-    "redirect_url": "https://app.sandbox.midtrans.com/snap/v2/vtweb/xxxx"
+    "status": "success",
+    "snap_token": "82a933f7-9251-4f11-9a74-9f79b6343516",
+    "client_key": "Mid-client-jioH9suTiClJ0y4F"
   }
   ```
+
+* **Cara Penggunaan di Mobile (Flutter / React Native / Android Native / iOS):**
+  * **Midtrans Mobile SDK:** Kirim `snap_token` ke fungsi `MidtransSDK.startPaymentUiFlow(snapToken)`.
+  * **WebView:** Buka URL Snap:
+    * Sandbox: `https://app.sandbox.midtrans.com/snap/v2/vtweb/{snap_token}`
+    * Production: `https://app.midtrans.com/snap/v2/vtweb/{snap_token}`
+
+---
 
 ### B. Upload Bukti Transfer Manual
 * **Method:** `POST` (Multipart / Form-Data)

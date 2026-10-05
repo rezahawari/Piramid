@@ -48,7 +48,39 @@ class MidtransService
         Config::$isSanitized = (bool) config('midtrans.is_sanitized', true);
         Config::$is3ds = (bool) config('midtrans.is_3ds', true);
 
-        $transaction->loadMissing(['user', 'product']);
+        $transaction->loadMissing(['user', 'product', 'variant', 'distributionOption']);
+
+        $itemDetails = [];
+        $itemName = $transaction->product ? $transaction->product->name : 'Hewan Ternak';
+        if ($transaction->variant) {
+            $itemName .= ' - ' . $transaction->variant->name_id;
+        }
+
+        $itemDetails[] = [
+            'id' => (string) ($transaction->product_variant_id ? 'var-' . $transaction->product_variant_id : 'prod-' . ($transaction->product_id ?? '1')),
+            'name' => Str::limit($itemName, 50, ''),
+            'quantity' => (int) $transaction->quantity,
+            'price' => (int) round($transaction->unit_price),
+        ];
+
+        if ((float) $transaction->cooking_fee > 0) {
+            $itemDetails[] = [
+                'id' => 'cooking-fee',
+                'name' => 'Biaya Olahan Daging Matang',
+                'quantity' => 1,
+                'price' => (int) round($transaction->cooking_fee),
+            ];
+        }
+
+        if ((float) $transaction->distribution_fee > 0) {
+            $distName = $transaction->distributionOption ? $transaction->distributionOption->name_id : 'Penyaluran';
+            $itemDetails[] = [
+                'id' => 'dist-fee',
+                'name' => Str::limit('Biaya Penyaluran: ' . $distName, 50, ''),
+                'quantity' => 1,
+                'price' => (int) round($transaction->distribution_fee),
+            ];
+        }
 
         $params = [
             'transaction_details' => [
@@ -58,17 +90,9 @@ class MidtransService
             'customer_details' => [
                 'first_name' => $transaction->user ? $transaction->user->name : ($transaction->recipient_name ?? 'Pelanggan'),
                 'email' => $transaction->user ? $transaction->user->email : 'customer@piramidqurban.com',
-                'phone' => $transaction->recipient_phone ?? '',
+                'phone' => $transaction->recipient_phone ?? ($transaction->user->phone ?? ''),
             ],
-            'item_details' => [
-                [
-                    'id' => (string) ($transaction->product_id ?? 'item-1'),
-                    // Midtrans limits item name to 50 chars.
-                    'name' => Str::limit($transaction->product ? $transaction->product->name : 'Hewan Qurban/Aqiqah', 50, ''),
-                    'quantity' => (int) $transaction->quantity,
-                    'price' => (int) round($transaction->unit_price),
-                ],
-            ],
+            'item_details' => $itemDetails,
         ];
 
         try {
