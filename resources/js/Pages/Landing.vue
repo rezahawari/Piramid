@@ -10,6 +10,10 @@ import { computed, onMounted, ref } from 'vue';
 const props = defineProps({
     services: Array,
     products: Array,
+    legalities: {
+        type: Array,
+        default: () => [],
+    },
     documentationGalleries: {
         type: Array,
         default: () => [],
@@ -26,6 +30,7 @@ onMounted(() => {
 
 const selectedCategory = ref('all');
 const activeMediaModal = ref(null);
+const activeLegalityModal = ref(null);
 
 const filteredGalleries = computed(() => {
     if (!props.documentationGalleries || props.documentationGalleries.length === 0) {
@@ -268,7 +273,203 @@ const coverageCountries = [
             </div>
         </section>
 
-<!-- Section Galeri Dokumentasi & Edukasi -->
+        <!-- Section Legalitas Perusahaan & Syariat -->
+        <section class="bg-white py-20 border-t border-zinc-100">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <!-- Header Section Legalitas -->
+                <div class="mx-auto max-w-3xl text-center">
+                    <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3.5 py-1 text-xs font-bold text-emerald-700 border border-emerald-200/80 mb-3 shadow-2xs">
+                        <svg class="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                        <span>Terverifikasi, Resmi &amp; Terpercaya</span>
+                    </div>
+                    <h2 class="text-3xl font-black text-zinc-900 sm:text-4xl tracking-tight">
+                        Legalitas &amp; Sertifikasi Syariat
+                    </h2>
+                    <p class="mt-3 text-sm text-zinc-600 leading-relaxed">
+                        Piramid beroperasi dengan izin resmi, mematuhi standar higienis Rumah Potong Hewan (RPH),
+                        serta tersertifikasi syariat Islam agar ibadah qurban dan aqiqah Anda sah, tenang, dan berkah.
+                    </p>
+                </div>
+
+                <!-- Dokumen Legalitas Grid Cards -->
+                <div v-if="legalities && legalities.length > 0" class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <div
+                        v-for="doc in legalities"
+                        :key="doc.id"
+                        class="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-xs transition duration-300 hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl"
+                    >
+                        <div>
+                            <!-- Header Card & Icon Badge -->
+                            <div class="flex items-start justify-between gap-3">
+                                <div class="flex h-12 w-12 items-center justify-center rounded-2xl transition duration-300 group-hover:scale-110"
+                                     :class="doc.file_type === 'pdf' ? 'bg-rose-50 text-rose-600 border border-rose-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'">
+                                    <!-- PDF Icon -->
+                                    <svg v-if="doc.file_type === 'pdf'" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 4h7v5h5v11H6V4zm8 9a1 1 0 0 1 1 1v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-4a1 1 0 0 1 1-1z" />
+                                    </svg>
+                                    <!-- Image Icon -->
+                                    <svg v-else class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+
+                                <div class="flex flex-col items-end gap-1">
+                                    <span class="rounded-lg px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider"
+                                          :class="doc.file_type === 'pdf' ? 'bg-rose-100 text-rose-800' : 'bg-blue-100 text-blue-800'">
+                                        {{ doc.file_type ? doc.file_type.toUpperCase() : 'DOKUMEN' }}
+                                    </span>
+                                    <span v-if="doc.file_size" class="text-[10px] text-zinc-400 font-medium">
+                                        {{ doc.file_size }}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Issuer & Title -->
+                            <div class="mt-4">
+                                <span v-if="doc.issuer" class="text-[10px] font-bold uppercase tracking-widest text-brand-600 block mb-1">
+                                    {{ doc.issuer }}
+                                </span>
+                                <h3 class="text-base font-extrabold text-zinc-900 group-hover:text-brand-600 transition leading-snug">
+                                    {{ doc.title }}
+                                </h3>
+                            </div>
+
+                            <!-- Document Number -->
+                            <div v-if="doc.document_number" class="mt-3 flex items-center gap-1.5 rounded-xl bg-zinc-50 px-3 py-1.5 text-xs font-mono text-zinc-700 border border-zinc-100">
+                                <svg class="h-3.5 w-3.5 text-zinc-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                                </svg>
+                                <span class="truncate font-semibold">{{ doc.document_number }}</span>
+                            </div>
+
+                            <!-- Description -->
+                            <p v-if="doc.description" class="mt-3 text-xs text-zinc-600 line-clamp-2 leading-relaxed">
+                                {{ doc.description }}
+                            </p>
+                        </div>
+
+                        <!-- Card Actions: Pratinjau & Buka File -->
+                        <div class="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between gap-2">
+                            <button
+                                type="button"
+                                @click="activeLegalityModal = doc"
+                                class="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-700 hover:text-brand-600 transition cursor-pointer"
+                            >
+                                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                                Lihat Pratinjau
+                            </button>
+
+                            <a
+                                :href="doc.file_path"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex items-center gap-1 rounded-xl bg-brand-500/10 px-3 py-1.5 text-xs font-bold text-brand-600 hover:bg-brand-500 hover:text-white transition shadow-2xs"
+                            >
+                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                                Berkas Asli
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empty State Fallback -->
+                <div v-else class="mt-10 rounded-3xl border border-dashed border-zinc-200 bg-zinc-50/60 p-8 text-center max-w-lg mx-auto">
+                    <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <h4 class="mt-3 text-sm font-bold text-zinc-900">Legalitas &amp; Sertifikat Terverifikasi</h4>
+                    <p class="mt-1 text-xs text-zinc-500 leading-relaxed">
+                        Dokumen legalitas badan usaha, sertifikasi halal RPH, dan izin kurban sedang dalam sinkronisasi sistem.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Pratinjau Dokumen Legalitas (PDF & Gambar) -->
+        <div
+            v-if="activeLegalityModal"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            @click.self="activeLegalityModal = null"
+        >
+            <div class="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                <!-- Header Modal -->
+                <div class="flex items-center justify-between border-b border-zinc-100 px-6 py-4 bg-zinc-50/90">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="rounded-md bg-brand-500 px-2 py-0.5 text-[9px] font-black uppercase text-white tracking-wider">
+                                {{ activeLegalityModal.file_type ? activeLegalityModal.file_type.toUpperCase() : 'LEGALITAS' }}
+                            </span>
+                            <span v-if="activeLegalityModal.issuer" class="text-xs font-bold text-zinc-500 uppercase">
+                                {{ activeLegalityModal.issuer }}
+                            </span>
+                        </div>
+                        <h3 class="mt-1 text-base font-extrabold text-zinc-900 leading-snug">
+                            {{ activeLegalityModal.title }}
+                        </h3>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <a
+                            :href="activeLegalityModal.file_path"
+                            target="_blank"
+                            download
+                            class="inline-flex items-center gap-1.5 rounded-xl bg-brand-500 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-brand-600 transition"
+                        >
+                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            <span>Unduh Berkas</span>
+                        </a>
+                        <button
+                            type="button"
+                            @click="activeLegalityModal = null"
+                            class="h-8 w-8 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-500 hover:bg-zinc-300 hover:text-zinc-900 transition text-sm font-bold cursor-pointer"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Body Document Preview -->
+                <div class="flex-1 overflow-auto bg-zinc-950 p-4 flex items-center justify-center min-h-[420px]">
+                    <!-- PDF Viewer -->
+                    <iframe
+                        v-if="activeLegalityModal.file_type === 'pdf' || (activeLegalityModal.file_path && activeLegalityModal.file_path.toLowerCase().endsWith('.pdf'))"
+                        :src="activeLegalityModal.file_path"
+                        class="w-full h-[70vh] rounded-2xl border border-white/10"
+                    ></iframe>
+
+                    <!-- Image Viewer (PNG / JPG) -->
+                    <img
+                        v-else
+                        :src="activeLegalityModal.file_path"
+                        :alt="activeLegalityModal.title"
+                        class="max-h-[75vh] max-w-full rounded-2xl object-contain shadow-2xl"
+                    />
+                </div>
+
+                <!-- Footer Modal Details -->
+                <div v-if="activeLegalityModal.document_number || activeLegalityModal.description" class="bg-zinc-50 px-6 py-3 border-t border-zinc-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-zinc-600">
+                    <span v-if="activeLegalityModal.document_number" class="font-mono font-semibold">
+                        No. Sertifikat: {{ activeLegalityModal.document_number }}
+                    </span>
+                    <span v-if="activeLegalityModal.issued_date" class="text-zinc-500">
+                        Tanggal: {{ activeLegalityModal.issued_date }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section Galeri Dokumentasi & Edukasi -->
         <section class="bg-zinc-50 py-20">
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="mx-auto max-w-3xl text-center">

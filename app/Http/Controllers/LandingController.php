@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DocumentationGallery;
+use App\Models\Legality;
 use App\Models\Product;
 use App\Models\Service;
 use Illuminate\Http\RedirectResponse;
@@ -12,7 +13,7 @@ use Inertia\Response;
 class LandingController extends Controller
 {
     /**
-     * Display the landing page with the active services, featured products, and documentation gallery.
+     * Display the landing page with the active services, featured products, legalities, and documentation gallery.
      */
     public function index(): Response|RedirectResponse
     {
@@ -36,6 +37,10 @@ class LandingController extends Controller
                 ->orderBy('price')
                 ->limit(3)
                 ->get(['id', 'name', 'slug', 'price', 'weight_estimate_kg', 'primary_image_url']),
+            'legalities' => Legality::active()
+                ->orderBy('order')
+                ->latest()
+                ->get(),
             'documentationGalleries' => DocumentationGallery::active()
                 ->orderBy('order_index')
                 ->latest()

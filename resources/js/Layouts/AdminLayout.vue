@@ -11,6 +11,7 @@ const navItems = [
     { label: 'Produk Hewan', href: '/admin/produk' },
     { label: 'Penyaluran / Distribusi', href: '/admin/distribusi' },
     { label: 'Landing Hero', href: '/admin/heroes' },
+    { label: 'Legalitas', href: '/admin/legalitas' },
     { label: 'Galeri & Edukasi', href: '/admin/galeri' },
     { label: 'Transaksi', href: '/admin/transaksi' },
     { label: 'Pengguna', href: '/admin/users' },

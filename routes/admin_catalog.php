@@ -44,6 +44,14 @@ Route::middleware(['auth', 'admin'])
         Route::patch('/heroes/{hero}/toggle-status', [\App\Http\Controllers\Admin\LandingHeroController::class, 'toggleStatus'])
             ->name('heroes.toggle-status');
 
+        // Manajemen Legalitas CMS (PDF, PNG, JPG)
+        Route::resource('legalitas', \App\Http\Controllers\Admin\LegalityController::class)
+            ->parameters(['legalitas' => 'legality'])
+            ->names('legalities')
+            ->except(['show']);
+        Route::patch('/legalitas/{legality}/toggle-status', [\App\Http\Controllers\Admin\LegalityController::class, 'toggleStatus'])
+            ->name('legalities.toggle-status');
+
         // Manajemen Pengguna (CRUD, Soft Delete, Status, Reset Password)
         Route::resource('users', UserController::class)
             ->parameters(['users' => 'user'])
