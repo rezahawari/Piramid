@@ -350,7 +350,7 @@ const coverageCountries = [
                             </p>
                         </div>
 
-                        <!-- Card Actions: Pratinjau & Buka File -->
+                        <!-- Card Actions: Pratinjau Dokumen -->
                         <div class="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between gap-2">
                             <button
                                 type="button"
@@ -361,20 +361,15 @@ const coverageCountries = [
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
-                                Lihat Pratinjau
+                                <span>Lihat Pratinjau Dokumen</span>
                             </button>
 
-                            <a
-                                :href="doc.file_path"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                class="inline-flex items-center gap-1 rounded-xl bg-brand-500/10 px-3 py-1.5 text-xs font-bold text-brand-600 hover:bg-brand-500 hover:text-white transition shadow-2xs"
-                            >
-                                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            <span class="inline-flex items-center gap-1 rounded-xl bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold text-zinc-500">
+                                <svg class="h-3.5 w-3.5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                 </svg>
-                                Berkas Asli
-                            </a>
+                                Hanya Baca
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -394,11 +389,12 @@ const coverageCountries = [
             </div>
         </section>
 
-        <!-- Modal Pratinjau Dokumen Legalitas (PDF & Gambar) -->
+        <!-- Modal Pratinjau Dokumen Legalitas (Hanya Lihat / Proteksi Download) -->
         <div
             v-if="activeLegalityModal"
-            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm select-none"
             @click.self="activeLegalityModal = null"
+            @contextmenu.prevent
         >
             <div class="relative w-full max-w-4xl max-h-[92vh] flex flex-col rounded-3xl bg-white shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                 <!-- Header Modal -->
@@ -417,18 +413,13 @@ const coverageCountries = [
                         </h3>
                     </div>
 
-                    <div class="flex items-center gap-3">
-                        <a
-                            :href="activeLegalityModal.file_path"
-                            target="_blank"
-                            download
-                            class="inline-flex items-center gap-1.5 rounded-xl bg-brand-500 px-3.5 py-2 text-xs font-bold text-white shadow-xs hover:bg-brand-600 transition"
-                        >
-                            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    <div class="flex items-center gap-2">
+                        <span class="hidden sm:inline-flex items-center gap-1 text-[11px] font-semibold text-zinc-500 bg-zinc-100 px-2.5 py-1 rounded-lg">
+                            <svg class="h-3.5 w-3.5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                             </svg>
-                            <span>Unduh Berkas</span>
-                        </a>
+                            Pratinjau Resmi (Dilindungi)
+                        </span>
                         <button
                             type="button"
                             @click="activeLegalityModal = null"
@@ -441,10 +432,10 @@ const coverageCountries = [
 
                 <!-- Body Document Preview -->
                 <div class="flex-1 overflow-auto bg-zinc-950 p-4 flex items-center justify-center min-h-[420px]">
-                    <!-- PDF Viewer -->
+                    <!-- PDF Viewer dengan toolbar tersembunyi -->
                     <iframe
                         v-if="activeLegalityModal.file_type === 'pdf' || (activeLegalityModal.file_path && activeLegalityModal.file_path.toLowerCase().endsWith('.pdf'))"
-                        :src="activeLegalityModal.file_path"
+                        :src="activeLegalityModal.file_path + '#toolbar=0&navpanes=0&scrollbar=1'"
                         class="w-full h-[70vh] rounded-2xl border border-white/10"
                     ></iframe>
 
