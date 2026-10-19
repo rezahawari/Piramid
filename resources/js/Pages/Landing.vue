@@ -197,7 +197,7 @@ const coverageCountries = [
                 src="/assets/svgs/mosque_light.svg"
                 alt=""
                 aria-hidden="true"
-                class="pointer-events-none absolute inset-x-0 bottom-0 w-full opacity-20"
+                class="pointer-events-none absolute inset-x-0 bottom-0 w-full opacity-20 hidden md:block"
             />
             <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <h2 class="text-center text-3xl font-extrabold text-white">Layanan Kami</h2>
