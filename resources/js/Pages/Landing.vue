@@ -293,41 +293,40 @@ const coverageCountries = [
                     </p>
                 </div>
 
-                <!-- Dokumen Legalitas Grid Cards -->
+                <!-- Dokumen Legalitas Grid Cards (Rata Tengah / Center Aligned) -->
                 <div v-if="legalities && legalities.length > 0" class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     <div
                         v-for="doc in legalities"
                         :key="doc.id"
-                        class="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/80 bg-white p-6 shadow-xs transition duration-300 hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl"
+                        class="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-zinc-200/80 bg-white p-7 text-center shadow-xs transition duration-300 hover:-translate-y-1 hover:border-brand-500/50 hover:shadow-xl"
                     >
-                        <div>
-                            <!-- Header Card & Icon Badge -->
-                            <div class="flex items-start justify-between gap-3">
-                                <div class="flex h-12 w-12 items-center justify-center rounded-2xl transition duration-300 group-hover:scale-110"
-                                     :class="doc.file_type === 'pdf' ? 'bg-rose-50 text-rose-600 border border-rose-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'">
-                                    <!-- PDF Icon -->
-                                    <svg v-if="doc.file_type === 'pdf'" class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 4h7v5h5v11H6V4zm8 9a1 1 0 0 1 1 1v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-4a1 1 0 0 1 1-1z" />
-                                    </svg>
-                                    <!-- Image Icon -->
-                                    <svg v-else class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                </div>
-
-                                <div class="flex flex-col items-end gap-1">
-                                    <span class="rounded-lg px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider"
-                                          :class="doc.file_type === 'pdf' ? 'bg-rose-100 text-rose-800' : 'bg-blue-100 text-blue-800'">
-                                        {{ doc.file_type ? doc.file_type.toUpperCase() : 'DOKUMEN' }}
-                                    </span>
-                                    <span v-if="doc.file_size" class="text-[10px] text-zinc-400 font-medium">
-                                        {{ doc.file_size }}
-                                    </span>
-                                </div>
+                        <div class="flex flex-col items-center">
+                            <!-- Top Format & Size Badge -->
+                            <div class="flex items-center justify-center gap-2 mb-4">
+                                <span class="rounded-lg px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider"
+                                      :class="doc.file_type === 'pdf' ? 'bg-rose-100 text-rose-800' : 'bg-blue-100 text-blue-800'">
+                                    {{ doc.file_type ? doc.file_type.toUpperCase() : 'DOKUMEN' }}
+                                </span>
+                                <span v-if="doc.file_size" class="rounded-lg bg-zinc-100 px-2 py-0.5 text-[10px] text-zinc-500 font-medium">
+                                    {{ doc.file_size }}
+                                </span>
                             </div>
 
-                            <!-- Issuer & Title -->
-                            <div class="mt-4">
+                            <!-- Icon Badge Center -->
+                            <div class="flex h-16 w-16 items-center justify-center rounded-2xl transition duration-300 group-hover:scale-110 shadow-2xs"
+                                 :class="doc.file_type === 'pdf' ? 'bg-rose-50 text-rose-600 border border-rose-100' : 'bg-emerald-50 text-emerald-600 border border-emerald-100'">
+                                <!-- PDF Icon -->
+                                <svg v-if="doc.file_type === 'pdf'" class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zM6 4h7v5h5v11H6V4zm8 9a1 1 0 0 1 1 1v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-4a1 1 0 0 1 1-1z" />
+                                </svg>
+                                <!-- Image Icon -->
+                                <svg v-else class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+
+                            <!-- Issuer & Title Center -->
+                            <div class="mt-5 max-w-xs">
                                 <span v-if="doc.issuer" class="text-[10px] font-bold uppercase tracking-widest text-brand-600 block mb-1">
                                     {{ doc.issuer }}
                                 </span>
@@ -336,35 +335,35 @@ const coverageCountries = [
                                 </h3>
                             </div>
 
-                            <!-- Document Number -->
-                            <div v-if="doc.document_number" class="mt-3 flex items-center gap-1.5 rounded-xl bg-zinc-50 px-3 py-1.5 text-xs font-mono text-zinc-700 border border-zinc-100">
+                            <!-- Document Number Center -->
+                            <div v-if="doc.document_number" class="mt-3.5 inline-flex items-center justify-center gap-1.5 rounded-xl bg-zinc-50 px-3.5 py-1.5 text-xs font-mono text-zinc-700 border border-zinc-100 max-w-full">
                                 <svg class="h-3.5 w-3.5 text-zinc-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
                                 </svg>
                                 <span class="truncate font-semibold">{{ doc.document_number }}</span>
                             </div>
 
-                            <!-- Description -->
-                            <p v-if="doc.description" class="mt-3 text-xs text-zinc-600 line-clamp-2 leading-relaxed">
+                            <!-- Description Center -->
+                            <p v-if="doc.description" class="mt-3 text-xs text-zinc-600 line-clamp-2 leading-relaxed max-w-sm">
                                 {{ doc.description }}
                             </p>
                         </div>
 
-                        <!-- Card Actions: Pratinjau Dokumen -->
-                        <div class="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between gap-2">
+                        <!-- Card Actions: Pratinjau Dokumen Center -->
+                        <div class="mt-6 pt-4 border-t border-zinc-100 flex flex-col sm:flex-row items-center justify-center gap-3">
                             <button
                                 type="button"
                                 @click="activeLegalityModal = doc"
-                                class="inline-flex items-center gap-1.5 text-xs font-bold text-zinc-700 hover:text-brand-600 transition cursor-pointer"
+                                class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-500 px-4 py-2 text-xs font-bold text-white shadow-2xs hover:bg-brand-600 transition cursor-pointer w-full sm:w-auto"
                             >
                                 <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                                 </svg>
-                                <span>Lihat Pratinjau Dokumen</span>
+                                <span>Lihat Pratinjau</span>
                             </button>
 
-                            <span class="inline-flex items-center gap-1 rounded-xl bg-zinc-100 px-2.5 py-1 text-[11px] font-semibold text-zinc-500">
+                            <span class="inline-flex items-center justify-center gap-1 rounded-xl bg-zinc-100 px-3 py-2 text-[11px] font-semibold text-zinc-500">
                                 <svg class="h-3.5 w-3.5 text-zinc-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                                 </svg>
