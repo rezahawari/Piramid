@@ -291,38 +291,6 @@ const coverageCountries = [
                         >
                             Semua Dokumentasi
                         </button>
-                        <button
-                            type="button"
-                            @click="selectedCategory = 'qurban'"
-                            class="rounded-xl px-4 py-2 text-xs font-bold transition shadow-xs"
-                            :class="selectedCategory === 'qurban' ? 'bg-brand-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'"
-                        >
-                            Qurban
-                        </button>
-                        <button
-                            type="button"
-                            @click="selectedCategory = 'aqiqah'"
-                            class="rounded-xl px-4 py-2 text-xs font-bold transition shadow-xs"
-                            :class="selectedCategory === 'aqiqah' ? 'bg-brand-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'"
-                        >
-                            Aqiqah
-                        </button>
-                        <button
-                            type="button"
-                            @click="selectedCategory = 'edukasi'"
-                            class="rounded-xl px-4 py-2 text-xs font-bold transition shadow-xs"
-                            :class="selectedCategory === 'edukasi' ? 'bg-brand-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'"
-                        >
-                            Edukasi Syariat
-                        </button>
-                        <button
-                            type="button"
-                            @click="selectedCategory = 'distribusi'"
-                            class="rounded-xl px-4 py-2 text-xs font-bold transition shadow-xs"
-                            :class="selectedCategory === 'distribusi' ? 'bg-brand-500 text-white' : 'bg-white text-zinc-600 hover:bg-zinc-100 border border-zinc-200'"
-                        >
-                            Penyaluran Pelosok
-                        </button>
                     </div>
                 </div>
 
